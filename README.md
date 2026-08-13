@@ -1,2 +1,60 @@
-# velvet-viking-valhalla-1
-Running training 
+# Velvet Viking — Master-Brand Website
+
+A pre-launch, editable foundation for the Velvet Viking master-brand website.
+Velvet Viking is the parent brand; **Valhalla** — the intelligent endurance
+training app in `velvet-viking-valhalla-2` — is its flagship product.
+
+This is a foundation, not a finished public launch. Where final content
+doesn't exist yet, sections use clearly-marked placeholder positions (e.g.
+`[HERO PHOTOGRAPH]`) rather than invented copy or Lorem Ipsum. No production
+domain is connected — develop and review locally or on a Vercel preview.
+
+## Stack
+
+Next.js (App Router) + TypeScript + Tailwind CSS v4, deployed to Vercel.
+
+## Getting started
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## Design tokens
+
+All colors, radii and shadows in `src/app/globals.css` are extracted verbatim
+from the live Valhalla 2 app (`velvet-viking-valhalla.html`'s `:root` and
+`[data-theme="light"]` blocks) so the website and the product read as one
+visual family. Don't invent new brand colors — pull any additional value from
+the app's own token set.
+
+The site has **no user-facing theme toggle**. `:root` is the dark identity;
+`.theme-light` is applied per-`<section>` to compose an art-directed
+dark/light rhythm down the page — that rhythm is a design decision, not
+something the visitor controls.
+
+## Content
+
+All editable copy, nav labels, CTA labels and image-slot placeholders live in
+`src/content/site.ts`, separate from layout. Update content there rather than
+inside components.
+
+## Brand crest
+
+`public/brand/crest.png` (and `crest-square.png`) is the approved Velvet
+Viking crest, reproduced as-is per brand guidance — composition, wording and
+the gold/navy identity are not to be altered. Only a raster master exists
+today; the `Crest` component (`src/components/ui/Crest.tsx`) is the single
+place the artwork is referenced, so a professionally mastered SVG can replace
+it later as a one-line change, without a page redesign.
+
+## Structure
+
+- `/` — homepage: hero → brand story → Valhalla product → full-width
+  photography → Earn Your Place → future-brand architecture → final CTA.
+- `/valhalla`, `/philosophy`, `/about` — minimal structural foundations for
+  future detailed pages.
+- `/privacy`, `/terms`, `/cookies` — footer-linked stubs, no fabricated legal
+  content.

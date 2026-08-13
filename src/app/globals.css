@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+/*
+  Design tokens are extracted verbatim from the live Valhalla 2 app
+  (velvet-viking-valhalla-2 / velvet-viking-valhalla.html :root and
+  [data-theme="light"] blocks) so the website and the product share one
+  visual family. Do not invent new colors here — extend this file only by
+  pulling further values from the app's own token set.
+
+  The website has no user-facing theme toggle. --dark is the default,
+  page-wide identity; .theme-light is applied per <section> to compose an
+  art-directed dark/light rhythm down the page, never left to the visitor.
+*/
+:root {
+  --vv-bg: #15110d;
+  --vv-bg-2: #1d1712;
+  --vv-bg-3: #261d14;
+  --vv-bg-4: #2e2318;
+  --vv-ink: #ede3d0;
+  --vv-ink-dim: #b3a48c;
+  --vv-ink-faint: #948970;
+  --vv-line: #3b2e20;
+  --vv-line-soft: #2a2015;
+  --vv-bronze: #c0923f;
+  --vv-bronze-2: #9c7433;
+  --vv-gold: #e3b15a;
+  --vv-bronze-ink: #1a1204;
+  --vv-gold-text: var(--vv-gold);
+  --vv-bronze-text: var(--vv-bronze);
+  --vv-gold-bright: #f5d061;
+  --vv-gold-mid: #c5a059;
+  --vv-gold-deep: #8a6d2b;
+  --vv-gold-shadow-1: #7a5c1e;
+  --vv-gold-shadow-2: #543e12;
+  --vv-radius-sm: 10px;
+  --vv-radius: 16px;
+  --vv-radius-lg: 22px;
+  --vv-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --vv-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  /* placeholder-media fill/border: independent of --vv-bg-3, which sits too
+     close to --vv-bg-2/--vv-bg in the light theme to read as a distinct
+     card (a warm-white-on-warm-white contrast problem) */
+  --vv-placeholder-bg: rgba(255, 255, 255, 0.045);
+  --vv-placeholder-border: rgba(237, 227, 208, 0.16);
+  color-scheme: dark;
+}
+
+.theme-light {
+  --vv-bg: #f2ecdc;
+  --vv-bg-2: #fffcf6;
+  --vv-bg-3: #ebe1c8;
+  --vv-bg-4: #e3d7b8;
+  --vv-ink: #241c15;
+  --vv-ink-dim: #5e5443;
+  --vv-ink-faint: #6b5f49;
+  --vv-line: #dccea9;
+  --vv-line-soft: #e7dabb;
+  --vv-gold-text: #7a5c1e;
+  --vv-bronze-text: #7a5c1e;
+  --vv-shadow-sm: 0 4px 12px rgba(90, 70, 30, 0.1);
+  --vv-shadow: 0 10px 30px rgba(90, 70, 30, 0.14);
+  --vv-placeholder-bg: rgba(36, 28, 21, 0.055);
+  --vv-placeholder-border: rgba(36, 28, 21, 0.16);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-vv-bg: var(--vv-bg);
+  --color-vv-bg-2: var(--vv-bg-2);
+  --color-vv-bg-3: var(--vv-bg-3);
+  --color-vv-bg-4: var(--vv-bg-4);
+  --color-vv-ink: var(--vv-ink);
+  --color-vv-ink-dim: var(--vv-ink-dim);
+  --color-vv-ink-faint: var(--vv-ink-faint);
+  --color-vv-line: var(--vv-line);
+  --color-vv-line-soft: var(--vv-line-soft);
+  --color-vv-bronze: var(--vv-bronze);
+  --color-vv-bronze-2: var(--vv-bronze-2);
+  --color-vv-gold: var(--vv-gold);
+  --color-vv-bronze-ink: var(--vv-bronze-ink);
+  --color-vv-gold-text: var(--vv-gold-text);
+  --color-vv-bronze-text: var(--vv-bronze-text);
+  --color-vv-gold-bright: var(--vv-gold-bright);
+  --color-vv-gold-deep: var(--vv-gold-deep);
+
+  --radius-vv-sm: var(--vv-radius-sm);
+  --radius-vv: var(--vv-radius);
+  --radius-vv-lg: var(--vv-radius-lg);
+
+  --shadow-vv-sm: var(--vv-shadow-sm);
+  --shadow-vv: var(--vv-shadow);
+
+  --font-display: var(--font-cinzel), serif;
+  --font-head: var(--font-oswald), sans-serif;
+  --font-sans: var(--font-inter), -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--vv-bg);
+  color: var(--vv-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--vv-bronze);
+  color: var(--vv-bronze-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--vv-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* the app's one metallic-gold gradient finish, reused verbatim for the
+   wordmark so the site and the app read as the same brand mark */
+.text-metallic {
+  background: linear-gradient(180deg, var(--vv-gold-bright) 0%, var(--vv-gold-mid) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow:
+    0 1px 0 var(--vv-gold-shadow-1),
+    0 2px 0 var(--vv-gold-shadow-2),
+    0 3px 6px rgba(0, 0, 0, 0.8);
+}
+
+.theme-light .text-metallic {
+  background: none;
+  -webkit-text-fill-color: #2b2317;
+  color: #2b2317;
+  text-shadow: 0 1px 2px rgba(197, 160, 89, 0.4);
+}
