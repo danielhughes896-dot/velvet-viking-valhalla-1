@@ -44,28 +44,31 @@ inside components.
 ## Brand crest
 
 `public/brand/velvet-viking-crest.png` is the single canonical Velvet Viking
-crest asset — the only crest file in this repo, referenced everywhere
-(hero, header, footer, favicon, Open Graph/social imagery) through one
-component, `src/components/ui/Crest.tsx`. Reproduce it as-is per brand
-guidance — composition, wording and the gold/navy identity are not to be
-altered. The PNG has a transparent background (only the circular gold/navy
-crest and the "EARN YOUR PLACE" wordmark are opaque) so it can be dropped
-onto light or dark sections, merchandise, and third-party surfaces without
-a black background box; keep any future master in that transparent form.
-Only a raster master exists today; because there's a single reference
-point, a professionally mastered SVG can replace it later as a one-line
-change, without a page redesign.
+crest asset — the master used everywhere the full crest appears (hero,
+header, mobile nav, philosophy page, Open Graph/social imagery) through one
+component, `src/components/ui/Crest.tsx`. This file is identical to the
+`assets/velvet-viking-crest.png` master in the Valhalla app repo
+(`velvet-viking-valhalla-2`) — the two must be kept in sync; there must not
+be visually different versions of the full crest across the two products.
+Reproduce it as-is per brand guidance — composition, wording and the
+gold/navy identity are not to be altered. The PNG has a transparent
+background (only the circular gold/navy crest, "VALHALLA AWAITS", "EARN
+YOUR PLACE" and its two flanking gold lines are opaque) so it can be
+dropped onto light or dark sections, merchandise, and third-party surfaces
+without a black background box; keep any future master in that transparent
+form.
 
-`public/brand/experimental-svg/` holds a first-pass genuine vector
-reconstruction (`velvet-viking-crest-master.svg`, full detail; and
-`velvet-viking-mark-simple.svg`, a reduced mark for favicon/small-UI sizes
-where the full crest turns to mush below ~96px). Both are real paths/strokes
-with gradients, not a traced or embedded bitmap. **Neither is wired into
-the site and neither should be treated as canonical** — side-by-side against
-the PNG they read as a clean, flatter, simplified interpretation, not a
-faithful reproduction of the photoreal metal/engraving in the raster
-master. Keep the PNG as the production asset until a design-approved SVG
-replaces this folder's contents.
+`public/brand/velvet-viking-icon-source.png` is a **separate, deliberately
+older** asset used only for `icons.icon` / `icons.apple` in
+`src/app/layout.tsx` (browser favicon, iOS home-screen icon). It is held
+back from the current crest master because the full detailed crest is
+known to turn illegible below ~96px — see the small-icon comparison
+referenced in the brand-asset task history before replacing it.
+
+`public/brand/experimental-svg/` holds a rejected first-pass vector
+reconstruction. **Do not use it anywhere or treat it as a starting point.**
+The canonical crest is the raster PNG above; kept only as prior-art, not as
+an active asset.
 
 **Canonical wording** (do not add to or remove from this without an explicit
 brand decision):

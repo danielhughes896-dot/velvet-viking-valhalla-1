@@ -53,9 +53,14 @@ export const metadata: Metadata = {
     description: "Valhalla Awaits. Earn Your Place.",
     images: ["/brand/velvet-viking-crest.png"],
   },
+  // Deliberately NOT the same file as openGraph/twitter images above: favicon and
+  // apple-touch-icon render very small (browser tab, home-screen icon), where the
+  // full detailed crest is known to turn illegible below ~96px. Held back on the
+  // pre-swap asset pending a dedicated small-size review — see brand crest notes
+  // in README.md.
   icons: {
-    icon: "/brand/velvet-viking-crest.png",
-    apple: "/brand/velvet-viking-crest.png",
+    icon: "/brand/velvet-viking-icon-source.png",
+    apple: "/brand/velvet-viking-icon-source.png",
   },
 };
 
