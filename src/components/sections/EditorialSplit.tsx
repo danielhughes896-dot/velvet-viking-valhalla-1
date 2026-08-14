@@ -11,21 +11,29 @@ type EditorialSplitProps = {
   theme?: "dark" | "light";
 };
 
-// Deliberately unequal (not a 50/50 grid): the image column carries more
-// visual weight than the text column, overflows the row's own vertical
-// bounds on desktop, and bleeds toward its outer edge — all the way to the
-// viewport edge at md+, and past the section's own inset on mobile. The
-// bleed is done with `translate`, not margin: this is a grid item, and
-// grid items stretch to fill their track by default, which makes the
-// browser's box model silently discard a horizontal *margin* that would
-// push the item wider than its track (an "over-constrained" box resolves
-// by dropping margin-right/left, not width). `translate` is a paint-time
-// offset, so it isn't subject to that — and the section's own
-// overflow-hidden clips it safely, so it never introduces page-level
-// horizontal scroll. `reverse` flips which side carries the image, but
-// also swaps the vertical alignment/overflow amount, so Philosophy and
-// Earn Your Place read as related compositions rather than a mirrored
-// template.
+// Photography breaks out of the content grid; the text column stays put in
+// its normal padding. Below md, `reverse` decides how much of the container
+// the image escapes:
+//   - Philosophy (reverse=false): breaks out on BOTH sides, edge to edge —
+//     `margin-left/right: calc(50% - 50vw)` is the standard "full-bleed
+//     from a nested, padded container" formula. On a plain block, 50% here
+//     resolves against the parent's width; combined with the viewport-
+//     relative 50vw, the two cancel out any nesting/padding and the result
+//     is flush with the true viewport edges, whatever they are — no image
+//     ever has to know how wide its ancestors' padding is.
+//   - Earn Your Place (reverse=true): breaks out on ONE side only (right),
+//     keeping its left edge aligned with the text above it — a related but
+//     visibly different composition, not a mirror of Philosophy.
+// At md+ the two columns sit side by side, so a full-bleed-both-sides
+// breakout isn't structurally sensible (it would run under the text
+// column) — the mobile breakout margins are reset there, and a `translate`
+// carries the image to the viewport edge on its one outer side instead.
+// `translate` is used (not margin) at md+ because the image is a grid item
+// stretched to its own track by default, and a grid item's containing
+// block for margin percentages is that (narrower) track, not the padded
+// page container — the calc(50%-50vw) formula only reaches the viewport
+// edge when "50%" is the full container width, which is only true at the
+// single-column mobile layout.
 export default function EditorialSplit({
   eyebrow,
   heading,
@@ -35,8 +43,8 @@ export default function EditorialSplit({
   theme = "dark",
 }: EditorialSplitProps) {
   const mediaClassName = reverse
-    ? "-translate-x-6 sm:-translate-x-8 md:-translate-x-[calc((100vw-min(100vw,72rem))/2)] md:-my-20 md:self-end"
-    : "translate-x-6 sm:translate-x-8 md:translate-x-[calc((100vw-min(100vw,72rem))/2)] md:-my-14 md:self-start";
+    ? "mr-[calc(50%-50vw)] md:mr-0 md:-translate-x-[calc((100vw-min(100vw,72rem))/2)] md:self-end md:-my-20"
+    : "ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] md:ml-0 md:mr-0 md:translate-x-[calc((100vw-min(100vw,72rem))/2)] md:self-start md:-my-14";
 
   return (
     <section
@@ -54,7 +62,7 @@ export default function EditorialSplit({
             <SectionHeading eyebrow={eyebrow} heading={heading} />
             <p className="mt-6 max-w-md text-base leading-relaxed text-vv-ink-dim">{body}</p>
           </div>
-          <PlaceholderMedia label={mediaLabel} aspect="portrait" className={mediaClassName} />
+          <PlaceholderMedia label={mediaLabel} aspect="portrait" bleed className={mediaClassName} />
         </div>
       </div>
     </section>

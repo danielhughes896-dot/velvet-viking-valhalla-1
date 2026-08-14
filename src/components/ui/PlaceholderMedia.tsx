@@ -13,9 +13,13 @@ const aspectClass: Record<NonNullable<PlaceholderMediaProps["aspect"]>, string> 
   wide: "aspect-16/9",
 };
 
-// Deliberately quiet: a hairline bracket frame + small tracked label, not a
-// loud "IMAGE HERE" box. Swapping in a real <Image> later means dropping it
-// into the same aspect-ratio slot — no section redesign required.
+// Deliberately quiet: a small tracked label on a faint tint, not a loud
+// "IMAGE HERE" box. Swapping in a real <Image> later means dropping it into
+// the same slot — no section redesign required. `bleed` drops every "card"
+// signal (radius, outer border, dashed inner marker) for photography meant
+// to read as part of the page canvas rather than a component; the plain
+// (non-bleed) treatment keeps the hairline card frame for contexts that are
+// deliberately framed, like device-mockup screens.
 export default function PlaceholderMedia({
   label,
   aspect = "landscape",
@@ -32,11 +36,13 @@ export default function PlaceholderMedia({
           : { borderWidth: 1, borderStyle: "solid", borderColor: "var(--vv-placeholder-border)" }),
       }}
     >
-      <div
-        className="absolute inset-4 border border-dashed sm:inset-8"
-        style={{ borderColor: "var(--vv-placeholder-border)" }}
-        aria-hidden
-      />
+      {!bleed ? (
+        <div
+          className="absolute inset-4 border border-dashed sm:inset-8"
+          style={{ borderColor: "var(--vv-placeholder-border)" }}
+          aria-hidden
+        />
+      ) : null}
       <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
         <span className="font-head text-[11px] font-medium uppercase tracking-[0.2em] text-vv-ink-faint">
           {label}
