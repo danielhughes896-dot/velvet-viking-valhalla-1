@@ -160,3 +160,16 @@ body {
   color: #2b2317;
   text-shadow: 0 1px 2px rgba(197, 160, 89, 0.4);
 }
+
+/* Hides the scrollbar on the one horizontally-scrollable editorial media
+   strip — a visible scrollbar there reads as a website widget, not an
+   editorial surface. Scrolling itself is untouched; only the OS scrollbar
+   chrome is hidden, in both engines that need their own syntax for it. */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

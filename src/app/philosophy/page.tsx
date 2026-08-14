@@ -13,12 +13,13 @@ export default function PhilosophyPage() {
     <>
       <PageIntro {...pages.philosophy} />
       <section className="theme-light border-t border-vv-line-soft bg-vv-bg">
-        <div className="mx-auto flex max-w-2xl flex-col items-center px-6 py-24 text-center sm:px-8">
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-5 px-6 py-24 text-center sm:px-8">
           <Crest size={80} framed />
-          <p className="mt-8 max-w-md text-base leading-relaxed text-vv-ink-dim">
-            [The full Velvet Viking philosophy — the discipline of becoming capable, and why
-            the work matters more than the claim — will live here as final copy is confirmed.]
-          </p>
+          {pages.philosophy.expanded.map((paragraph) => (
+            <p key={paragraph} className="max-w-md text-base leading-relaxed text-vv-ink-dim">
+              {paragraph}
+            </p>
+          ))}
         </div>
       </section>
     </>
