@@ -92,6 +92,16 @@ export const earnYourPlace = {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
     alt: "[ATHLETE / TRAINING PHOTOGRAPH — placeholder]",
   },
+  // Slots for a future horizontal gallery of training moments — "the work
+  // you return to, again and again" reads more naturally as several images
+  // than one. Each is a placeholder position, not a real photograph; swap
+  // labels for real alt text/src when photography exists, no layout change
+  // required.
+  gallery: [
+    { placeholder: "[TRAINING MOMENT]", alt: "[TRAINING MOMENT — placeholder]", aspect: "portrait" },
+    { placeholder: "[ATHLETE DETAIL]", alt: "[ATHLETE DETAIL — placeholder]", aspect: "square" },
+    { placeholder: "[ENVIRONMENT]", alt: "[ENVIRONMENT — placeholder]", aspect: "landscape" },
+  ],
 } as const;
 
 export const futureWorld = {
@@ -109,10 +119,13 @@ export const finalCta = {
 
 export const footer = {
   tagline: "Earn Your Place.",
-  // Nullable on purpose — no real accounts exist yet. Add the URL here when
-  // one goes live; SocialLinks renders that single platform automatically,
-  // with no other code change required. Leave a platform null indefinitely
-  // if it's never used — it simply never renders.
+  // Nullable on purpose — no real accounts exist yet. All four platforms
+  // are always visually present (SocialLinks renders an inactive mark for
+  // a null URL, not nothing), so the row's design can be finished ahead of
+  // the accounts existing. Add a URL here when one goes live; that single
+  // platform becomes a real link automatically, no other code change
+  // required. Leave a platform null indefinitely if it's never used — it
+  // stays visible but inactive, never a fake link.
   social: {
     instagram: null as string | null,
     strava: null as string | null,

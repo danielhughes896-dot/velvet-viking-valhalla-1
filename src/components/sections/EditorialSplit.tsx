@@ -1,6 +1,12 @@
 import SectionHeading from "@/components/ui/SectionHeading";
 import PlaceholderMedia from "@/components/ui/PlaceholderMedia";
 
+type MediaItem = {
+  placeholder: string;
+  alt: string;
+  aspect: "landscape" | "portrait" | "square" | "wide";
+};
+
 type EditorialSplitProps = {
   eyebrow?: string;
   heading: string | readonly string[];
@@ -9,6 +15,18 @@ type EditorialSplitProps = {
   mediaAlt: string;
   reverse?: boolean;
   theme?: "dark" | "light";
+  /** When provided, renders a horizontally scrollable strip of media slots
+   * instead of a single image — the one deliberate WedMuse-inspired moment
+   * on the page. Everything else about the section (alignment, breakout,
+   * heading, body) is unchanged; only what fills the media column differs. */
+  galleryItems?: readonly MediaItem[];
+};
+
+const STRIP_WIDTHS: Record<MediaItem["aspect"], string> = {
+  portrait: "w-[72%] sm:w-[52%] md:w-[34%]",
+  square: "w-[58%] sm:w-[40%] md:w-[26%]",
+  landscape: "w-[72%] sm:w-[52%] md:w-[34%]",
+  wide: "w-[85%] sm:w-[60%] md:w-[40%]",
 };
 
 // Photography breaks out of the content grid; the text column stays put in
@@ -41,6 +59,7 @@ export default function EditorialSplit({
   mediaLabel,
   reverse = false,
   theme = "dark",
+  galleryItems,
 }: EditorialSplitProps) {
   const mediaClassName = reverse
     ? "mr-[calc(50%-50vw)] md:mr-0 md:-translate-x-[calc((100vw-min(100vw,72rem))/2)] md:self-end md:-my-20"
@@ -62,7 +81,32 @@ export default function EditorialSplit({
             <SectionHeading eyebrow={eyebrow} heading={heading} />
             <p className="mt-6 max-w-md text-base leading-relaxed text-vv-ink-dim">{body}</p>
           </div>
-          <PlaceholderMedia label={mediaLabel} aspect="portrait" bleed className={mediaClassName} />
+
+          {galleryItems && galleryItems.length > 0 ? (
+            <div className={mediaClassName}>
+              {/* Native scroll + snap, not a carousel: no JS, no dots, no
+                  arrows, no autoplay. tabIndex makes it keyboard-operable
+                  (arrow keys scroll a focused overflow container) since
+                  nothing inside it is itself focusable. */}
+              <div
+                tabIndex={0}
+                aria-label="Training photography — scroll to preview more"
+                className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain"
+              >
+                {galleryItems.map((item) => (
+                  <PlaceholderMedia
+                    key={item.placeholder}
+                    label={item.placeholder}
+                    aspect={item.aspect}
+                    bleed
+                    className={`shrink-0 snap-start ${STRIP_WIDTHS[item.aspect]}`}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <PlaceholderMedia label={mediaLabel} aspect="portrait" bleed className={mediaClassName} />
+          )}
         </div>
       </div>
     </section>

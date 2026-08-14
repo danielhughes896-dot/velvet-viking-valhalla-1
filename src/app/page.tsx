@@ -35,6 +35,7 @@ export default function Home() {
         body={earnYourPlace.body}
         mediaLabel={earnYourPlace.media.placeholder}
         mediaAlt={earnYourPlace.media.alt}
+        galleryItems={earnYourPlace.gallery}
         reverse
       />
 
