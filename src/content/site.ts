@@ -26,7 +26,7 @@ export const nav = {
 export const hero = {
   eyebrow: "Velvet Viking",
   heading: ["Valhalla Awaits.", "Earn Your Place."],
-  sub: "Adaptive endurance coaching built around your fitness, your training and your progression.",
+  sub: "Endurance coaching that learns from your training and adapts with you.",
   cta: { label: "Explore Valhalla", href: "/valhalla" },
   media: {
     placeholder: "[HERO PHOTOGRAPH]",
@@ -36,8 +36,8 @@ export const hero = {
 
 export const brandStory = {
   eyebrow: "Velvet Viking",
-  heading: "The Right Work, Repeated.",
-  body: "[VELVET VIKING BRAND STATEMENT — the philosophy behind the name: precision and discipline alongside resilience and effort. Final copy to be confirmed.]",
+  heading: ["Performance isn't given.", "It's built."],
+  body: "Progress comes from doing the right work consistently — knowing when to push, when to adapt and when to recover.",
   media: {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
     alt: "[ATHLETE / TRAINING PHOTOGRAPH — placeholder]",
@@ -47,13 +47,9 @@ export const brandStory = {
 export const valhallaProduct = {
   eyebrow: "The Flagship",
   heading: "Valhalla",
-  sub: "Intelligent endurance coaching by Velvet Viking.",
-  body: "[VALHALLA PRODUCT DESCRIPTION — training built around the athlete, interpreted rather than simply logged. Final copy to be confirmed.]",
-  points: [
-    "[Training built around the athlete]",
-    "[Intelligent, ongoing adaptation]",
-    "[Coaching interpretation, not raw statistics]",
-  ],
+  sub: "Endurance coaching that responds to the athlete, not just the plan.",
+  body: "Valhalla doesn't just give you a training plan. It learns from what you actually do, interprets what matters and helps decide what comes next.",
+  points: ["Training built around you", "Adaptation with purpose", "Coaching, not just data"],
   cta: { label: "Explore Valhalla", href: "/valhalla" },
   screenshots: {
     mobile: {
@@ -78,7 +74,7 @@ export const fullWidthPhoto = {
 export const earnYourPlace = {
   eyebrow: "Velvet Viking",
   heading: "Earn Your Place.",
-  body: "[EARN YOUR PLACE — a short supporting statement on process over identity. Final copy to be confirmed.]",
+  body: "Not through one perfect session. Through the work you return to — intelligently, consistently, and with purpose.",
   media: {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
     alt: "[ATHLETE / TRAINING PHOTOGRAPH — placeholder]",
@@ -87,8 +83,8 @@ export const earnYourPlace = {
 
 export const futureWorld = {
   eyebrow: "Beyond Valhalla",
-  heading: "A world, not a single product.",
-  body: "The same philosophy extends beyond Valhalla — performance, apparel, training and community are natural expressions of it, each arriving only as it's genuinely ready.",
+  heading: ["One philosophy.", "Different expressions."],
+  body: "Velvet Viking begins with Valhalla, but it isn't defined by a single product. The same standards of purpose, performance and refinement will shape everything that carries the name.",
   categories: ["Performance", "Apparel", "Training", "Community"],
 } as const;
 
@@ -135,12 +131,12 @@ export const pages = {
     eyebrow: "Velvet Viking",
     heading: "Earn Your Place.",
     sub: "The philosophy behind the brand.",
-    body: "[This page will hold the complete Velvet Viking philosophy — the discipline of becoming capable, and why progress is earned rather than declared. Placeholder foundation only.]",
+    body: "[This page will hold the complete Velvet Viking philosophy — the discipline of becoming capable, and why the work matters more than the claim. Placeholder foundation only.]",
   },
   about: {
     eyebrow: "Velvet Viking",
     heading: "About",
-    sub: "A master brand for performance, built with intent.",
+    sub: "A performance brand, built with intent.",
     body: "[This page will hold Velvet Viking's genuine story, purpose and approach as it is confirmed. No history, team or claims are fabricated here.]",
   },
 } as const;

@@ -18,7 +18,24 @@ export default function Hero() {
       />
 
       <div className="relative mx-auto flex min-h-[86vh] max-w-4xl flex-col items-center justify-center px-6 py-28 text-center sm:px-8">
-        <Crest size={112} />
+        <div className="relative">
+          {/* The crest's own canvas is pure black, and the radial wash above
+              is lightest exactly where the crest sits — so without this, the
+              crest reads as a flat rectangle dropped on top of the section.
+              This soft, edge-less patch darkens the immediate area back
+              toward black first, so the crest settles into the composition
+              rather than sitting on it. Not a frame/card — no border, no
+              hard edge, invisible at rest. */}
+          <div
+            className="pointer-events-none absolute inset-0 -z-10"
+            style={{
+              transform: "scale(2.1)",
+              background: "radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 68%)",
+            }}
+            aria-hidden
+          />
+          <Crest size={136} />
+        </div>
 
         <p className="mt-8 font-head text-xs font-semibold uppercase tracking-[0.32em] text-vv-bronze-text">
           {hero.eyebrow}

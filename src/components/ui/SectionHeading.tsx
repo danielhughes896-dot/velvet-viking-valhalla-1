@@ -1,6 +1,8 @@
 type SectionHeadingProps = {
   eyebrow?: string;
-  heading: string;
+  /** A single line, or multiple lines rendered with <br /> between them
+   * (matching the hero's own two-line pattern). */
+  heading: string | readonly string[];
   align?: "left" | "center";
   className?: string;
 };
@@ -11,6 +13,8 @@ export default function SectionHeading({
   align = "left",
   className = "",
 }: SectionHeadingProps) {
+  const lines = Array.isArray(heading) ? heading : [heading];
+
   return (
     <div className={`${align === "center" ? "text-center" : "text-left"} ${className}`}>
       {eyebrow ? (
@@ -19,7 +23,12 @@ export default function SectionHeading({
         </p>
       ) : null}
       <h2 className="mt-3 font-display text-3xl font-semibold uppercase tracking-[0.02em] text-vv-ink sm:text-4xl md:text-5xl">
-        {heading}
+        {lines.map((line, i) => (
+          <span key={line}>
+            {i > 0 ? <br /> : null}
+            {line}
+          </span>
+        ))}
       </h2>
     </div>
   );

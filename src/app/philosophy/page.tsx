@@ -17,7 +17,7 @@ export default function PhilosophyPage() {
           <Crest size={80} framed />
           <p className="mt-8 max-w-md text-base leading-relaxed text-vv-ink-dim">
             [The full Velvet Viking philosophy — the discipline of becoming capable, and why
-            progress is earned — will live here as final copy is confirmed.]
+            the work matters more than the claim — will live here as final copy is confirmed.]
           </p>
         </div>
       </section>

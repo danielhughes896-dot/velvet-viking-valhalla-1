@@ -3,7 +3,7 @@ import PlaceholderMedia from "@/components/ui/PlaceholderMedia";
 
 type EditorialSplitProps = {
   eyebrow?: string;
-  heading: string;
+  heading: string | readonly string[];
   body: string;
   mediaLabel: string;
   mediaAlt: string;
