@@ -17,7 +17,10 @@ export default function FutureWorld() {
           {futureWorld.body}
         </p>
 
-        <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+        <p className="mt-10 font-head text-[11px] font-medium uppercase tracking-[0.2em] text-vv-ink-faint/70">
+          {futureWorld.categoriesKicker}
+        </p>
+        <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
           {futureWorld.categories.map((category) => (
             <li
               key={category}

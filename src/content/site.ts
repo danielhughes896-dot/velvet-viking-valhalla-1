@@ -26,7 +26,7 @@ export const nav = {
 export const hero = {
   eyebrow: "Velvet Viking",
   heading: ["Valhalla Awaits.", "Earn Your Place."],
-  sub: "Endurance coaching that learns from your training and adapts with you.",
+  sub: "Endurance coaching that pays attention — to what you actually do, not just what was planned.",
   cta: { label: "Explore Valhalla", href: "/valhalla" },
   media: {
     placeholder: "[HERO PHOTOGRAPH]",
@@ -37,7 +37,7 @@ export const hero = {
 export const brandStory = {
   eyebrow: "Velvet Viking",
   heading: ["Performance isn't given.", "It's built."],
-  body: "Progress comes from doing the right work consistently — knowing when to push, when to adapt and when to recover.",
+  body: "Not punishment. Not luck. Progress comes from showing up, doing the right work, and knowing when to push and when to recover.",
   media: {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
     alt: "[ATHLETE / TRAINING PHOTOGRAPH — placeholder]",
@@ -47,20 +47,20 @@ export const brandStory = {
 export const valhallaProduct = {
   eyebrow: "The Flagship",
   heading: "Valhalla",
-  sub: "Endurance coaching that responds to the athlete, not just the plan.",
-  body: "Valhalla doesn't just give you a training plan. It learns from what you actually do, interprets what matters and helps decide what comes next.",
+  sub: "Endurance coaching that reads your training, not just your calendar.",
+  body: "A training plan shouldn't go stale the moment real training starts. Valhalla pays attention to what you actually do, and helps you understand what that means for what comes next.",
   points: [
     {
       heading: "Training built around you",
-      body: "Your fitness, training zones, race target and available days shape the plan from the start.",
+      body: "Your fitness, training zones, race target and available days shape the plan from day one — down to the paces and effort that are actually right for you.",
     },
     {
       heading: "Adaptation with purpose",
-      body: "Completed sessions feed back into the plan, so adaptation is based on what actually happened — not just what was scheduled.",
+      body: "When training doesn't go to plan, Valhalla proposes the adjustment that makes sense — and you decide whether to take it. Adaptation is based on what actually happened, not just what was scheduled.",
     },
     {
       heading: "Coaching, not just data",
-      body: "Pace, heart rate, effort and execution are interpreted together, so the numbers lead to coaching rather than another dashboard.",
+      body: "Pace, heart rate, effort and execution are read together — not as separate charts, but as one picture of how a session actually went.",
     },
   ],
   cta: { label: "Explore Valhalla", href: "/valhalla" },
@@ -108,6 +108,10 @@ export const futureWorld = {
   eyebrow: "Beyond Valhalla",
   heading: ["One philosophy.", "Different expressions."],
   body: "Velvet Viking begins with Valhalla, but it isn't defined by a single product. The same standards of purpose, performance and refinement will shape everything that carries the name.",
+  // Deliberately framed as direction, not a product list — none of these
+  // exist yet. The kicker label above the words in FutureWorld.tsx exists
+  // specifically so this can't be misread as an active business structure.
+  categoriesKicker: "Where the philosophy could go next",
   categories: ["Performance", "Apparel", "Training", "Community"],
 } as const;
 
@@ -142,21 +146,41 @@ export const footer = {
 
 export const pages = {
   valhalla: {
-    eyebrow: "The Flagship",
-    heading: "Valhalla",
-    sub: "Intelligent endurance coaching by Velvet Viking.",
-    body: "[This page will hold the full Valhalla product story — real product screenshots, concise explanations of how training is built and adapted, and a path in. Placeholder foundation only.]",
+    eyebrow: valhallaProduct.eyebrow,
+    heading: valhallaProduct.heading,
+    sub: valhallaProduct.sub,
+    body: "A closer look at how Valhalla actually works.",
+    // Real product screenshots will eventually sit alongside this copy —
+    // see the device mockups below it on this page. Nothing here describes
+    // functionality beyond what the app genuinely does today.
+    expanded: [
+      "Valhalla builds your plan from what's true about you — your current fitness, a real benchmark performance, your race target and the days you can actually train. From there, it works out the paces and effort levels that make sense for your training, not generic ones.",
+      "Once training starts, Valhalla pays attention. Every session is compared with what was planned — pace, heart rate, effort, execution — and when reality and the plan diverge, Valhalla proposes a specific adjustment to what comes next. You decide whether to take it.",
+      "It isn't a dashboard of your data. It's a coach that's actually looking at it.",
+    ],
   },
   philosophy: {
     eyebrow: "Velvet Viking",
     heading: "Earn Your Place.",
     sub: "The philosophy behind the brand.",
-    body: "[This page will hold the complete Velvet Viking philosophy — the discipline of becoming capable, and why the work matters more than the claim. Placeholder foundation only.]",
+    body: "Earn Your Place is not a slogan. It's the standard everything else is built on.",
+    expanded: [
+      "Earn Your Place isn't about suffering for its own sake, and it isn't about proving something to anyone else. It's about the work itself — showing up, doing the right session on the right day, and letting progress come from that, rather than from a single perfect effort.",
+      "That means knowing when to push. It also means knowing when to hold back, because recovery is part of the work, not a break from it. Consistency, applied intelligently, beats intensity applied carelessly — every time.",
+      "Valhalla exists to support that: to help you do the right work, understand what it's telling you, and keep coming back to it.",
+    ],
   },
   about: {
     eyebrow: "Velvet Viking",
     heading: "About",
     sub: "A performance brand, built with intent.",
-    body: "[This page will hold Velvet Viking's genuine story, purpose and approach as it is confirmed. No history, team or claims are fabricated here.]",
+    body: "Velvet Viking is a performance brand built around one idea: that real progress comes from consistent, intelligent work — not shortcuts, not hype, and not performance for its own sake.",
+    // No founder/origin story: the repository holds no factual basis for
+    // one, and inventing personal history is explicitly out of scope for
+    // this pass. This page states only what's actually true.
+    expanded: [
+      "Valhalla, an endurance coaching product, is the first expression of that idea. The same standards — purpose, performance, refinement — will apply to whatever Velvet Viking builds next.",
+    ],
+    contactNote: "Contact details will be published here soon.",
   },
 } as const;
