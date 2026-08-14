@@ -48,9 +48,13 @@ crest asset — the only crest file in this repo, referenced everywhere
 (hero, header, footer, favicon, Open Graph/social imagery) through one
 component, `src/components/ui/Crest.tsx`. Reproduce it as-is per brand
 guidance — composition, wording and the gold/navy identity are not to be
-altered. Only a raster master exists today; because there's a single
-reference point, a professionally mastered SVG can replace it later as a
-one-line change, without a page redesign.
+altered. The PNG has a transparent background (only the circular gold/navy
+crest and the "EARN YOUR PLACE" wordmark are opaque) so it can be dropped
+onto light or dark sections, merchandise, and third-party surfaces without
+a black background box; keep any future master in that transparent form.
+Only a raster master exists today; because there's a single reference
+point, a professionally mastered SVG can replace it later as a one-line
+change, without a page redesign.
 
 **Canonical wording** (do not add to or remove from this without an explicit
 brand decision):
