@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-236 -236 472 472">
+  <title>Velvet Viking mark</title>
+  <defs>
+  <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="0" y1="-220" x2="0" y2="220">
+    <stop offset="0%" stop-color="#fbe7a1"/>
+    <stop offset="40%" stop-color="#e8c15a"/>
+    <stop offset="100%" stop-color="#946f24"/>
+  </linearGradient>
+  <radialGradient id="navy" gradientUnits="userSpaceOnUse" cx="0" cy="-60" r="230">
+    <stop offset="0%" stop-color="#132038"/>
+    <stop offset="100%" stop-color="#070f1c"/>
+  </radialGradient>
+</defs>
+  <circle cx="0" cy="0" r="214.0" fill="url(#navy)"/>
+  <circle cx="0" cy="0" r="214.0" fill="none" stroke="url(#gold)" stroke-width="12"/>
+  <g><line x1="0.0" y1="-30.0" x2="0.0" y2="-122.0" stroke="url(#gold)" stroke-width="15" stroke-linecap="round"/>
+<line x1="0.0" y1="-92.0" x2="-22.0" y2="-114.0" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="0.0" y1="-92.0" x2="22.0" y2="-114.0" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="21.2" y1="-21.2" x2="86.3" y2="-86.3" stroke="url(#gold)" stroke-width="15" stroke-linecap="round"/>
+<line x1="65.1" y1="-65.1" x2="65.1" y2="-96.2" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="65.1" y1="-65.1" x2="96.2" y2="-65.1" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="30.0" y1="-0.0" x2="122.0" y2="-0.0" stroke="url(#gold)" stroke-width="15" stroke-linecap="round"/>
+<line x1="92.0" y1="-0.0" x2="114.0" y2="-22.0" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="92.0" y1="-0.0" x2="114.0" y2="22.0" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="21.2" y1="21.2" x2="86.3" y2="86.3" stroke="url(#gold)" stroke-width="15" stroke-linecap="round"/>
+<line x1="65.1" y1="65.1" x2="96.2" y2="65.1" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="65.1" y1="65.1" x2="65.1" y2="96.2" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="0.0" y1="30.0" x2="0.0" y2="122.0" stroke="url(#gold)" stroke-width="15" stroke-linecap="round"/>
+<line x1="0.0" y1="92.0" x2="22.0" y2="114.0" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="0.0" y1="92.0" x2="-22.0" y2="114.0" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="-21.2" y1="21.2" x2="-86.3" y2="86.3" stroke="url(#gold)" stroke-width="15" stroke-linecap="round"/>
+<line x1="-65.1" y1="65.1" x2="-65.1" y2="96.2" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="-65.1" y1="65.1" x2="-96.2" y2="65.1" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="-30.0" y1="0.0" x2="-122.0" y2="0.0" stroke="url(#gold)" stroke-width="15" stroke-linecap="round"/>
+<line x1="-92.0" y1="0.0" x2="-114.0" y2="22.0" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="-92.0" y1="0.0" x2="-114.0" y2="-22.0" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="-21.2" y1="-21.2" x2="-86.3" y2="-86.3" stroke="url(#gold)" stroke-width="15" stroke-linecap="round"/>
+<line x1="-65.1" y1="-65.1" x2="-96.2" y2="-65.1" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<line x1="-65.1" y1="-65.1" x2="-65.1" y2="-96.2" stroke="url(#gold)" stroke-width="12.0" stroke-linecap="round"/>
+<circle cx="0" cy="0" r="30.0" fill="none" stroke="url(#gold)" stroke-width="12"/>
+<circle cx="0" cy="0" r="10" fill="url(#gold)"/></g>
+  <circle cx="0" cy="0" r="150.0" fill="none" stroke="url(#gold)" stroke-width="16"/>
+  <g transform="translate(-47.7,-58)">
+    <path d="M 22.71,-0.00 L 22.71,-5.34 L 38.30,-7.34 L 38.30,-90.45 L 34.57,-90.45 L 26.80,-90.35 L 15.01,-89.63 L 10.99,-88.99 L 9.00,-70.76 L 2.34,-70.76 L 2.34,-98.23 L 97.78,-98.23 L 97.78,-70.76 L 91.03,-70.76 L 89.06,-88.99 L 85.28,-89.57 L 73.27,-90.22 L 65.04,-90.30 L 61.45,-90.30 L 61.45,-7.34 L 77.06,-5.34 L 77.06,-0.00 L 22.71,-0.00 Z" fill="url(#gold)"/>
+  </g>
+</svg>

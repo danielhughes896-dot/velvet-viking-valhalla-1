@@ -56,6 +56,17 @@ Only a raster master exists today; because there's a single reference
 point, a professionally mastered SVG can replace it later as a one-line
 change, without a page redesign.
 
+`public/brand/experimental-svg/` holds a first-pass genuine vector
+reconstruction (`velvet-viking-crest-master.svg`, full detail; and
+`velvet-viking-mark-simple.svg`, a reduced mark for favicon/small-UI sizes
+where the full crest turns to mush below ~96px). Both are real paths/strokes
+with gradients, not a traced or embedded bitmap. **Neither is wired into
+the site and neither should be treated as canonical** — side-by-side against
+the PNG they read as a clean, flatter, simplified interpretation, not a
+faithful reproduction of the photoreal metal/engraving in the raster
+master. Keep the PNG as the production asset until a design-approved SVG
+replaces this folder's contents.
+
 **Canonical wording** (do not add to or remove from this without an explicit
 brand decision):
 
