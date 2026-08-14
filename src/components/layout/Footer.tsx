@@ -1,46 +1,41 @@
 import Link from "next/link";
+import SocialLinks from "@/components/layout/SocialLinks";
 import { footer } from "@/content/site";
 
-// No crest here by design — see FinalCta.tsx for the same rule. The
-// wordmark alone carries identity in the footer.
+// A quiet close, not a site directory: no repeat of the primary nav
+// (Philosophy/About/Valhalla are one click away in the header already), and
+// no fused "Valhalla Awaits. Earn Your Place." — that pairing is the hero's
+// alone. "Earn Your Place." here is Velvet Viking's own line. No top border
+// either: the final CTA above should settle into this rather than hit a
+// hard edge — the footer's much quieter type/density already reads as a
+// distinct, calmer close without needing a line to announce it.
 export default function Footer() {
   return (
-    <footer className="border-t border-vv-line-soft bg-vv-bg">
-      <div className="mx-auto max-w-6xl px-6 py-16 sm:px-8">
-        <div className="grid gap-12 sm:grid-cols-[1.2fr_1fr_1fr_1fr]">
-          <div>
-            <span className="font-display text-metallic text-sm font-bold uppercase tracking-[0.2em]">
-              Velvet Viking
-            </span>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-vv-ink-faint">
-              Valhalla Awaits. Earn Your Place.
-            </p>
-          </div>
+    <footer className="bg-vv-bg">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 px-6 py-16 text-center sm:px-8">
+        <div>
+          <span className="font-display text-metallic text-sm font-bold uppercase tracking-[0.2em]">
+            Velvet Viking
+          </span>
+          <p className="mt-3 text-sm text-vv-ink-faint">{footer.tagline}</p>
+        </div>
 
-          {footer.columns.map((col) => (
-            <div key={col.heading}>
-              <h3 className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink-faint">
-                {col.heading}
-              </h3>
-              <ul className="mt-4 space-y-3">
-                {col.links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-vv-ink-dim transition-colors hover:text-vv-ink"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        <SocialLinks />
+
+        <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          {footer.legalLinks.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className="font-head text-xs font-medium uppercase tracking-[0.15em] text-vv-ink-faint transition-colors hover:text-vv-ink"
+              >
+                {link.label}
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        <div className="mt-16 border-t border-vv-line-soft pt-8">
-          <p className="text-xs text-vv-ink-faint">{footer.legalLine}</p>
-        </div>
+        <p className="text-xs text-vv-ink-faint">{footer.legalLine}</p>
       </div>
     </footer>
   );

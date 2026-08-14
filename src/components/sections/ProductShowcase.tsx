@@ -34,13 +34,13 @@ export default function ProductShowcase() {
             {valhallaProduct.body}
           </p>
 
-          <ul className="mt-10 grid gap-6 text-center sm:grid-cols-3">
+          <ul className="mt-10 grid gap-8 text-center sm:grid-cols-3">
             {valhallaProduct.points.map((point) => (
-              <li
-                key={point}
-                className="font-head text-[13px] font-medium uppercase tracking-[0.1em] text-vv-ink-faint"
-              >
-                {point}
+              <li key={point.heading}>
+                <p className="font-head text-sm font-medium uppercase tracking-[0.1em] text-vv-ink-dim">
+                  {point.heading}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-vv-ink-faint">{point.body}</p>
               </li>
             ))}
           </ul>

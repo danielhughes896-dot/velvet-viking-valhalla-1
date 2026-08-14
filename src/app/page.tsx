@@ -38,12 +38,8 @@ export default function Home() {
         reverse
       />
 
-      <div className="border-t border-vv-line-soft">
-        <FutureWorld />
-        <div className="border-t border-vv-line-soft">
-          <FinalCta />
-        </div>
-      </div>
+      <FutureWorld />
+      <FinalCta />
     </>
   );
 }

@@ -22,7 +22,11 @@
   --vv-line: #3b2e20;
   --vv-line-soft: #2a2015;
   --vv-bronze: #c0923f;
-  --vv-bronze-2: #9c7433;
+  /* Lifted ~1% lighter than the app's own #9c7433 (same hue/saturation) —
+     the previous value put bronze-ink button text at 4.38:1 on the
+     gradient's dark end, failing WCAG AA for 13px text (needs 4.5:1).
+     #a17735 reaches 4.60:1 with no visible change to the gold character. */
+  --vv-bronze-2: #a17735;
   --vv-gold: #e3b15a;
   --vv-bronze-ink: #1a1204;
   --vv-gold-text: var(--vv-gold);

@@ -49,7 +49,20 @@ export const valhallaProduct = {
   heading: "Valhalla",
   sub: "Endurance coaching that responds to the athlete, not just the plan.",
   body: "Valhalla doesn't just give you a training plan. It learns from what you actually do, interprets what matters and helps decide what comes next.",
-  points: ["Training built around you", "Adaptation with purpose", "Coaching, not just data"],
+  points: [
+    {
+      heading: "Training built around you",
+      body: "Your fitness, training zones, race target and available days shape the plan from the start.",
+    },
+    {
+      heading: "Adaptation with purpose",
+      body: "Completed sessions feed back into the plan, so adaptation is based on what actually happened — not just what was scheduled.",
+    },
+    {
+      heading: "Coaching, not just data",
+      body: "Pace, heart rate, effort and execution are interpreted together, so the numbers lead to coaching rather than another dashboard.",
+    },
+  ],
   cta: { label: "Explore Valhalla", href: "/valhalla" },
   screenshots: {
     mobile: {
@@ -74,7 +87,7 @@ export const fullWidthPhoto = {
 export const earnYourPlace = {
   eyebrow: "Velvet Viking",
   heading: "Earn Your Place.",
-  body: "Not through one perfect session. Through the work you return to — intelligently, consistently, and with purpose.",
+  body: "Not through one perfect session. Through the work you return to, again and again, with purpose.",
   media: {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
     alt: "[ATHLETE / TRAINING PHOTOGRAPH — placeholder]",
@@ -89,34 +102,28 @@ export const futureWorld = {
 } as const;
 
 export const finalCta = {
-  heading: ["Valhalla Awaits.", "Earn Your Place."],
+  heading: "Valhalla Awaits.",
+  sub: "Training doesn't stand still. Neither should your coaching.",
   cta: { label: "Explore Valhalla", href: "/valhalla" },
 } as const;
 
 export const footer = {
-  columns: [
-    {
-      heading: "Velvet Viking",
-      links: [
-        { label: "Philosophy", href: "/philosophy" },
-        { label: "About", href: "/about" },
-      ],
-    },
-    {
-      heading: "Valhalla",
-      links: [{ label: "Overview", href: "/valhalla" }],
-    },
-    {
-      heading: "Company",
-      links: [
-        { label: "Contact", href: "/about#contact" },
-        { label: "Privacy", href: "/privacy" },
-        { label: "Terms", href: "/terms" },
-        { label: "Cookies", href: "/cookies" },
-      ],
-    },
+  tagline: "Earn Your Place.",
+  // Nullable on purpose — no real accounts exist yet. Add the URL here when
+  // one goes live; SocialLinks renders that single platform automatically,
+  // with no other code change required. Leave a platform null indefinitely
+  // if it's never used — it simply never renders.
+  social: {
+    instagram: null as string | null,
+    strava: null as string | null,
+    youtube: null as string | null,
+    tiktok: null as string | null,
+  },
+  legalLinks: [
+    { label: "Privacy", href: "/privacy" },
+    { label: "Terms", href: "/terms" },
+    { label: "Cookies", href: "/cookies" },
   ],
-  social: [] as { label: string; href: string }[],
   legalLine: "© " + new Date().getFullYear().toString() + " Velvet Viking. All rights reserved.",
 } as const;
 
