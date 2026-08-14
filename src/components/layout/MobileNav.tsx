@@ -1,11 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Crest from "@/components/ui/Crest";
 import CtaButton from "@/components/ui/CtaButton";
 import { brand, nav } from "@/content/site";
+
+const subscribeNoop = () => () => {};
+
+// SSR-safe "has this hydrated on the client yet" check, without the extra
+// render a useState+useEffect("mounted") pair would cost — the portal
+// target (document.body) only exists client-side, so the drawer can't
+// render during SSR regardless of `open`.
+function useIsClient() {
+  return useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  );
+}
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -13,9 +27,7 @@ export default function MobileNav() {
   // sizes against the real viewport — as a Header descendant it would
   // instead size against the header bar, because the header's
   // backdrop-blur establishes a containing block for fixed descendants.
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const isClient = useIsClient();
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -41,7 +53,7 @@ export default function MobileNav() {
         />
       </button>
 
-      {open && mounted
+      {open && isClient
         ? createPortal(
             <div className="fixed inset-0 z-40 flex flex-col bg-vv-bg">
               <div className="flex-1 overflow-y-auto px-8 pt-28 pb-10">
