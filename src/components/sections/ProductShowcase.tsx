@@ -16,20 +16,26 @@ export default function ProductShowcase() {
           {valhallaProduct.sub}
         </p>
 
-        <div className="relative mt-16 flex flex-col items-center justify-center gap-6 sm:flex-row sm:items-end">
+        {/* Top-aligned rather than bottom-aligned: the mobile frame is
+            pushed down past the desktop frame's own bottom edge, so it
+            reads as continuing the reveal downward instead of sitting
+            neatly beside it. Ordinary flow (no absolute positioning), so
+            the row's height grows to include the offset and nothing below
+            it needs manual clearance. */}
+        <div className="relative mt-16 flex flex-col items-center justify-center gap-10 sm:flex-row sm:items-start sm:justify-center sm:gap-0">
           <DeviceFrame
             kind="desktop"
             label={valhallaProduct.screenshots.desktop.placeholder}
-            className="sm:-mr-16"
+            className="sm:-mr-20"
           />
           <DeviceFrame
             kind="mobile"
             label={valhallaProduct.screenshots.mobile.placeholder}
-            className="relative"
+            className="relative z-10 sm:mt-20 md:mt-28"
           />
         </div>
 
-        <div className="mx-auto mt-20 max-w-3xl">
+        <div className="mx-auto mt-24 max-w-3xl sm:mt-16">
           <p className="text-center text-base leading-relaxed text-vv-ink-dim">
             {valhallaProduct.body}
           </p>

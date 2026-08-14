@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import PageIntro from "@/components/sections/PageIntro";
-import CtaButton from "@/components/ui/CtaButton";
 import DeviceFrame from "@/components/ui/DeviceFrame";
 import { pages, valhallaProduct } from "@/content/site";
 
@@ -23,10 +22,6 @@ export default function ValhallaPage() {
               className="sm:-mr-16"
             />
             <DeviceFrame kind="mobile" label={valhallaProduct.screenshots.mobile.placeholder} />
-          </div>
-
-          <div className="mt-16 flex justify-center">
-            <CtaButton href="/">Back to Velvet Viking</CtaButton>
           </div>
         </div>
       </section>

@@ -4,10 +4,14 @@ import { futureWorld } from "@/content/site";
 // Deliberately restrained: one editorial statement and an inline list of
 // architecture placeholders — not a card grid. Cards here would read as a
 // SaaS "coming soon" roadmap; none of these categories are real products yet.
+// Bottom padding is intentionally lighter than the top: this section and
+// FinalCta below share one uninterrupted dark background, and together
+// should read as a single closing chapter rather than two stacked centred
+// sections — see FinalCta's matching reduced top padding.
 export default function FutureWorld() {
   return (
     <section className="bg-vv-bg">
-      <div className="mx-auto max-w-3xl px-6 py-24 text-center sm:px-8 sm:py-32">
+      <div className="mx-auto max-w-3xl px-6 pt-24 pb-10 text-center sm:px-8 sm:pt-32 sm:pb-14">
         <SectionHeading eyebrow={futureWorld.eyebrow} heading={futureWorld.heading} align="center" />
         <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-vv-ink-dim">
           {futureWorld.body}
