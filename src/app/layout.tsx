@@ -37,11 +37,11 @@ export const metadata: Metadata = {
     template: "%s — Velvet Viking",
   },
   description:
-    "Velvet Viking is a master brand for intelligent, disciplined performance. Valhalla, its flagship endurance-training system, awaits.",
+    "Adaptive endurance coaching built around your fitness, your training and your progression — Valhalla, by Velvet Viking.",
   openGraph: {
     title: "Velvet Viking",
     description:
-      "Velvet Viking is a master brand for intelligent, disciplined performance. Valhalla, its flagship endurance-training system, awaits.",
+      "Adaptive endurance coaching built around your fitness, your training and your progression — Valhalla, by Velvet Viking.",
     url: siteUrl,
     siteName: "Velvet Viking",
     images: ["/brand/velvet-viking-crest.png"],

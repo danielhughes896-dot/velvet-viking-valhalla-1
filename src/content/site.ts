@@ -20,14 +20,14 @@ export const nav = {
     { label: "Philosophy", href: "/philosophy" },
     { label: "About", href: "/about" },
   ],
-  cta: { label: "Enter Valhalla", href: "/valhalla" },
+  cta: { label: "Explore Valhalla", href: "/valhalla" },
 } as const;
 
 export const hero = {
   eyebrow: "Velvet Viking",
   heading: ["Valhalla Awaits.", "Earn Your Place."],
-  sub: "A master brand for intelligent, disciplined performance — built by Velvet Viking, proven by Valhalla.",
-  cta: { label: "Enter Valhalla", href: "/valhalla" },
+  sub: "Adaptive endurance coaching built around your fitness, your training and your progression.",
+  cta: { label: "Explore Valhalla", href: "/valhalla" },
   media: {
     placeholder: "[HERO PHOTOGRAPH]",
     alt: "[HERO PHOTOGRAPH — athlete in training, environment to be confirmed]",
@@ -36,8 +36,8 @@ export const hero = {
 
 export const brandStory = {
   eyebrow: "Velvet Viking",
-  heading: "Refinement. Earned.",
-  body: "[VELVET VIKING BRAND STATEMENT — the philosophy behind the name: precision and discipline earning their place alongside resilience and effort. Final copy to be confirmed.]",
+  heading: "The Right Work, Repeated.",
+  body: "[VELVET VIKING BRAND STATEMENT — the philosophy behind the name: precision and discipline alongside resilience and effort. Final copy to be confirmed.]",
   media: {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
     alt: "[ATHLETE / TRAINING PHOTOGRAPH — placeholder]",
@@ -72,7 +72,7 @@ export const fullWidthPhoto = {
     placeholder: "[CAMPAIGN PHOTOGRAPH]",
     alt: "[CAMPAIGN PHOTOGRAPH — full-width training/environment moment, placeholder]",
   },
-  caption: "Progress is earned.",
+  caption: "Consistency Compounds.",
 } as const;
 
 export const earnYourPlace = {
@@ -88,13 +88,13 @@ export const earnYourPlace = {
 export const futureWorld = {
   eyebrow: "Beyond Valhalla",
   heading: "A world, not a single product.",
-  body: "Velvet Viking is built to grow beyond Valhalla — into performance, apparel, training and community, as each is genuinely ready.",
+  body: "The same philosophy extends beyond Valhalla — performance, apparel, training and community are natural expressions of it, each arriving only as it's genuinely ready.",
   categories: ["Performance", "Apparel", "Training", "Community"],
 } as const;
 
 export const finalCta = {
   heading: ["Valhalla Awaits.", "Earn Your Place."],
-  cta: { label: "Enter Valhalla", href: "/valhalla" },
+  cta: { label: "Explore Valhalla", href: "/valhalla" },
 } as const;
 
 export const footer = {
