@@ -43,12 +43,29 @@ inside components.
 
 ## Brand crest
 
-`public/brand/crest.png` (and `crest-square.png`) is the approved Velvet
-Viking crest, reproduced as-is per brand guidance — composition, wording and
-the gold/navy identity are not to be altered. Only a raster master exists
-today; the `Crest` component (`src/components/ui/Crest.tsx`) is the single
-place the artwork is referenced, so a professionally mastered SVG can replace
-it later as a one-line change, without a page redesign.
+`public/brand/velvet-viking-crest.png` is the single canonical Velvet Viking
+crest asset — the only crest file in this repo, referenced everywhere
+(hero, header, footer, favicon, Open Graph/social imagery) through one
+component, `src/components/ui/Crest.tsx`. Reproduce it as-is per brand
+guidance — composition, wording and the gold/navy identity are not to be
+altered. Only a raster master exists today; because there's a single
+reference point, a professionally mastered SVG can replace it later as a
+one-line change, without a page redesign.
+
+**Canonical wording** (do not add to or remove from this without an explicit
+brand decision):
+
+```
+VELVET VIKING
+VALHALLA AWAITS
+EARN YOUR PLACE
+```
+
+The master crest does not carry category descriptors such as "RUNNING
+PROGRAMS" — Velvet Viking is the master brand and is not defined in its core
+identity by any one product category. An earlier build of this site
+inherited a "RUNNING PROGRAMS" crest variant from Valhalla 2; that asset is
+retired and must not be reintroduced.
 
 ## Structure
 

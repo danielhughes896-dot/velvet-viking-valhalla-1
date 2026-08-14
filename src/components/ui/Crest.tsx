@@ -1,5 +1,5 @@
 import Image from "next/image";
-import crest from "../../../public/brand/crest.png";
+import crest from "../../../public/brand/velvet-viking-crest.png";
 
 type CrestProps = {
   size?: number;

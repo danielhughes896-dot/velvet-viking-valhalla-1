@@ -44,18 +44,18 @@ export const metadata: Metadata = {
       "Velvet Viking is a master brand for intelligent, disciplined performance. Valhalla, its flagship endurance-training system, awaits.",
     url: siteUrl,
     siteName: "Velvet Viking",
-    images: ["/brand/crest-square.png"],
+    images: ["/brand/velvet-viking-crest.png"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Velvet Viking",
     description: "Valhalla Awaits. Earn Your Place.",
-    images: ["/brand/crest-square.png"],
+    images: ["/brand/velvet-viking-crest.png"],
   },
   icons: {
-    icon: "/brand/crest-square.png",
-    apple: "/brand/crest-square.png",
+    icon: "/brand/velvet-viking-crest.png",
+    apple: "/brand/velvet-viking-crest.png",
   },
 };
 
