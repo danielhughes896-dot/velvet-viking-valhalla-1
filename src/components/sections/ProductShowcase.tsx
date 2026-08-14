@@ -35,7 +35,7 @@ export default function ProductShowcase() {
           />
         </div>
 
-        <div className="mx-auto mt-24 max-w-3xl sm:mt-16">
+        <div className="mx-auto mt-12 max-w-3xl sm:mt-10">
           <p className="text-center text-base leading-relaxed text-vv-ink-dim">
             {valhallaProduct.body}
           </p>
