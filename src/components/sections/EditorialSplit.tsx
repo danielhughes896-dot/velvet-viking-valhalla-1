@@ -20,6 +20,11 @@ type EditorialSplitProps = {
    * on the page. Everything else about the section (alignment, breakout,
    * heading, body) is unchanged; only what fills the media column differs. */
   galleryItems?: readonly MediaItem[];
+  /** PROTOTYPE: appended to the outer <section> className. Used exactly
+   * once, on the Earn Your Place instance in page.tsx, to pull this
+   * section up over FullWidthPhoto's pinned sticky media — see that
+   * component for the full scroll-transition mechanics. */
+  outerClassName?: string;
 };
 
 const STRIP_WIDTHS: Record<MediaItem["aspect"], string> = {
@@ -60,6 +65,7 @@ export default function EditorialSplit({
   reverse = false,
   theme = "dark",
   galleryItems,
+  outerClassName = "",
 }: EditorialSplitProps) {
   const mediaClassName = reverse
     ? "mr-[calc(50%-50vw)] md:mr-0 md:-translate-x-[calc((100vw-min(100vw,72rem))/2)] md:self-end md:-my-20"
@@ -67,7 +73,7 @@ export default function EditorialSplit({
 
   return (
     <section
-      className={`overflow-hidden ${theme === "light" ? "theme-light bg-vv-bg" : "bg-vv-bg"}`}
+      className={`overflow-hidden ${theme === "light" ? "theme-light bg-vv-bg" : "bg-vv-bg"} ${outerClassName}`}
     >
       <div className="mx-auto max-w-6xl px-6 py-24 sm:px-8 sm:py-32">
         <div

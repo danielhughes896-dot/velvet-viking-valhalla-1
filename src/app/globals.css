@@ -1,71 +1,97 @@
 @import "tailwindcss";
 
 /*
-  Design tokens are extracted verbatim from the live Valhalla 2 app
-  (velvet-viking-valhalla-2 / velvet-viking-valhalla.html :root and
-  [data-theme="light"] blocks) so the website and the product share one
-  visual family. Do not invent new colors here — extend this file only by
-  pulling further values from the app's own token set.
+  PROTOTYPE PALETTE — v2, "warm ivory first". Refinement round 2 flips the
+  site's dominant identity: :root is now the warm-ivory/near-black system
+  (previously the override class, .theme-light); a small number of
+  sections stay deliberately dark via the new `.theme-dark` override,
+  where a dark section genuinely serves the scroll narrative (the pinned
+  campaign photo) or preserves the master-brand/product visual-language
+  split (ProductShowcase and the /valhalla screenshot block, which echo
+  Valhalla's own dark product UI rather than the editorial ivory world).
+  Gold is a restrained accent only — rules, small tracked labels, and the
+  CTA fill — never a dominant atmosphere. Every value below is
+  contrast-checked (WCAG AA); see report for the computed ratios. Not yet
+  reconciled with the live Valhalla app's own token set; that
+  reconciliation is a decision for the approval step, not this prototype.
 
-  The website has no user-facing theme toggle. --dark is the default,
-  page-wide identity; .theme-light is applied per <section> to compose an
-  art-directed dark/light rhythm down the page, never left to the visitor.
+  The website has no user-facing theme toggle. Ivory (:root) is the
+  default, page-wide identity; .theme-dark is applied per <section> for
+  the few deliberately dark moments; .theme-light is kept (identical to
+  :root) purely so existing theme="light" call sites don't need to change.
 */
 :root {
-  --vv-bg: #15110d;
-  --vv-bg-2: #1d1712;
-  --vv-bg-3: #261d14;
-  --vv-bg-4: #2e2318;
-  --vv-ink: #ede3d0;
-  --vv-ink-dim: #b3a48c;
-  --vv-ink-faint: #948970;
-  --vv-line: #3b2e20;
-  --vv-line-soft: #2a2015;
-  --vv-bronze: #c0923f;
-  /* Lifted ~1% lighter than the app's own #9c7433 (same hue/saturation) —
-     the previous value put bronze-ink button text at 4.38:1 on the
-     gradient's dark end, failing WCAG AA for 13px text (needs 4.5:1).
-     #a17735 reaches 4.60:1 with no visible change to the gold character. */
-  --vv-bronze-2: #a17735;
-  --vv-gold: #e3b15a;
-  --vv-bronze-ink: #1a1204;
-  --vv-gold-text: var(--vv-gold);
-  --vv-bronze-text: var(--vv-bronze);
-  --vv-gold-bright: #f5d061;
-  --vv-gold-mid: #c5a059;
+  --vv-bg: #f4f1ea;
+  --vv-bg-2: #fbfaf7;
+  --vv-bg-3: #ebe7dc;
+  --vv-bg-4: #e2ddcd;
+  --vv-ink: #171717;
+  --vv-ink-dim: #55524c;
+  --vv-ink-faint: #6b655c;
+  --vv-line: #ddd7c8;
+  --vv-line-soft: #e8e3d5;
+  --vv-bronze: #c9a35a;
+  --vv-bronze-2: #ad8a4c;
+  --vv-gold: #c9a35a;
+  --vv-bronze-ink: #191204;
+  --vv-gold-text: #7a5c1e;
+  --vv-bronze-text: #7a5c1e;
+  --vv-gold-bright: #e9c878;
+  --vv-gold-mid: #c9a35a;
   --vv-gold-deep: #8a6d2b;
   --vv-gold-shadow-1: #7a5c1e;
   --vv-gold-shadow-2: #543e12;
   --vv-radius-sm: 10px;
   --vv-radius: 16px;
   --vv-radius-lg: 22px;
-  --vv-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --vv-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  /* placeholder-media fill/border: independent of --vv-bg-3, which sits too
-     close to --vv-bg-2/--vv-bg in the light theme to read as a distinct
-     card (a warm-white-on-warm-white contrast problem) */
-  --vv-placeholder-bg: rgba(255, 255, 255, 0.045);
-  --vv-placeholder-border: rgba(237, 227, 208, 0.16);
-  color-scheme: dark;
+  --vv-shadow-sm: 0 4px 12px rgba(30, 26, 15, 0.08);
+  --vv-shadow: 0 10px 30px rgba(30, 26, 15, 0.12);
+  --vv-placeholder-bg: rgba(23, 23, 23, 0.05);
+  --vv-placeholder-border: rgba(23, 23, 23, 0.14);
+  color-scheme: light;
 }
 
 .theme-light {
-  --vv-bg: #f2ecdc;
-  --vv-bg-2: #fffcf6;
-  --vv-bg-3: #ebe1c8;
-  --vv-bg-4: #e3d7b8;
-  --vv-ink: #241c15;
-  --vv-ink-dim: #5e5443;
-  --vv-ink-faint: #6b5f49;
-  --vv-line: #dccea9;
-  --vv-line-soft: #e7dabb;
+  /* Redundant with :root now that ivory is the default — kept only so
+     existing theme="light" call sites (EditorialSplit) don't need to
+     change. Mirrors :root exactly. */
+  --vv-bg: #f4f1ea;
+  --vv-bg-2: #fbfaf7;
+  --vv-bg-3: #ebe7dc;
+  --vv-bg-4: #e2ddcd;
+  --vv-ink: #171717;
+  --vv-ink-dim: #55524c;
+  --vv-ink-faint: #6b655c;
+  --vv-line: #ddd7c8;
+  --vv-line-soft: #e8e3d5;
   --vv-gold-text: #7a5c1e;
   --vv-bronze-text: #7a5c1e;
-  --vv-shadow-sm: 0 4px 12px rgba(90, 70, 30, 0.1);
-  --vv-shadow: 0 10px 30px rgba(90, 70, 30, 0.14);
-  --vv-placeholder-bg: rgba(36, 28, 21, 0.055);
-  --vv-placeholder-border: rgba(36, 28, 21, 0.16);
+  --vv-shadow-sm: 0 4px 12px rgba(30, 26, 15, 0.08);
+  --vv-shadow: 0 10px 30px rgba(30, 26, 15, 0.12);
+  --vv-placeholder-bg: rgba(23, 23, 23, 0.05);
+  --vv-placeholder-border: rgba(23, 23, 23, 0.14);
   color-scheme: light;
+}
+
+.theme-dark {
+  /* Opt-in override for the handful of deliberately dark sections — see
+     the file-level note above for which and why. */
+  --vv-bg: #151417;
+  --vv-bg-2: #1c1b1f;
+  --vv-bg-3: #242327;
+  --vv-bg-4: #2c2b30;
+  --vv-ink: #ece9e4;
+  --vv-ink-dim: #aca8a3;
+  --vv-ink-faint: #87837f;
+  --vv-line: #333136;
+  --vv-line-soft: #242327;
+  --vv-gold-text: var(--vv-gold);
+  --vv-bronze-text: var(--vv-bronze);
+  --vv-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --vv-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  --vv-placeholder-bg: rgba(255, 255, 255, 0.045);
+  --vv-placeholder-border: rgba(237, 227, 208, 0.16);
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -140,9 +166,19 @@ body {
   }
 }
 
-/* the app's one metallic-gold gradient finish, reused verbatim for the
-   wordmark so the site and the app read as the same brand mark */
+/* Flat, near-black by default — the wordmark now sits on ivory almost
+   everywhere (header, footer), where the app's bright gold-gradient
+   finish doesn't have the contrast to read as text. The gradient finish
+   is reserved for the deliberately dark sections (.theme-dark), where it
+   still ties the wordmark back to the app's own metallic mark. */
 .text-metallic {
+  background: none;
+  -webkit-text-fill-color: var(--vv-ink);
+  color: var(--vv-ink);
+  text-shadow: none;
+}
+
+.theme-dark .text-metallic {
   background: linear-gradient(180deg, var(--vv-gold-bright) 0%, var(--vv-gold-mid) 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -152,13 +188,6 @@ body {
     0 1px 0 var(--vv-gold-shadow-1),
     0 2px 0 var(--vv-gold-shadow-2),
     0 3px 6px rgba(0, 0, 0, 0.8);
-}
-
-.theme-light .text-metallic {
-  background: none;
-  -webkit-text-fill-color: #2b2317;
-  color: #2b2317;
-  text-shadow: 0 1px 2px rgba(197, 160, 89, 0.4);
 }
 
 /* Hides the scrollbar on the one horizontally-scrollable editorial media
