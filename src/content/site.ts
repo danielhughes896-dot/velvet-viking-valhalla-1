@@ -156,7 +156,7 @@ export const pages = {
     expanded: [
       "Valhalla builds your plan from what's true about you — your current fitness, a real benchmark performance, your race target and the days you can actually train. From there, it works out the paces and effort levels that make sense for your training, not generic ones.",
       "Once training starts, Valhalla pays attention. Every session is compared with what was planned — pace, heart rate, effort, execution. But one hard day doesn't change anything on its own. Valhalla waits for a real pattern before it acts, then proposes a specific adjustment to what comes next. You decide whether to take it.",
-      "It isn't a dashboard of your data. It's a coach that's actually looking at it.",
+      "It isn't a dashboard of your data. It's a coach that's actually looking at it — and telling you only what actually matters.",
     ],
   },
   philosophy: {
