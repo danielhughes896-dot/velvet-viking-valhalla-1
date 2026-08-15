@@ -22,14 +22,21 @@ export default function ValhallaPage() {
           ))}
         </div>
 
-        <div className="mx-auto max-w-6xl px-6 py-24 sm:px-8">
-          <div className="flex flex-col items-center justify-center gap-6 sm:flex-row sm:items-end">
+        <div className="theme-dark mx-auto max-w-6xl px-6 py-24 sm:px-8">
+          {/* PROTOTYPE: two portrait frames, no desktop mockup — see
+              ProductShowcase.tsx for the same primary/secondary rationale.
+              theme-dark here too, matching the homepage's ProductShowcase:
+              Valhalla's own product surface stays visually distinct from
+              the ivory editorial page around it. */}
+          <div className="flex flex-col items-center justify-center gap-8 sm:flex-row sm:items-end">
             <DeviceFrame
-              kind="desktop"
-              label={valhallaProduct.screenshots.desktop.placeholder}
-              className="sm:-mr-16"
+              kind="mobile"
+              label={valhallaProduct.screenshots.primary.placeholder}
+              className="sm:-mr-10"
             />
-            <DeviceFrame kind="mobile" label={valhallaProduct.screenshots.mobile.placeholder} />
+            <div className="scale-[0.86]">
+              <DeviceFrame kind="mobile" label={valhallaProduct.screenshots.secondary.placeholder} />
+            </div>
           </div>
         </div>
       </section>

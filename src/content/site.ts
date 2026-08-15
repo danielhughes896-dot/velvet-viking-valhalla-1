@@ -24,7 +24,14 @@ export const nav = {
 } as const;
 
 export const hero = {
-  eyebrow: "Velvet Viking",
+  // PROTOTYPE NOTE: was "Velvet Viking". The crest above already states
+  // "Velvet Viking" (it's baked into the artwork), so the eyebrow becomes
+  // "The Flagship" instead — reusing valhallaProduct.eyebrow's own exact
+  // wording, not new copy — so this eyebrow now reads as introducing
+  // Valhalla as a product noun ("The Flagship / Valhalla Awaits.") rather
+  // than repeating the brand name a second time in the same viewport.
+  // heading/sub/cta below are unchanged and remain protected verbatim.
+  eyebrow: "The Flagship",
   heading: ["Valhalla Awaits.", "Earn Your Place."],
   sub: "Endurance coaching that pays attention — to what you actually do, not just what was planned.",
   cta: { label: "Explore Valhalla", href: "/valhalla" },
@@ -64,15 +71,26 @@ export const valhallaProduct = {
     },
   ],
   cta: { label: "Explore Valhalla", href: "/valhalla" },
+  // PROTOTYPE: both slots are now portrait/phone-first — Valhalla has no
+  // desktop app to screenshot. `primary` is Next Move/Plan Evolution (the
+  // dominant, foregrounded frame); `secondary` is Execution Review (the
+  // smaller, offset frame). Renamed from desktop/mobile.
   screenshots: {
-    mobile: {
-      placeholder: "[VALHALLA MOBILE SCREENSHOT]",
-      alt: "[VALHALLA MOBILE SCREENSHOT — placeholder]",
+    primary: {
+      placeholder: "[VALHALLA — NEXT MOVE / PLAN EVOLUTION]",
+      alt: "[VALHALLA SCREENSHOT — Next Move / Plan Evolution, placeholder]",
     },
-    desktop: {
-      placeholder: "[VALHALLA DESKTOP SCREENSHOT]",
-      alt: "[VALHALLA DESKTOP SCREENSHOT — placeholder]",
+    secondary: {
+      placeholder: "[VALHALLA — EXECUTION REVIEW]",
+      alt: "[VALHALLA SCREENSHOT — Execution Review, placeholder]",
     },
+  },
+} as const;
+
+export const documentaryReel = {
+  media: {
+    placeholder: "[DOCUMENTARY REEL — placeholder]",
+    alt: "[DOCUMENTARY REEL — placeholder, opening motion piece, footage to be confirmed]",
   },
 } as const;
 

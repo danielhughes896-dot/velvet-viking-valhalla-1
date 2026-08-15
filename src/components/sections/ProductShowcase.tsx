@@ -5,7 +5,7 @@ import { valhallaProduct } from "@/content/site";
 
 export default function ProductShowcase() {
   return (
-    <section className="bg-vv-bg">
+    <section className="theme-dark bg-vv-bg">
       <div className="mx-auto max-w-6xl px-6 py-24 sm:px-8 sm:py-32">
         <SectionHeading
           eyebrow={valhallaProduct.eyebrow}
@@ -16,23 +16,23 @@ export default function ProductShowcase() {
           {valhallaProduct.sub}
         </p>
 
-        {/* Top-aligned rather than bottom-aligned: the mobile frame is
-            pushed down past the desktop frame's own bottom edge, so it
-            reads as continuing the reveal downward instead of sitting
-            neatly beside it. Ordinary flow (no absolute positioning), so
-            the row's height grows to include the offset and nothing below
-            it needs manual clearance. */}
+        {/* PROTOTYPE: both frames are portrait — Valhalla is phone-first,
+            there's no desktop app to screenshot. Primary (Next Move/Plan
+            Evolution) leads, unshifted; secondary (Execution Review) is
+            deliberately smaller and offset behind/below it, echoing the
+            original primary/secondary offset composition without implying
+            a desktop surface exists. Ordinary flow (no absolute
+            positioning), so the row's height grows to include the offset
+            and nothing below it needs manual clearance. */}
         <div className="relative mt-16 flex flex-col items-center justify-center gap-10 sm:flex-row sm:items-start sm:justify-center sm:gap-0">
           <DeviceFrame
-            kind="desktop"
-            label={valhallaProduct.screenshots.desktop.placeholder}
-            className="sm:-mr-20"
-          />
-          <DeviceFrame
             kind="mobile"
-            label={valhallaProduct.screenshots.mobile.placeholder}
-            className="relative z-10 sm:mt-20 md:mt-28"
+            label={valhallaProduct.screenshots.primary.placeholder}
+            className="sm:-mr-14"
           />
+          <div className="relative z-10 origin-top scale-[0.84] sm:mt-20 md:mt-28">
+            <DeviceFrame kind="mobile" label={valhallaProduct.screenshots.secondary.placeholder} />
+          </div>
         </div>
 
         <div className="mx-auto mt-12 max-w-3xl sm:mt-10">

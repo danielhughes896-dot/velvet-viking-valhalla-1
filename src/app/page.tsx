@@ -1,4 +1,5 @@
 import Hero from "@/components/sections/Hero";
+import DocumentaryReel from "@/components/sections/DocumentaryReel";
 import EditorialSplit from "@/components/sections/EditorialSplit";
 import ProductShowcase from "@/components/sections/ProductShowcase";
 import FullWidthPhoto from "@/components/sections/FullWidthPhoto";
@@ -10,6 +11,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <DocumentaryReel />
 
       <EditorialSplit
         theme="light"
@@ -37,6 +39,7 @@ export default function Home() {
         mediaAlt={earnYourPlace.media.alt}
         galleryItems={earnYourPlace.gallery}
         reverse
+        outerClassName="relative z-10 -mt-[100vh] flex min-h-screen items-center"
       />
 
       <FutureWorld />
