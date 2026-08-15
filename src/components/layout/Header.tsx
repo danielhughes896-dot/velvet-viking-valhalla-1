@@ -6,7 +6,7 @@ import { nav } from "@/content/site";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-vv-line-soft bg-vv-bg/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 bg-vv-bg/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4 sm:px-8">
         <HeaderBrand />
 

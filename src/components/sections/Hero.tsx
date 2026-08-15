@@ -17,7 +17,7 @@ export default function Hero() {
         aria-hidden
       />
 
-      <div className="relative mx-auto flex min-h-[86vh] max-w-4xl flex-col items-center justify-center px-6 py-28 text-center sm:px-8">
+      <div className="relative mx-auto flex min-h-[86vh] max-w-4xl flex-col items-center justify-center px-6 py-16 text-center sm:px-8 sm:py-24 md:py-28">
         <div className="relative">
           {/* The crest's own canvas is pure black, and the radial wash above
               is lightest exactly where the crest sits — so without this, the
