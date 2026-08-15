@@ -56,7 +56,7 @@ export const valhallaProduct = {
     },
     {
       heading: "Adaptation with purpose",
-      body: "When training doesn't go to plan, Valhalla proposes the adjustment that makes sense — and you decide whether to take it. Adaptation is based on what actually happened, not just what was scheduled.",
+      body: "One tough session doesn't change anything. A real pattern does. When the evidence is clear, Valhalla proposes the adjustment that makes sense — and you decide whether to take it.",
     },
     {
       heading: "Coaching, not just data",
@@ -155,7 +155,7 @@ export const pages = {
     // functionality beyond what the app genuinely does today.
     expanded: [
       "Valhalla builds your plan from what's true about you — your current fitness, a real benchmark performance, your race target and the days you can actually train. From there, it works out the paces and effort levels that make sense for your training, not generic ones.",
-      "Once training starts, Valhalla pays attention. Every session is compared with what was planned — pace, heart rate, effort, execution — and when reality and the plan diverge, Valhalla proposes a specific adjustment to what comes next. You decide whether to take it.",
+      "Once training starts, Valhalla pays attention. Every session is compared with what was planned — pace, heart rate, effort, execution. But one hard day doesn't change anything on its own. Valhalla waits for a real pattern before it acts, then proposes a specific adjustment to what comes next. You decide whether to take it.",
       "It isn't a dashboard of your data. It's a coach that's actually looking at it.",
     ],
   },

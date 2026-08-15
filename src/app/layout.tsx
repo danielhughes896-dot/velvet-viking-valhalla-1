@@ -37,11 +37,11 @@ export const metadata: Metadata = {
     template: "%s — Velvet Viking",
   },
   description:
-    "Adaptive endurance coaching built around your fitness, your training and your progression — Valhalla, by Velvet Viking.",
+    "Endurance coaching that pays attention to what you actually do, not just what was planned. Valhalla by Velvet Viking.",
   openGraph: {
     title: "Velvet Viking",
     description:
-      "Adaptive endurance coaching built around your fitness, your training and your progression — Valhalla, by Velvet Viking.",
+      "Endurance coaching that pays attention to what you actually do, not just what was planned. Valhalla by Velvet Viking.",
     url: siteUrl,
     siteName: "Velvet Viking",
     images: ["/brand/velvet-viking-crest.png"],
