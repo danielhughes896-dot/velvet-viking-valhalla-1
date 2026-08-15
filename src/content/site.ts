@@ -55,7 +55,14 @@ export const valhallaProduct = {
   eyebrow: "The Flagship",
   heading: "Valhalla",
   sub: "Endurance coaching that reads your training, not just your calendar.",
-  body: "A training plan shouldn't go stale the moment real training starts. Valhalla pays attention to what you actually do, and helps you understand what that means for what comes next.",
+  // COPY AUDIT: was "...Valhalla pays attention to what you actually do,
+  // and helps you understand what that means for what comes next." — a
+  // near-duplicate of hero.sub one scroll later. Rewritten to state the
+  // actual differentiator (waits for a pattern, explains why, athlete
+  // decides) as this section's lead sentence, so it reads as a headline
+  // claim before the "Adaptation with purpose" point below elaborates on
+  // it — not just a third repeated variant of "pays attention."
+  body: "A training plan shouldn't go stale the moment real training starts. Valhalla watches what actually happens — and waits for a real pattern before it changes anything. When a change is genuinely justified, it tells you why, and you decide whether to take it.",
   points: [
     {
       heading: "Training built around you",
@@ -182,9 +189,16 @@ export const pages = {
     heading: "Earn Your Place.",
     sub: "The philosophy behind the brand.",
     body: "Earn Your Place is not a slogan. It's the standard everything else is built on.",
+    // COPY AUDIT: paragraph 1 was trimmed — its back half ("showing up,
+    // doing the right session on the right day, and letting progress come
+    // from that, rather than from a single perfect effort") duplicated
+    // Home's brandStory/earnYourPlace almost word for word. Kept the part
+    // of this paragraph that's genuinely unique to Philosophy (motivation
+    // — not proving anything to anyone else). Paragraph 2 drops the
+    // trailing "— every time": an absolute claim the copy hadn't earned.
     expanded: [
-      "Earn Your Place isn't about suffering for its own sake, and it isn't about proving something to anyone else. It's about the work itself — showing up, doing the right session on the right day, and letting progress come from that, rather than from a single perfect effort.",
-      "That means knowing when to push. It also means knowing when to hold back, because recovery is part of the work, not a break from it. Consistency, applied intelligently, beats intensity applied carelessly — every time.",
+      "Earn Your Place isn't about suffering for its own sake, and it isn't about proving something to anyone else. It's about doing the right work on the right day — not chasing a single perfect effort.",
+      "That means knowing when to push. It also means knowing when to hold back, because recovery is part of the work, not a break from it. Consistency, applied intelligently, beats intensity applied carelessly.",
       "Valhalla exists to support that: to help you do the right work, understand what it's telling you, and keep coming back to it.",
     ],
   },
@@ -192,13 +206,24 @@ export const pages = {
     eyebrow: "Velvet Viking",
     heading: "About",
     sub: "A performance brand, built with intent.",
-    body: "Velvet Viking is a performance brand built around one idea: that real progress comes from consistent, intelligent work — not shortcuts, not hype, and not performance for its own sake.",
+    // COPY AUDIT: was "...that real progress comes from consistent,
+    // intelligent work — not shortcuts, not hype..." — that's Philosophy's
+    // thesis, restated here for roughly the sixth time site-wide. About's
+    // job is the entity, not the training belief: what Velvet Viking is,
+    // and its relationship to Valhalla.
+    body: "Velvet Viking is a performance brand. Valhalla, its endurance coaching product, is the first thing it has built.",
     // No founder/origin story: the repository holds no factual basis for
     // one, and inventing personal history is explicitly out of scope for
     // this pass. This page states only what's actually true.
+    //
+    // COPY AUDIT: the previous line here ("...The same standards —
+    // purpose, performance, refinement — will apply to whatever Velvet
+    // Viking builds next.") was a near-duplicate of FutureWorld's own
+    // sentence on the homepage. FutureWorld already owns that forward-
+    // looking claim; this one stays about the Valhalla/Velvet Viking
+    // relationship instead.
     expanded: [
-      "Valhalla, an endurance coaching product, is the first expression of that idea. The same standards — purpose, performance, refinement — will apply to whatever Velvet Viking builds next.",
+      "Valhalla is not a side project. It is Velvet Viking's first product, built to the same standard the name is meant to carry.",
     ],
-    contactNote: "Contact details will be published here soon.",
   },
 } as const;

@@ -4,8 +4,12 @@ import { hero } from "@/content/site";
 
 // Two-tier composition:
 //   1. MASTER-BRAND MOMENT — crest, a thin gold rule, and the category
-//      line "Endurance Performance, Built Differently." REFINEMENT ROUND
-//      2: the standalone "Velvet Viking" wordmark that previously sat
+//      line "Endurance Performance, Coached With Intent." (copy audit:
+//      the earlier "Built Differently" line asserted differentiation
+//      without demonstrating it — this version points at the actual
+//      differentiator instead of a generic superiority claim.)
+//      REFINEMENT ROUND 2: the standalone "Velvet Viking" wordmark that
+//      previously sat
 //      between the crest and the rule was removed — the crest already
 //      states the brand name (it's baked into the artwork), and the
 //      header wordmark is a click away; repeating it a third time here,
@@ -49,7 +53,7 @@ export default function Hero() {
             }}
           />
           <p className="mt-4 font-head text-[11px] font-semibold uppercase tracking-[0.32em] text-vv-ink-faint sm:text-xs">
-            Endurance Performance, Built Differently.
+            Endurance Performance, Coached With Intent.
           </p>
         </div>
 
