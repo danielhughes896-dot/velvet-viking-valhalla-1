@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageIntro from "@/components/sections/PageIntro";
 import DeviceFrame from "@/components/ui/DeviceFrame";
+import CtaButton from "@/components/ui/CtaButton";
 import { pages, valhallaProduct } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -38,6 +39,12 @@ export default function ValhallaPage() {
               <DeviceFrame kind="mobile" label={valhallaProduct.screenshots.secondary.placeholder} />
             </div>
           </div>
+        </div>
+
+        <div className="flex justify-center pb-24 sm:pb-32">
+          <CtaButton href={pages.valhalla.closingCta.href}>
+            {pages.valhalla.closingCta.label}
+          </CtaButton>
         </div>
       </section>
     </>

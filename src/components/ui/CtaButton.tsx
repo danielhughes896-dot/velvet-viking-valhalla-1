@@ -2,11 +2,17 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 type CtaButtonProps = {
-  href: string;
+  /** Nullable so a not-yet-live backend seam (commerceSeams.* in
+   * content/commerce.ts) can render this exact CTA in its pending state,
+   * rather than a component that only knows how to be a working link —
+   * same convention as the nullable footer.social URLs. */
+  href: string | null;
   children: ReactNode;
   variant?: "primary" | "ghost";
   className?: string;
   onClick?: () => void;
+  /** Shown as a title/sr-only note when href is null. */
+  pendingLabel?: string;
 };
 
 const base =
@@ -28,7 +34,24 @@ export default function CtaButton({
   variant = "primary",
   className = "",
   onClick,
+  pendingLabel = "Coming soon",
 }: CtaButtonProps) {
+  if (href === null) {
+    // Not a link: unfocusable, no href, so it can never resolve as a fake
+    // success path. Visually present at reduced opacity, same shape as the
+    // live button, with the pending state exposed to assistive tech too.
+    return (
+      <span
+        aria-disabled="true"
+        title={pendingLabel}
+        className={`${base} ${variants[variant]} cursor-not-allowed opacity-45 ${className}`}
+      >
+        {children}
+        <span className="sr-only"> — {pendingLabel}</span>
+      </span>
+    );
+  }
+
   return (
     <Link href={href} onClick={onClick} className={`${base} ${variants[variant]} ${className}`}>
       {children}

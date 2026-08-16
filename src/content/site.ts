@@ -17,10 +17,17 @@ export const brand = {
 export const nav = {
   links: [
     { label: "Valhalla", href: "/valhalla" },
+    { label: "Pricing", href: "/pricing" },
     { label: "Philosophy", href: "/philosophy" },
     { label: "About", href: "/about" },
   ],
   cta: { label: "Explore Valhalla", href: "/valhalla" },
+  // Secondary utility action, not a brand destination — kept out of `links`
+  // so MobileNav can render it visually distinct (quiet, not display type).
+  // href is filled in once commerceSeams.signIn (content/commerce.ts) is
+  // live; MobileNav renders this exact label as the CtaButton pending
+  // state until then.
+  signIn: { label: "Sign In" },
 } as const;
 
 export const hero = {
@@ -148,7 +155,13 @@ export const futureWorld = {
 export const finalCta = {
   heading: "Valhalla Awaits.",
   sub: "Training doesn't stand still. Neither should your coaching.",
-  cta: { label: "Explore Valhalla", href: "/valhalla" },
+  // PHASE 3: was { label: "Explore Valhalla", href: "/valhalla" } — the
+  // homepage's own Hero and ProductShowcase CTAs already send readers to
+  // /valhalla twice before this section. As the page's final, bottom-of-
+  // scroll moment, this is the "ready to commit" beat — the one CTA graph
+  // dead end the Phase 2 audit flagged now resolves forward into the
+  // commercial entry point instead of back to a page already reached.
+  cta: { label: "See Standard Pricing", href: "/pricing" },
 } as const;
 
 export const footer = {
@@ -175,11 +188,28 @@ export const footer = {
 } as const;
 
 export const pages = {
+  pricing: {
+    eyebrow: "Standard",
+    heading: "Pricing",
+    sub: "One plan. The full Valhalla coaching core.",
+    body: "No tiers to compare and nothing held back for later — Standard is Valhalla, in full.",
+  },
+  start: {
+    eyebrow: "Standard",
+    heading: "Start Your Trial",
+    sub: "Here's exactly what happens next.",
+    body: "Trial signup isn't open yet. This is the journey as it's designed to work, and it'll go live here the moment it's real.",
+  },
   valhalla: {
     eyebrow: valhallaProduct.eyebrow,
     heading: valhallaProduct.heading,
     sub: valhallaProduct.sub,
     body: "A closer look at how Valhalla actually works.",
+    // PHASE 3: this page previously had no closing action at all — after
+    // the screenshots, the scroll just ended. That's the literal "dead
+    // end" the Phase 2 audit flagged in the CTA graph. Now closes into the
+    // commercial entry point instead of looping back to itself.
+    closingCta: { label: "See Standard Pricing", href: "/pricing" },
     // Real product screenshots will eventually sit alongside this copy —
     // see the device mockups below it on this page. Nothing here describes
     // functionality beyond what the app genuinely does today.

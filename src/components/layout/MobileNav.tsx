@@ -5,6 +5,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Crest from "@/components/ui/Crest";
 import { brand, nav } from "@/content/site";
+import { commerceSeams } from "@/content/commerce";
 
 const subscribeNoop = () => () => {};
 
@@ -98,7 +99,33 @@ export default function MobileNav() {
                   ))}
                 </nav>
               </div>
-              <div className="flex flex-col items-center gap-3 border-t border-vv-line-soft px-8 py-8">
+              <div className="flex flex-col items-center gap-5 border-t border-vv-line-soft px-8 py-8">
+                {/* Returning-athlete entry, deliberately quiet (small tracked
+                    text, not a display link) so it reads as a secondary
+                    utility action rather than a fifth brand destination.
+                    Nullable seam: commerceSeams.signIn is null until the
+                    account/entitlement system lands, so this renders
+                    inactive rather than a fake sign-in link — same pattern
+                    as SocialLinks. */}
+                {commerceSeams.signIn ? (
+                  <Link
+                    href={commerceSeams.signIn}
+                    onClick={() => setOpen(false)}
+                    className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink-dim transition-colors hover:text-vv-bronze-text"
+                  >
+                    {nav.signIn.label}
+                  </Link>
+                ) : (
+                  <span
+                    aria-disabled="true"
+                    title="Coming soon"
+                    className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink-faint/50"
+                  >
+                    {nav.signIn.label}
+                    <span className="sr-only"> — Coming soon</span>
+                  </span>
+                )}
+
                 <Crest size={40} />
                 <p className="font-head text-[11px] uppercase tracking-[0.24em] text-vv-ink-faint">
                   {brand.name}
