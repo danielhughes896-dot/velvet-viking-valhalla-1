@@ -5,6 +5,7 @@ import { pages } from "@/content/site";
 export const metadata: Metadata = {
   title: pages.philosophy.heading,
   description: pages.philosophy.sub,
+  alternates: { canonical: "/philosophy" },
 };
 
 export default function PhilosophyPage() {

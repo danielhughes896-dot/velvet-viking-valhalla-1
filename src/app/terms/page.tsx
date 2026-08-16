@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import PageIntro from "@/components/sections/PageIntro";
 
-export const metadata: Metadata = { title: "Terms" };
+// OVERNIGHT AUDIT: see privacy/page.tsx for the same fix and rationale.
+export const metadata: Metadata = {
+  title: "Terms",
+  description: "This page will hold Velvet Viking's terms of use once finalised.",
+  alternates: { canonical: "/terms" },
+  robots: { index: false, follow: true },
+};
 
 export default function TermsPage() {
   return (

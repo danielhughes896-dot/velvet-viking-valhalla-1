@@ -6,6 +6,7 @@ import { pages } from "@/content/site";
 export const metadata: Metadata = {
   title: pages.pricing.heading,
   description: pages.pricing.sub,
+  alternates: { canonical: "/pricing" },
 };
 
 export default function PricingPage() {

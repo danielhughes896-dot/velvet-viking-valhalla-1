@@ -5,6 +5,7 @@ import { pages } from "@/content/site";
 export const metadata: Metadata = {
   title: pages.about.heading,
   description: pages.about.sub,
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {

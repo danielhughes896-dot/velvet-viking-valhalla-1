@@ -7,6 +7,7 @@ import { plans, trial, commerceSeams } from "@/content/commerce";
 export const metadata: Metadata = {
   title: pages.start.heading,
   description: pages.start.sub,
+  alternates: { canonical: "/start" },
 };
 
 const plan = plans.standard;

@@ -123,7 +123,11 @@
   --font-display: var(--font-cinzel), serif;
   --font-head: var(--font-oswald), sans-serif;
   --font-sans: var(--font-inter), -apple-system, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), monospace;
+  /* No --font-mono override: nothing on the site uses font-mono (confirmed
+     by a full-repo grep, overnight audit) — JetBrains Mono was a Google
+     Font load with zero visual use. Removed here and in layout.tsx; the
+     font-mono Tailwind utility now falls back to Tailwind's own default
+     monospace stack if anything ever needs it. */
 }
 
 * {

@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import PageIntro from "@/components/sections/PageIntro";
 
-export const metadata: Metadata = { title: "Cookies" };
+// OVERNIGHT AUDIT: see privacy/page.tsx for the same fix and rationale.
+export const metadata: Metadata = {
+  title: "Cookies",
+  description: "This page will hold Velvet Viking's cookie policy once finalised.",
+  alternates: { canonical: "/cookies" },
+  robots: { index: false, follow: true },
+};
 
 export default function CookiesPage() {
   return (

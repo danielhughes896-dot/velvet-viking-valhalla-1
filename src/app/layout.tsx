@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel, Oswald, Inter, JetBrains_Mono } from "next/font/google";
+import { Cinzel, Oswald, Inter } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
@@ -22,12 +22,6 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
 const siteUrl = "https://velvet-viking-website-preview.vercel.app";
 
 export const metadata: Metadata = {
@@ -38,29 +32,41 @@ export const metadata: Metadata = {
   },
   description:
     "Endurance coaching that pays attention to what you actually do, not just what was planned. Valhalla by Velvet Viking.",
+  // Site-wide default; every route below overrides this with its own path
+  // so each page declares its own canonical URL rather than inheriting "/".
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Velvet Viking",
     description:
       "Endurance coaching that pays attention to what you actually do, not just what was planned. Valhalla by Velvet Viking.",
     url: siteUrl,
     siteName: "Velvet Viking",
-    images: ["/brand/velvet-viking-crest.png"],
+    // OVERNIGHT AUDIT: was the raw canonical crest (2.1MB) served directly
+    // as the social-preview image. Same artwork, same transparency, no
+    // crop or recomposite — just resized (longest edge 1200px) and
+    // recompressed for a payload social crawlers actually fetch quickly.
+    // The canonical file itself is untouched; Crest.tsx still renders the
+    // full-resolution original everywhere on-page.
+    images: ["/brand/velvet-viking-crest-og.png"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Velvet Viking",
     description: "Valhalla Awaits. Earn Your Place.",
-    images: ["/brand/velvet-viking-crest.png"],
+    images: ["/brand/velvet-viking-crest-og.png"],
   },
-  // Deliberately NOT the same file as openGraph/twitter images above: favicon and
-  // apple-touch-icon render very small (browser tab, home-screen icon), where the
-  // full detailed crest is known to turn illegible below ~96px. Held back on the
-  // pre-swap asset pending a dedicated small-size review — see brand crest notes
-  // in README.md.
+  // OVERNIGHT AUDIT: favicon/apple-touch-icon previously pointed straight
+  // at velvet-viking-icon-source.png — a 1184x1328, 1.48MB file — fetched
+  // by the browser at full size for a tab icon. These two derivatives are
+  // that exact same source image resized to the dimensions browsers
+  // actually request (192px / Apple's 180px spec size), nothing recomposed
+  // or altered. This does NOT resolve the pending "swap to a crest-derived
+  // icon" decision noted in README.md — that source image is still the one
+  // in use, just delivered efficiently.
   icons: {
-    icon: "/brand/velvet-viking-icon-source.png",
-    apple: "/brand/velvet-viking-icon-source.png",
+    icon: "/brand/velvet-viking-icon-192.png",
+    apple: "/brand/velvet-viking-icon-180.png",
   },
 };
 
@@ -74,7 +80,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${cinzel.variable} ${oswald.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${cinzel.variable} ${oswald.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-vv-bg font-sans text-vv-ink">
         <Header />

@@ -7,6 +7,7 @@ import { pages, valhallaProduct } from "@/content/site";
 export const metadata: Metadata = {
   title: pages.valhalla.heading,
   description: pages.valhalla.sub,
+  alternates: { canonical: "/valhalla" },
 };
 
 export default function ValhallaPage() {
