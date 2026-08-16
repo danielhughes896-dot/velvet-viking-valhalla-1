@@ -70,7 +70,12 @@ export const valhallaProduct = {
     },
     {
       heading: "Adaptation with purpose",
-      body: "One tough session doesn't change anything. A real pattern does. When the evidence is clear, Valhalla proposes the adjustment that makes sense — and you decide whether to take it.",
+      // PHASE 2 AUDIT: previously re-narrated the section body's restraint
+      // logic almost verbatim ("one tough session doesn't change anything…
+      // you decide whether to take it") in the very next scroll position.
+      // Reweighted to the one facet the body states but doesn't elaborate —
+      // that the reason is visible — instead of repeating the threshold.
+      body: "Every proposed adjustment comes with the pattern behind it — never a change without a reason you can see.",
     },
     {
       heading: "Coaching, not just data",
@@ -181,7 +186,13 @@ export const pages = {
     expanded: [
       "Valhalla builds your plan from what's true about you — your current fitness, a real benchmark performance, your race target and the days you can actually train. From there, it works out the paces and effort levels that make sense for your training, not generic ones.",
       "Once training starts, Valhalla pays attention. Every session is compared with what was planned — pace, heart rate, effort, execution. But one hard day doesn't change anything on its own. Valhalla waits for a real pattern before it acts, then proposes a specific adjustment to what comes next. You decide whether to take it.",
-      "It isn't a dashboard of your data. It's a coach that's actually looking at it — and telling you only what actually matters.",
+      // PHASE 2 AUDIT: was "It's a coach that's actually looking at it" —
+      // flagged against Business's unearned-claim list ("coach-like",
+      // "understands training"). Rewritten to keep the not-a-dashboard
+      // contrast without asserting the product is a cognitive/coaching
+      // agent — reuses "pays attention," already established in hero.sub,
+      // rather than a new anthropomorphizing claim.
+      "It isn't a dashboard of your data. It's built to pay attention to it — and tell you only what actually matters.",
     ],
   },
   philosophy: {
