@@ -9,8 +9,8 @@
 export const brand = {
   name: "Velvet Viking",
   product: "Valhalla",
-  tagline: "Valhalla Awaits.",
-  motto: "Earn Your Place.",
+  tagline: "Valhalla Awaits",
+  motto: "Earn Your Place",
   crestAlt: "The Velvet Viking crest",
 } as const;
 
@@ -39,7 +39,12 @@ export const hero = {
   // than repeating the brand name a second time in the same viewport.
   // heading/sub/cta below are unchanged and remain protected verbatim.
   eyebrow: "The Flagship",
-  heading: ["Valhalla Awaits.", "Earn Your Place."],
+  // TITLE-PUNCTUATION FOLLOW-UP: HQ rule — display headings never end in a
+  // terminal full stop; a period between two sentences inside one heading
+  // is internal punctuation and stays (see brandStory.heading below for
+  // the same pattern). Line 1 keeps its period because line 2 follows it
+  // in the same <h1>; line 2 lost its because it's the heading's end.
+  heading: ["Valhalla Awaits.", "Earn Your Place"],
   sub: "Endurance coaching that pays attention — to what you actually do, not just what was planned.",
   cta: { label: "Explore Valhalla", href: "/valhalla" },
   media: {
@@ -50,7 +55,10 @@ export const hero = {
 
 export const brandStory = {
   eyebrow: "Velvet Viking",
-  heading: ["Performance isn't given.", "It's built."],
+  // TITLE-PUNCTUATION FOLLOW-UP: HQ's own worked example — internal period
+  // after "given" stays (mid-heading sentence break), terminal period
+  // after "built" is removed (end of the heading).
+  heading: ["Performance isn't given.", "It's built"],
   body: "Not punishment. Not luck. Progress comes from showing up, doing the right work, and knowing when to push and when to recover.",
   media: {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
@@ -118,12 +126,12 @@ export const fullWidthPhoto = {
     placeholder: "[CAMPAIGN PHOTOGRAPH]",
     alt: "[CAMPAIGN PHOTOGRAPH — full-width training/environment moment, placeholder]",
   },
-  caption: "Consistency Compounds.",
+  caption: "Consistency Compounds",
 } as const;
 
 export const earnYourPlace = {
   eyebrow: "Velvet Viking",
-  heading: "Earn Your Place.",
+  heading: "Earn Your Place",
   body: "Not through one perfect session. Through the work you return to, again and again, with purpose.",
   media: {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
@@ -143,7 +151,9 @@ export const earnYourPlace = {
 
 export const futureWorld = {
   eyebrow: "Beyond Valhalla",
-  heading: ["One philosophy.", "Different expressions."],
+  // TITLE-PUNCTUATION FOLLOW-UP: same pattern as brandStory.heading —
+  // internal period stays, terminal one is removed.
+  heading: ["One philosophy.", "Different expressions"],
   body: "Velvet Viking begins with Valhalla, but it isn't defined by a single product. The same standards of purpose, performance and refinement will shape everything that carries the name.",
   // Deliberately framed as direction, not a product list — none of these
   // exist yet. The kicker label above the words in FutureWorld.tsx exists
@@ -153,7 +163,7 @@ export const futureWorld = {
 } as const;
 
 export const finalCta = {
-  heading: "Valhalla Awaits.",
+  heading: "Valhalla Awaits",
   sub: "Training doesn't stand still. Neither should your coaching.",
   // PHASE 3: was { label: "Explore Valhalla", href: "/valhalla" } — the
   // homepage's own Hero and ProductShowcase CTAs already send readers to
@@ -165,7 +175,7 @@ export const finalCta = {
 } as const;
 
 export const footer = {
-  tagline: "Earn Your Place.",
+  tagline: "Earn Your Place",
   // Nullable on purpose — no real accounts exist yet. All four platforms
   // are always visually present (SocialLinks renders an inactive mark for
   // a null URL, not nothing), so the row's design can be finished ahead of
@@ -227,7 +237,7 @@ export const pages = {
   },
   philosophy: {
     eyebrow: "Velvet Viking",
-    heading: "Earn Your Place.",
+    heading: "Earn Your Place",
     sub: "The philosophy behind the brand.",
     body: "Earn Your Place is not a slogan. It's the standard everything else is built on.",
     // COPY AUDIT: paragraph 1 was trimmed — its back half ("showing up,

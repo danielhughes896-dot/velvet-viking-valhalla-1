@@ -53,7 +53,7 @@ export default function Hero() {
             }}
           />
           <p className="mt-4 font-head text-[11px] font-semibold uppercase tracking-[0.32em] text-vv-ink-faint sm:text-xs">
-            Endurance Performance, Coached With Intent.
+            Endurance Performance, Coached With Intent
           </p>
         </div>
 
