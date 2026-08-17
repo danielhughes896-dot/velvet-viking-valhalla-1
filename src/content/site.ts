@@ -239,7 +239,7 @@ export const pages = {
       // has already left "understand the product" behind. Stated here in
       // plain outcomes, no internal state names (no HOLD/PROGRESS/ADAPT/
       // RECOVER, no "Plan Evolution").
-      "A missed session doesn't spiral into a rescue plan — the days worth rescheduling get another chance when the calendar allows it, the rest are simply left behind, because that protects the training itself, not a completion percentage. And a change is never automatically a step back: Valhalla knows when to hold the current plan, when to let progression continue, and when recovery matters more than the schedule.",
+      "A missed session doesn't spiral into a rescue plan — the days worth rescheduling get another chance when the calendar allows it; the rest are simply left behind, because that protects the training itself, not a completion percentage. And a change is never automatically a step back: Valhalla knows when to hold the current plan, when to let progression continue, and when recovery matters more than the schedule.",
       // PHASE 2 AUDIT: was "It's a coach that's actually looking at it" —
       // flagged against Business's unearned-claim list ("coach-like",
       // "understands training"). Rewritten to keep the not-a-dashboard
