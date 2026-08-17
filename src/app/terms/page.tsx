@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import LegalDocument from "@/components/sections/LegalDocument";
 import PageIntro from "@/components/sections/PageIntro";
-import { LEGAL_CONTENT_APPROVED, termsDraft } from "@/content/legal";
+import { LEGAL_APPROVALS, termsDraft } from "@/content/legal";
 
 // OVERNIGHT AUDIT: see privacy/page.tsx for the same fix and rationale.
 export const metadata: Metadata = {
@@ -11,14 +11,16 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-// PUBLICATION GATE. The drafted policy in @/content/legal was written from the
-// product's real observed behaviour, but it has not been reviewed by a
-// solicitor and the company's statutory facts are still outstanding. Publishing
-// unreviewed legal text is worse than publishing none, so the placeholder below
-// remains the live state until LEGAL_CONTENT_APPROVED is flipped. Flipping it is
-// the only change needed here.
+// STILL GATED, and NOT covered by the private-beta publication approval. HQ
+// approved two documents -- the Privacy Policy and the Private Beta Terms -- and
+// this commercial terms of service is neither of them, so LEGAL_APPROVALS.terms stays false and the
+// placeholder below remains the live state.
+//
+// Do not flip this alongside a beta approval. Publishing it would represent as
+// approved a document nobody has approved, which is a worse outcome than the page
+// saying plainly that it is not ready.
 export default function TermsPage() {
-  if (LEGAL_CONTENT_APPROVED) {
+  if (LEGAL_APPROVALS.terms) {
     return <LegalDocument doc={termsDraft} />;
   }
 

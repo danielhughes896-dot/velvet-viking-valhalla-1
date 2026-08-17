@@ -1,26 +1,28 @@
 import type { Metadata } from "next";
 import LegalDocument from "@/components/sections/LegalDocument";
 import PageIntro from "@/components/sections/PageIntro";
-import { LEGAL_CONTENT_APPROVED, betaTermsDraft } from "@/content/legal";
+import { LEGAL_APPROVALS, betaTermsDraft } from "@/content/legal";
 
-// The Private Beta Terms draft existed in @/content/legal with no route to
-// reach it, which made it unreadable by the five people it is written for.
-// Deliberately not in sitemap.ts: an unpublished page is not something to hand
-// a search engine, and it is reached by a direct link given to invited testers.
+// PUBLISHED, and reachable by URL rather than by navigation. This is the
+// CANONICAL Private Beta Terms document; the app Settings screen and the beta
+// onboarding note both resolve here.
+//
+// NOINDEX AND NOT IN THE SITEMAP, on purpose and not as an oversight. These terms
+// govern an invited beta for five people, so they need to be one tap away for
+// those five and are not public-facing content. Publishing them is about the
+// testers being able to read what they have agreed to, not about reach — so the
+// page is live, linked from the product, and left out of both the sitemap and the
+// index. It is also deliberately absent from the website footer: the footer is
+// public furniture and this is not a public document.
 export const metadata: Metadata = {
   title: "Private Beta Terms",
-  description:
-    "The terms that apply to Velvet Viking's invited private beta, once finalised.",
+  description: "The terms that apply to Velvet Viking's invited private beta.",
   alternates: { canonical: "/beta-terms" },
   robots: { index: false, follow: true },
 };
 
-// PUBLICATION GATE, the same one the other legal pages use. These terms are
-// short on purpose — five invited, non-paying testers using pre-release
-// software, not a commercial contract — but short is not the same as reviewed,
-// so the gate applies here too.
 export default function BetaTermsPage() {
-  if (LEGAL_CONTENT_APPROVED) {
+  if (LEGAL_APPROVALS.betaTerms) {
     return <LegalDocument doc={betaTermsDraft} />;
   }
 

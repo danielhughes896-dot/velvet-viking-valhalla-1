@@ -1,59 +1,94 @@
 // ---------------------------------------------------------------------------
-// DRAFT LEGAL CONTENT — NOT LEGALLY REVIEWED — NOT PUBLISHED
+// LEGAL CONTENT — TWO DOCUMENTS PUBLISHED, TWO STILL GATED
 // ---------------------------------------------------------------------------
 //
-// This file holds a working first draft of the Privacy Policy, Terms of Use and
-// Cookie Policy, written from the product's actual observed behaviour so that a
-// qualified solicitor has something concrete to review, edit and sign off
-// rather than starting from a blank page.
+// This file holds four documents at two different approval states, and the
+// difference between them is the most important thing in it.
 //
-// It is NOT live. `LEGAL_CONTENT_APPROVED` below is `false`, so /privacy,
-// /terms and /cookies continue to render their existing "to be confirmed"
-// placeholders. Publishing is a deliberate one-line act: flip the flag to
-// `true` AFTER a solicitor has reviewed and amended this content. Merging this
-// file alone publishes nothing.
+// PUBLISHED, for the five-person invited private beta, on HQ's explicit
+// publication approval:
+//     privacyDraft    -> /privacy
+//     betaTermsDraft  -> /beta-terms
 //
-// Bracketed [TO BE CONFIRMED: ...] strings are genuinely unknown business facts
-// (legal entity, company number, registered address, support address). They are
-// deliberately NOT invented — see the audit report accompanying this branch.
-// Every one must be filled before the flag is flipped.
+// NOT PUBLISHED, and not approved by anybody:
+//     termsDraft      -> /terms      the FUTURE COMMERCIAL terms of service
+//     cookiesDraft    -> /cookies    accurate, but outside the beta approval
 //
-// Known gaps a solicitor must resolve, not guess at:
+// WHY THIS IS NOT ONE FLAG ANY MORE. It used to be: a single
+// LEGAL_CONTENT_APPROVED gated all four. HQ has approved two documents, so
+// flipping that flag would also have published an unreviewed commercial terms of
+// service — representing as approved a document nobody has approved, which is a
+// worse outcome than the beta shipping without terms at all. Per-document gates
+// make each state explicit, independently auditable, and impossible to change by
+// accident: publishing the commercial terms now requires editing the line that
+// says commercial terms, and says false.
+//
+// Bracketed [TO BE CONFIRMED: ...] strings are business facts genuinely unknown
+// to this repository. They are deliberately NOT invented, and nothing renders
+// them to a visitor — see isConfirmed() and tradingDisclosure below.
+//
+// STILL FOR A SOLICITOR, and parked by HQ until after this private trial:
 //   - lawful basis wording for each processing purpose under UK GDPR
-//   - whether ICO registration is required for this processing
+//   - whether the training data collected is "data concerning health" under
+//     Art 9, and what condition would then apply
+//   - whether ICO registration/fee is required for this processing
 //   - enforceability/scope of the IP and anti-scraping provisions in Terms §7
 //   - liability caps and consumer-law carve-outs (Terms §9)
-//   - whether the cancellation/refund terms satisfy the Consumer Contracts
-//     (Information, Cancellation and Additional Charges) Regulations 2013, and
-//     the DMCC Act 2024 subscription regime once it commences (expected 2027)
+//   - the refund/cancellation regime, before any paid access exists
 // ---------------------------------------------------------------------------
 
 /**
- * Publication gate. While `false`, the legal pages render their existing
- * placeholder state and none of the draft content below is served. Do not flip
- * this without completed legal review — the draft is written in good faith from
- * product behaviour, but it is not legal advice and has not been checked by a
- * qualified person.
+ * PER-DOCUMENT PUBLICATION GATES.
+ *
+ * A document renders its real content only when its own flag here is true.
+ * There is no combined switch and deliberately no default: a document added
+ * later has no entry, so it cannot inherit somebody else's approval.
  */
-export const LEGAL_CONTENT_APPROVED = false;
+export const LEGAL_APPROVALS = {
+  /** HQ-approved for the five-person private beta. */
+  privacy: true,
+  /** HQ-approved for the five-person private beta. */
+  betaTerms: true,
+
+  /**
+   * FUTURE COMMERCIAL TERMS OF SERVICE — NOT APPROVED, NOT REVIEWED.
+   *
+   * This is the gate the previous audit was told to preserve, and it is
+   * separate from the beta approval on purpose. It describes subscriptions,
+   * trials, cancellation and refunds, none of which exist yet. It must not be
+   * published on the strength of a beta approval, and must not be published at
+   * all until a solicitor has reviewed it and paid access actually exists.
+   */
+  terms: false,
+
+  /**
+   * Cookie policy. Its content was verified as accurate against the live site
+   * and the app, but HQ's approval covered the two beta documents only, so it
+   * stays gated rather than being waved through for being correct.
+   */
+  cookies: false,
+} as const;
+
+/**
+ * The commercial legal set, preserved as a single named gate so "have the
+ * commercial documents been approved" stays answerable in one place.
+ */
+export const COMMERCIAL_LEGAL_APPROVED =
+  LEGAL_APPROVALS.terms && LEGAL_APPROVALS.cookies;
 
 /** Placeholder token, so unresolved business facts are greppable before launch. */
 const TBC = (what: string) => `[TO BE CONFIRMED: ${what}]`;
 
-// Confirmed by HQ: Velvet Viking Ltd is incorporated and support@velvetviking.co.uk
-// is live. Company number and registered office are still outstanding here only
-// because they have not been supplied to this workstream — they are known facts,
-// not undecided ones, and both are required by the Companies (Trading Disclosures)
-// Regulations before the site trades.
+// SUPPLIED BY HQ: the registered name, the company number and the place of
+// registration. The registered office address has NOT been supplied and is not
+// guessed — the Companies (Trading Disclosures) Regulations want the address as
+// filed, and a nearly-right address is worse than an absent one. It is the single
+// outstanding disclosure fact; see the report accompanying this change.
 export const legalEntity = {
   name: "Velvet Viking Ltd",
-  companyNumber: TBC("company registration number — issued, not yet supplied here"),
-  registeredAddress: TBC("registered office address — set, not yet supplied here"),
-  // Also a required disclosure element, and deliberately not assumed. "England
-  // and Wales" is the likely answer for a company called Ltd operating on a
-  // .co.uk domain, but likely is not known: Scotland and Northern Ireland are
-  // separate registers, and the certificate of incorporation states which one.
-  placeOfRegistration: TBC("place of registration, exactly as the certificate of incorporation states it"),
+  companyNumber: "17404255",
+  placeOfRegistration: "England and Wales",
+  registeredAddress: TBC("registered office address, exactly as filed at Companies House"),
   contactEmail: "support@velvetviking.co.uk",
 } as const;
 
@@ -71,13 +106,47 @@ export const isConfirmed = (value: string): boolean =>
   typeof value === "string" && value.length > 0 && !value.startsWith("[TO BE CONFIRMED");
 
 /**
+ * How the operating company is described inside a document body.
+ *
+ * Assembled rather than written out, because these sentences previously
+ * interpolated the registered office directly — which would have printed
+ * "[TO BE CONFIRMED: registered office address...]" into the first paragraph of a
+ * published Privacy Policy. Every fact is included only once confirmed, so the
+ * sentence stays true and grammatical at each stage of being filled in, and gains
+ * the registered office automatically when that address is supplied.
+ */
+export const entityDescription = (): string => {
+  const parts: string[] = [];
+  if (isConfirmed(legalEntity.companyNumber)) {
+    parts.push(`company number ${legalEntity.companyNumber}`);
+  }
+  if (isConfirmed(legalEntity.placeOfRegistration)) {
+    parts.push(`registered in ${legalEntity.placeOfRegistration}`);
+  }
+  if (isConfirmed(legalEntity.registeredAddress)) {
+    parts.push(`registered office ${legalEntity.registeredAddress}`);
+  }
+  return parts.length ? `${legalEntity.name} (${parts.join(", ")})` : legalEntity.name;
+};
+
+/**
+ * Effective date of the two documents published for the private beta.
+ *
+ * A real date rather than a placeholder, because these documents are actually
+ * live now: HQ gave publication approval for the five-person beta, and a policy
+ * with no effective date is not much of a policy. The commercial documents keep
+ * their placeholder — they have no effective date because they are not in force.
+ */
+export const BETA_LEGAL_EFFECTIVE_DATE = "17 August 2026";
+
+/**
  * The statutory trading disclosure, assembled from whatever is actually known.
  *
  * The Companies (Trading Disclosures) Regulations 2008 require a company's
  * website to state its registered name, its registered number, its place of
- * registration and its registered office address. Only the name is available to
- * this repository today, so only the name renders; the remaining lines appear
- * automatically, with no code change, the moment the facts are filled in above.
+ * registration and its registered office address. Three of the four are now
+ * supplied; the registered office line appears automatically, with no code
+ * change, the moment that address is filled in above.
  *
  * `complete` is what a test and a pre-launch check can read to answer "is the
  * site's statutory disclosure finished yet" without anybody having to remember
@@ -134,34 +203,39 @@ export const privacyDraft: LegalDocument = {
   heading: "Privacy",
   sub: "What Valhalla stores about your training, why, and what you can do about it.",
   preamble:
-    "This policy explains what personal data Valhalla collects when you use the product, what it is used for, how long it is kept, and the rights you have over it. It is written to describe what the product actually does, not what it might do in future.",
-  lastUpdated: TBC("effective date"),
+    "This policy explains what personal data Valhalla collects when you use the product, what it is used for, how long it is kept, and the rights you have over it. It is written to describe what the product actually does today, in the invited private beta, rather than what it might do in future. Where something is switched off, it says so.",
+  lastUpdated: BETA_LEGAL_EFFECTIVE_DATE,
   sections: [
     {
       heading: "Who is responsible for your data",
       paragraphs: [
-        `Valhalla is operated by ${legalEntity.name} (company number ${legalEntity.companyNumber}), registered at ${legalEntity.registeredAddress}. For data protection purposes, we are the data controller for the personal data described in this policy.`,
+        `Valhalla is operated by ${entityDescription()}. For data protection purposes, we are the data controller for the personal data described in this policy.`,
         `If you have a question about your data, or want to exercise any of the rights set out below, contact us at ${legalEntity.contactEmail}.`,
       ],
     },
     {
       heading: "What we collect",
       paragraphs: [
-        "Account data: your email address, and the authentication records needed to sign you in. Valhalla uses passwordless email sign-in, so we do not store a password for your account.",
-        "Training data: the plan generated for you, the sessions you log, and the details you record against them — including pace, heart rate, perceived effort, how a session felt, and any notes you add.",
+        "Account data: your email address, and the authentication records needed to sign you in. You sign in with a link we email you, so you do not create or use a password to access Valhalla.",
+        "Programme data: the answers you give when you set up a training block — your goal distance and date, your current weekly volume, the days you can run, your benchmark time, and your goal times — and the plan Valhalla generates from them.",
+        "Completed workouts: for each session you log, the distance covered, the pace, your heart rate where you record it, your rating of perceived effort, how the session felt, any lap or split figures you enter by hand, and any notes you write. Where you use the notes tool that reads your own text back to you, we also keep the original wording alongside what it picked out.",
+        "Daily check-in: when you record it, how you are feeling that day — your general health, how your legs feel, and how you slept. You can use Valhalla without providing this.",
+        "Injury, pain and illness information where you supply it: if you tell Valhalla you are in pain, unwell, or carrying a niggle — whether through the daily check-in or in a session note — that is stored with the session or day it relates to and is used to decide what to recommend next, including recommending that you do not run.",
         "Coaching data: the outputs Valhalla produces about your training, including execution reviews, proposed plan changes, and the record of whether you accepted or declined them.",
-        "Connected services: Valhalla can support a connection to Strava, but that integration is currently switched off and no Strava data is collected. If it is enabled in future, we would store the access credentials for the connection and the activity data it returns, you would choose whether to connect, and you could disconnect at any time. This policy will be updated before that happens.",
-        "We do not collect advertising identifiers, and we do not track your behaviour across other websites or apps.",
+        "Preferences: units, theme, and whether you have enabled reminders.",
+        "Connected services: Valhalla can support a connection to Strava, but that integration is switched off and no Strava data is collected for anyone in this beta. If it is enabled in future, we would store the access credentials for the connection and the activity data it returns, you would choose whether to connect, and you could disconnect at any time. This policy will be updated before that happens.",
+        "We do not use analytics, advertising or tracking technology. We do not collect advertising identifiers, and we do not track your behaviour across other websites or apps.",
       ],
     },
     {
       heading: "What we use it for",
       paragraphs: [
-        "To create and adjust your training plan, and to produce the coaching output that is the substance of the product. Without your training data, Valhalla cannot do the thing you are paying it to do.",
+        "To create and adjust your training plan, and to produce the coaching output that is the substance of the product. Without your training data, Valhalla cannot do the thing you came to it for.",
+        "To decide what to recommend next, including holding you back or telling you not to run when what you have recorded says you should not.",
         "To keep your plan and history available across your devices, and to restore it if you sign in again later.",
         "To operate the service — authenticating you, keeping the service secure and available, and diagnosing faults.",
-        "To handle your support requests, and to manage your subscription and entitlement if and when paid access is enabled.",
-        "We use aggregate, non-identifying counts of ordinary product events — such as how often proposed plan changes are accepted or declined — to understand whether the coaching is working. We do not build advertising or behavioural profiles from this.",
+        "To handle your support requests, and to hear your feedback on the beta.",
+        "That is the complete list. We do not run analytics over your data, we do not measure your behaviour in the product, and we do not build advertising or behavioural profiles.",
       ],
     },
     {
@@ -174,7 +248,7 @@ export const privacyDraft: LegalDocument = {
     {
       heading: "Where your data is stored",
       paragraphs: [
-        "Your account and training data are stored in a managed database hosted in the European Union, operated on our behalf by our infrastructure providers. Those providers process the data only to provide the service to us and under contract.",
+        "Your account and training data are stored in a managed database hosted in the European Union, provided by Supabase acting as our data processor. Vercel hosts the website, the application and the small server functions that talk to the database. Both process the data only to provide the service to us, and under contract.",
         "The Valhalla application also stores a copy of your current plan and recent activity on your own device, so the product remains usable when you are offline or have a poor connection. Data held on your device is under your control and is removed when you uninstall the application or clear its data.",
       ],
     },
@@ -182,8 +256,9 @@ export const privacyDraft: LegalDocument = {
       heading: "How long we keep it",
       paragraphs: [
         "While your account is open, we keep your training history so that it remains available to you and so that coaching decisions can take your history into account. Losing your history would degrade the product for you, so we do not delete it routinely.",
-        "If your paid access ends, your data is retained and your history remains available to you — access to new coaching output stops, but your record of your own training does not disappear because a payment stopped.",
-        `If you delete your account, we delete your account and associated training data from our systems. Backups may take up to ${TBC("backup retention window, e.g. 30 days")} to cycle out, and we may retain a minimal record where we are legally required to.`,
+        "If this beta ends, or if Valhalla later becomes a paid product and you do not continue, your record of your own training does not disappear for that reason. We will tell you before anything changes about how long we keep it.",
+        "If you delete your account, we delete your account and the training data associated with it from our live systems straight away. Copies can persist for a short period in routine encrypted backups taken by our database provider before those backups rotate out, and we may retain a minimal record where the law requires it.",
+        `If you want your data deleted and would rather not do it yourself in the app, email ${legalEntity.contactEmail} and we will do it for you.`,
       ],
     },
     {
@@ -362,21 +437,22 @@ export const betaTermsDraft: LegalDocument = {
   eyebrow: "Velvet Viking",
   heading: "Private Beta Terms",
   sub: "The short version of what taking part in the Valhalla private beta means.",
-  preamble:
-    "You have been invited to test Valhalla before it is finished. These terms are deliberately brief, and cover what you can expect from us and what we ask of you.",
-  lastUpdated: TBC("effective date"),
+  preamble: `You have been invited to test Valhalla before it is finished. These terms are deliberately brief, and cover what you can expect from us and what we ask of you. They are between you and ${entityDescription()}, and they apply to the invited private beta only — if Valhalla later becomes a paid product, different terms will apply and you will see them before anything changes.`,
+  lastUpdated: BETA_LEGAL_EFFECTIVE_DATE,
   sections: [
     {
       heading: "1. This is pre-release software",
       paragraphs: [
-        "Valhalla is not finished. Expect bugs, rough edges, and changes between one week and the next. Features may be added, altered or removed while you are testing.",
+        "Valhalla is not finished. It will contain defects. Expect bugs, rough edges, and changes between one week and the next: features may be added, altered or removed while you are testing, and a plan or a screen you got used to may not look the same next month.",
+        "It is provided as it is, for testing, with no promise that it is fit for any particular purpose.",
         "We will do our best not to lose your training data, but you should not treat the beta as the only record of your training.",
       ],
     },
     {
       heading: "2. Taking part is voluntary and free",
       paragraphs: [
-        "There is no charge for beta access and no obligation to continue. You can stop at any time, for any reason, without explaining why — just tell us, or delete your account in the app.",
+        "There is no charge for beta access, no subscription, no trial that turns into a payment, and no card details asked for or held. Nothing in this beta costs money.",
+        "There is no obligation to continue. You can stop at any time, for any reason, without explaining why — just tell us, or delete your account in the app.",
         "Beta access is personal to you and tied to the email address we invited. Please do not share your access with anyone else.",
       ],
     },
@@ -410,8 +486,8 @@ export const betaTermsDraft: LegalDocument = {
     {
       heading: "7. Your data, and the law that applies",
       paragraphs: [
-        "How we handle your data is set out in the Privacy Policy. In short: your training data is yours, you can export or delete it, and we do not sell it or use it to train models for anyone else.",
-        TBC("governing law and jurisdiction — expected England and Wales; to be confirmed"),
+        "How we handle your data is set out in the Privacy Policy at /privacy, which forms part of these terms. In short: your training data is yours, you can export or delete it, and we do not sell it or use it to train models for anyone else.",
+        `These terms are governed by the law of ${legalEntity.placeOfRegistration}, and its courts have jurisdiction. Nothing here affects your statutory rights, and if you live elsewhere in the UK you keep the protection of your local consumer law.`,
         `Questions, problems, or anything at all: ${legalEntity.contactEmail}.`,
       ],
     },
