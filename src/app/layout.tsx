@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cinzel, Oswald, Inter } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { siteUrl } from "@/content/site";
 import "./globals.css";
 
 const cinzel = Cinzel({
@@ -21,8 +22,6 @@ const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
-
-const siteUrl = "https://velvet-viking-website-preview.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
