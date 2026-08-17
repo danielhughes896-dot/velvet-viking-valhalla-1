@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PageIntro from "@/components/sections/PageIntro";
 import CtaButton from "@/components/ui/CtaButton";
-import { pages } from "@/content/site";
+import { pages, betaAccess } from "@/content/site";
 import { plans, trial, commerceSeams } from "@/content/commerce";
 
 export const metadata: Metadata = {
@@ -74,6 +74,23 @@ export default function StartPage() {
             Your account is what holds your trial and your training — installing the app on your
             phone is a separate step from having one, and comes after this.
           </p>
+
+          {/* FIVE-PERSON PRIVATE BETA: a quiet, clearly-labelled side door for
+              testers who already have an invitation — not a second version of
+              the "Start Trial" flow above, and not presented as open signup.
+              Deliberately last on the page and ghost-styled so the primary
+              (disabled) commercial CTAs above keep the page's real visual
+              weight — this is what a general visitor should encounter first,
+              exactly as they will once the trial genuinely opens. */}
+          <div className="flex w-full flex-col items-center gap-3 border-t border-vv-line-soft pt-10 text-center">
+            <p className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text">
+              {betaAccess.eyebrow}
+            </p>
+            <p className="text-xs text-vv-ink-faint">{betaAccess.body}</p>
+            <CtaButton href={betaAccess.cta.href} variant="ghost">
+              {betaAccess.cta.label}
+            </CtaButton>
+          </div>
         </div>
       </section>
     </>

@@ -197,6 +197,21 @@ export const footer = {
   legalLine: "© " + new Date().getFullYear().toString() + " Velvet Viking. All rights reserved.",
 } as const;
 
+// FIVE-PERSON PRIVATE BETA: the current, authoritative Valhalla access/
+// download page — owned entirely by the app repo, not this one. The
+// website is only ever a doorway to it, never a second download surface;
+// the app's own Supabase beta gate remains the sole authority on who can
+// actually sign in from there. Real and working today — unlike
+// commerceSeams in content/commerce.ts, this isn't gated behind an
+// unapproved backend contract, so it isn't nullable. Deliberately absent
+// from primary nav/hero — reachable only by following the existing trial
+// journey to /start, so it isn't presented as a public, open invitation.
+export const betaAccess = {
+  eyebrow: "Private Beta",
+  body: "Already invited to the private beta?",
+  cta: { label: "Continue to Valhalla", href: "https://velvet-viking-valhalla-1.vercel.app/get" },
+} as const;
+
 export const pages = {
   pricing: {
     eyebrow: "Standard",
