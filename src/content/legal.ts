@@ -79,16 +79,20 @@ export const COMMERCIAL_LEGAL_APPROVED =
 /** Placeholder token, so unresolved business facts are greppable before launch. */
 const TBC = (what: string) => `[TO BE CONFIRMED: ${what}]`;
 
-// SUPPLIED BY HQ: the registered name, the company number and the place of
-// registration. The registered office address has NOT been supplied and is not
-// guessed — the Companies (Trading Disclosures) Regulations want the address as
-// filed, and a nearly-right address is worse than an absent one. It is the single
-// outstanding disclosure fact; see the report accompanying this change.
+// ALL FOUR STATUTORY FACTS ARE NOW SUPPLIED BY HQ, so the disclosure required by
+// the Companies (Trading Disclosures) Regulations 2008 is complete: registered
+// name, registered number, place of registration and registered office address.
+//
+// The address is held as one comma-separated line rather than as the three lines
+// it is filed on, because every place it appears is mid-sentence — "registered
+// office X" in the footer, "registered at X" in a document body. Line breaks
+// would read as a formatting fault in those positions. The wording is the filed
+// address unchanged; only the separators differ.
 export const legalEntity = {
   name: "Velvet Viking Ltd",
   companyNumber: "17404255",
   placeOfRegistration: "England and Wales",
-  registeredAddress: TBC("registered office address, exactly as filed at Companies House"),
+  registeredAddress: "7 Myrtle Drive, Halifax, HX2 8HQ",
   contactEmail: "support@velvetviking.co.uk",
 } as const;
 
