@@ -13,6 +13,14 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  // The regression suite runs on bare `node --test` with no bundler and no
+  // transpile step, so it is CommonJS on purpose — that is what keeps it
+  // runnable anywhere without adding a test toolchain to a three-dependency
+  // project. The app's own import rules are unchanged.
+  {
+    files: ["test/**/*.js"],
+    rules: { "@typescript-eslint/no-require-imports": "off" },
+  },
 ]);
 
 export default eslintConfig;

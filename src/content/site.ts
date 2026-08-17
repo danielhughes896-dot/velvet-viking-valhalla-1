@@ -6,6 +6,20 @@
 // placeholder positions, not filler — see PlaceholderMedia / the
 // `placeholder` fields for how they render.
 
+// THE PRODUCTION ORIGIN, IN ONE PLACE.
+//
+// This was a string literal in both layout.tsx and sitemap.ts, and both still
+// read velvet-viking-website-preview.vercel.app long after the site had a real
+// domain — which is how the canonical URL, the Open Graph URL and every sitemap
+// entry came to point search engines and social crawlers at a preview
+// deployment. Two copies of one fact is what let it go stale twice, so there is
+// now one copy, and a test fails if a vercel.app host reappears in either file.
+//
+// PUBLIC ORIGIN ONLY. The Valhalla app is a separate deployment on its own
+// Vercel hostname; that link further down this file is a genuine deployment URL
+// rather than a stale preview reference, and must stay exactly as it is.
+export const siteUrl = "https://velvetviking.co.uk";
+
 export const brand = {
   name: "Velvet Viking",
   product: "Valhalla",
