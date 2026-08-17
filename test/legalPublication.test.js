@@ -129,15 +129,52 @@ test('entityDescription includes each company fact only once confirmed', () => {
 // ---------------------------------------------------------------------------
 // COMPANY FACTS
 // ---------------------------------------------------------------------------
-test('the supplied company facts are present and the missing one is still a placeholder', () => {
+test('all four statutory company facts are supplied, none of them placeholders', () => {
+  // The Companies (Trading Disclosures) Regulations 2008 require exactly these
+  // four on a company's website. The registered office was the last outstanding
+  // one and has now been supplied by HQ.
   assert.match(LEGAL, /name: "Velvet Viking Ltd"/);
   assert.match(LEGAL, /companyNumber: "17404255"/);
   assert.match(LEGAL, /placeOfRegistration: "England and Wales"/);
-  assert.match(
-    LEGAL,
-    /registeredAddress: TBC\(/,
-    'the registered office address was not supplied and must not be guessed'
+  assert.match(LEGAL, /registeredAddress: "7 Myrtle Drive, Halifax, HX2 8HQ"/);
+  // Not a placeholder any more, and no facts may quietly regress to one.
+  const at = LEGAL.indexOf('export const legalEntity');
+  const entity = LEGAL.slice(at, LEGAL.indexOf('} as const;', at));
+  assert.ok(!/TBC\(/.test(entity), 'no company fact may be a placeholder');
+});
+
+test('the trading disclosure is complete', () => {
+  // `complete` is the one boolean a pre-launch check can read to answer "is the
+  // statutory disclosure finished". Evaluated here rather than asserted from the
+  // source text, so it reflects the real predicate rather than a regex of it.
+  const src = LEGAL
+    // strip TypeScript annotations so the module can be evaluated as plain JS
+    .replace(/^export const /gm, 'const ')
+    .replace(/: string\[\]/g, '')
+    .replace(/\(value: string\): boolean/g, '(value)')
+    .replace(/\(\): string/g, '()')
+    .replace(/\(\): boolean/g, '()')
+    .replace(/\(what: string\)/g, '(what)')
+    .replace(/ as const/g, '');
+  const at = src.indexOf('const TBC');
+  const end = src.indexOf('export type LegalSection') === -1
+    ? src.indexOf('const privacyDraft')
+    : src.indexOf('export type LegalSection');
+  const slice = src.slice(at, end).replace(/^type [\s\S]*?};$/gm, '');
+  const fn = new Function(slice + '\nreturn { tradingDisclosure, entityDescription, legalEntity };');
+  const { tradingDisclosure, entityDescription, legalEntity } = fn();
+
+  assert.equal(tradingDisclosure.complete, true, 'all four elements must be present');
+  assert.deepEqual(tradingDisclosure.lines, [
+    'Velvet Viking Ltd',
+    'Registered in England and Wales, company number 17404255',
+    'Registered office: 7 Myrtle Drive, Halifax, HX2 8HQ',
+  ]);
+  assert.equal(
+    entityDescription(),
+    'Velvet Viking Ltd (company number 17404255, registered in England and Wales, registered office 7 Myrtle Drive, Halifax, HX2 8HQ)'
   );
+  assert.equal(legalEntity.contactEmail, 'support@velvetviking.co.uk');
 });
 
 test('the trading disclosure guards every optional element', () => {
