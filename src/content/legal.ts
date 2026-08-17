@@ -76,6 +76,24 @@ export const LEGAL_APPROVALS = {
 export const COMMERCIAL_LEGAL_APPROVED =
   LEGAL_APPROVALS.terms && LEGAL_APPROVALS.cookies;
 
+/**
+ * PUBLIC FOOTER LEGAL LINKS.
+ *
+ * Derived from each document's own gate above, not a static list a human has
+ * to remember to edit. When LEGAL_APPROVALS.terms or .cookies flips true for
+ * commercial launch, that document's footer link appears on its own — the
+ * gate flip is the only change required, exactly as for the page itself.
+ *
+ * /beta-terms is never included here, in any state. It governs five invited
+ * testers, not the public — see the note on its own page — so it has no
+ * `approved` branch to eventually take; it simply isn't a footer candidate.
+ */
+export const publicLegalLinks = [
+  { label: "Privacy", href: "/privacy", approved: LEGAL_APPROVALS.privacy },
+  { label: "Terms", href: "/terms", approved: LEGAL_APPROVALS.terms },
+  { label: "Cookies", href: "/cookies", approved: LEGAL_APPROVALS.cookies },
+].filter((link) => link.approved);
+
 /** Placeholder token, so unresolved business facts are greppable before launch. */
 const TBC = (what: string) => `[TO BE CONFIRMED: ${what}]`;
 

@@ -203,11 +203,10 @@ export const footer = {
     youtube: null as string | null,
     tiktok: null as string | null,
   },
-  legalLinks: [
-    { label: "Privacy", href: "/privacy" },
-    { label: "Terms", href: "/terms" },
-    { label: "Cookies", href: "/cookies" },
-  ],
+  // Public legal footer links moved to publicLegalLinks in @/content/legal —
+  // derived from each document's own LEGAL_APPROVALS gate rather than a
+  // static list here, so Terms/Cookies appear automatically once approved
+  // instead of requiring someone to remember this array.
   legalLine: "© " + new Date().getFullYear().toString() + " Velvet Viking. All rights reserved.",
 } as const;
 

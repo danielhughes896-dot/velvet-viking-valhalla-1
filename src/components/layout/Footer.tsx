@@ -1,7 +1,7 @@
 import Link from "next/link";
 import SocialLinks from "@/components/layout/SocialLinks";
 import { footer } from "@/content/site";
-import { tradingDisclosure } from "@/content/legal";
+import { tradingDisclosure, publicLegalLinks } from "@/content/legal";
 
 // A quiet close, not a site directory: no repeat of the primary nav
 // (Philosophy/About/Valhalla are one click away in the header already), and
@@ -23,8 +23,13 @@ export default function Footer() {
 
         <SocialLinks />
 
+        {/* PRIVATE BETA: only the documents actually approved for publication
+            appear here — see publicLegalLinks in @/content/legal. Terms and
+            Cookies stay off this list while LEGAL_APPROVALS.terms/.cookies
+            are false, and reappear on their own the moment either flips,
+            with no change required here. */}
         <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-          {footer.legalLinks.map((link) => (
+          {publicLegalLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}

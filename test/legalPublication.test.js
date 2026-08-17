@@ -308,14 +308,65 @@ test('both published pages declare their canonical path', () => {
   assert.match(read('src/app/beta-terms/page.tsx'), /canonical: "\/beta-terms"/);
 });
 
-test('the website footer links Privacy and does not link the beta terms', () => {
-  const site = read('src/content/site.ts');
-  const at = site.indexOf('legalLinks:');
-  const links = site.slice(at, site.indexOf(']', at));
-  assert.match(links, /href: "\/privacy"/, 'Privacy belongs in the public footer');
+test('the public footer link list is derived from LEGAL_APPROVALS, not a static array', () => {
+  const at = LEGAL.indexOf('export const publicLegalLinks');
+  assert.ok(at !== -1, 'publicLegalLinks must exist in @/content/legal');
+  const block = LEGAL.slice(at, LEGAL.indexOf('.filter(', at));
+  assert.match(
+    block,
+    /href: "\/privacy",\s*approved: LEGAL_APPROVALS\.privacy/,
+    'Privacy must be gated on its own approval flag, not hard-coded true'
+  );
+  assert.match(
+    block,
+    /href: "\/terms",\s*approved: LEGAL_APPROVALS\.terms/,
+    'Terms must be gated on its own approval flag'
+  );
+  assert.match(
+    block,
+    /href: "\/cookies",\s*approved: LEGAL_APPROVALS\.cookies/,
+    'Cookies must be gated on its own approval flag'
+  );
+  assert.match(LEGAL.slice(at), /\.filter\(\(link\) => link\.approved\)/, 'unapproved documents must be filtered out');
   assert.ok(
-    !/beta-terms/.test(links),
-    'the beta terms are for five invited testers, not public footer furniture'
+    !/beta-terms/.test(LEGAL.slice(at, LEGAL.indexOf('.filter(', at))),
+    'the beta terms are for five invited testers, not public footer furniture — must never be a footer candidate'
+  );
+});
+
+test('only approved legal documents currently reach the public footer', () => {
+  // Cross-checks the gate-boundary test above (privacy: true, terms/cookies:
+  // false) against how publicLegalLinks actually filters, without executing
+  // TypeScript: with today's gate state, Privacy's `approved` is `true` and
+  // Terms/Cookies' are `false`, so the .filter(link => link.approved) call
+  // keeps Privacy alone.
+  const at = LEGAL.indexOf('export const LEGAL_APPROVALS');
+  const gates = LEGAL.slice(at, LEGAL.indexOf('} as const;', at));
+  assert.match(gates, /privacy: true/);
+  assert.match(gates, /terms: false/);
+  assert.match(gates, /cookies: false/);
+});
+
+test('the footer renders legal links from the derived, state-driven list only', () => {
+  const footer = read('src/components/layout/Footer.tsx');
+  assert.match(
+    footer,
+    /import\s*\{[^}]*publicLegalLinks[^}]*\}\s*from\s*"@\/content\/legal"/,
+    'Footer must import publicLegalLinks from @/content/legal'
+  );
+  assert.match(footer, /publicLegalLinks\.map/, 'Footer must render from publicLegalLinks');
+  assert.ok(
+    !/footer\.legalLinks/.test(footer),
+    'the footer must not fall back to a static legalLinks array — visibility must come from LEGAL_APPROVALS'
+  );
+});
+
+test('site.ts no longer hard-codes a static public legal link list', () => {
+  const site = read('src/content/site.ts');
+  assert.ok(
+    !/legalLinks:\s*\[/.test(site),
+    'legal link visibility must live in publicLegalLinks (@/content/legal), not a static array in site.ts — ' +
+      'a static array here is exactly the hard-coded regression this architecture exists to prevent'
   );
 });
 
