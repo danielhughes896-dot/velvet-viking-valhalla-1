@@ -40,11 +40,16 @@ export const LEGAL_CONTENT_APPROVED = false;
 /** Placeholder token, so unresolved business facts are greppable before launch. */
 const TBC = (what: string) => `[TO BE CONFIRMED: ${what}]`;
 
+// Confirmed by HQ: Velvet Viking Ltd is incorporated and support@velvetviking.co.uk
+// is live. Company number and registered office are still outstanding here only
+// because they have not been supplied to this workstream — they are known facts,
+// not undecided ones, and both are required by the Companies (Trading Disclosures)
+// Regulations before the site trades.
 export const legalEntity = {
-  name: TBC("registered legal entity name"),
-  companyNumber: TBC("company registration number, if incorporated"),
-  registeredAddress: TBC("registered business address"),
-  contactEmail: TBC("support/privacy contact email address"),
+  name: "Velvet Viking Ltd",
+  companyNumber: TBC("company registration number — issued, not yet supplied here"),
+  registeredAddress: TBC("registered office address — set, not yet supplied here"),
+  contactEmail: "support@velvetviking.co.uk",
 } as const;
 
 export type LegalSection = {
@@ -87,7 +92,7 @@ export const privacyDraft: LegalDocument = {
         "Account data: your email address, and the authentication records needed to sign you in. Valhalla uses passwordless email sign-in, so we do not store a password for your account.",
         "Training data: the plan generated for you, the sessions you log, and the details you record against them — including pace, heart rate, perceived effort, how a session felt, and any notes you add.",
         "Coaching data: the outputs Valhalla produces about your training, including execution reviews, proposed plan changes, and the record of whether you accepted or declined them.",
-        "Connected services: if you choose to connect a third-party service such as Strava, we store the access credentials for that connection and the activity data it returns. You can disconnect at any time.",
+        "Connected services: Valhalla can support a connection to Strava, but that integration is currently switched off and no Strava data is collected. If it is enabled in future, we would store the access credentials for the connection and the activity data it returns, you would choose whether to connect, and you could disconnect at any time. This policy will be updated before that happens.",
         "We do not collect advertising identifiers, and we do not track your behaviour across other websites or apps.",
       ],
     },
@@ -281,6 +286,76 @@ export const cookiesDraft: LegalDocument = {
     {
       heading: "Questions",
       paragraphs: [`Contact us at ${legalEntity.contactEmail}.`],
+    },
+  ],
+};
+
+// ---------------------------------------------------------------------------
+// PRIVATE BETA TERMS (draft)
+// ---------------------------------------------------------------------------
+//
+// Separate from termsDraft on purpose. The full Terms are written for a paid
+// commercial relationship; these are for five invited, non-paying testers using
+// pre-release software. Deliberately short — burying five people who are doing
+// us a favour in a commercial contract would be both disproportionate and
+// counterproductive. Replaced by termsDraft at commercial launch, not extended.
+
+export const betaTermsDraft: LegalDocument = {
+  eyebrow: "Velvet Viking",
+  heading: "Private Beta Terms",
+  sub: "The short version of what taking part in the Valhalla private beta means.",
+  preamble:
+    "You have been invited to test Valhalla before it is finished. These terms are deliberately brief, and cover what you can expect from us and what we ask of you.",
+  lastUpdated: TBC("effective date"),
+  sections: [
+    {
+      heading: "1. This is pre-release software",
+      paragraphs: [
+        "Valhalla is not finished. Expect bugs, rough edges, and changes between one week and the next. Features may be added, altered or removed while you are testing.",
+        "We will do our best not to lose your training data, but you should not treat the beta as the only record of your training.",
+      ],
+    },
+    {
+      heading: "2. Taking part is voluntary and free",
+      paragraphs: [
+        "There is no charge for beta access and no obligation to continue. You can stop at any time, for any reason, without explaining why — just tell us, or delete your account in the app.",
+        "Beta access is personal to you and tied to the email address we invited. Please do not share your access with anyone else.",
+      ],
+    },
+    {
+      heading: "3. What we ask of you",
+      paragraphs: [
+        "Use it as you would normally train, and tell us what you find — especially anything confusing, wrong, or that made you lose confidence in what the app was telling you.",
+        "Please do not publicly share screenshots, coaching output or details of unreleased features while the beta is running. We are not asking you to keep the existence of Valhalla secret — just to hold off on publishing the inside of it.",
+      ],
+    },
+    {
+      heading: "4. Feedback",
+      paragraphs: [
+        "If you send us feedback, ideas or bug reports, we may use them to improve Valhalla without restriction and without owing you payment. You are not giving up anything else by taking part, and you keep ownership of your own training data.",
+      ],
+    },
+    {
+      heading: "5. Valhalla is a training tool, not a medical one",
+      paragraphs: [
+        "Valhalla makes training judgements from the training data you give it. It does not diagnose, treat or monitor injury or illness, it cannot tell whether you are injured, and nothing it says is medical advice or medical clearance.",
+        "You are responsible for deciding whether you are well enough to train, and for stopping when you should. If you have a health condition, are coming back from injury, or are unsure whether training is safe for you, speak to a qualified professional. If something hurts, trust that over the app.",
+      ],
+    },
+    {
+      heading: "6. Availability, and ending access",
+      paragraphs: [
+        "The beta may be unavailable at times, and we may end it, or your access to it, at any point. If we end the beta we will tell you beforehand where we reasonably can, and explain what happens to your data.",
+        "We do not exclude our liability for death or personal injury caused by our negligence, or for fraud, and nothing here affects your statutory rights. Beyond that, and because this is free pre-release software provided as-is, our liability to you is limited to the fullest extent the law allows.",
+      ],
+    },
+    {
+      heading: "7. Your data, and the law that applies",
+      paragraphs: [
+        "How we handle your data is set out in the Privacy Policy. In short: your training data is yours, you can export or delete it, and we do not sell it or use it to train models for anyone else.",
+        TBC("governing law and jurisdiction — expected England and Wales; to be confirmed"),
+        `Questions, problems, or anything at all: ${legalEntity.contactEmail}.`,
+      ],
     },
   ],
 };
