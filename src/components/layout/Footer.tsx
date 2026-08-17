@@ -1,6 +1,7 @@
 import Link from "next/link";
 import SocialLinks from "@/components/layout/SocialLinks";
 import { footer } from "@/content/site";
+import { tradingDisclosure } from "@/content/legal";
 
 // A quiet close, not a site directory: no repeat of the primary nav
 // (Philosophy/About/Valhalla are one click away in the header already), and
@@ -36,6 +37,26 @@ export default function Footer() {
         </ul>
 
         <p className="text-xs text-vv-ink-faint">{footer.legalLine}</p>
+
+        {/* STATUTORY TRADING DISCLOSURE.
+            Required on a company's website by the Companies (Trading
+            Disclosures) Regulations 2008, and it belongs here rather than
+            anywhere louder: it is a legal obligation, not a marketing message,
+            and the hero is not the place for a company number.
+
+            Rendered from confirmed facts only. While the company number,
+            place of registration and registered office are still placeholders
+            in @/content/legal, this prints the registered name alone and adds
+            each remaining line automatically once the fact is supplied — no
+            code change, and no possibility of a "[TO BE CONFIRMED: ...]"
+            string reaching a visitor. */}
+        <address className="max-w-md text-[0.6875rem] not-italic leading-relaxed text-vv-ink-faint">
+          {tradingDisclosure.lines.map((line) => (
+            <span key={line} className="block">
+              {line}
+            </span>
+          ))}
+        </address>
       </div>
     </footer>
   );
