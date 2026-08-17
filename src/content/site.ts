@@ -226,6 +226,20 @@ export const pages = {
     expanded: [
       "Valhalla builds your plan from what's true about you — your current fitness, a real benchmark performance, your race target and the days you can actually train. From there, it works out the paces and effort levels that make sense for your training, not generic ones.",
       "Once training starts, Valhalla pays attention. Every session is compared with what was planned — pace, heart rate, effort, execution. But one hard day doesn't change anything on its own. Valhalla waits for a real pattern before it acts, then proposes a specific adjustment to what comes next. You decide whether to take it.",
+      // PHASE 4 AUDIT: two genuine gaps, not duplication — confirmed against
+      // the app's real decision engine before writing this. (1) Every other
+      // paragraph on this page frames "change" as something cautious/
+      // downward ("waits", "one hard day doesn't change anything"); nothing
+      // said Valhalla also recognises when training is going well and lets
+      // it continue, or when recovery should outrank the schedule entirely
+      // — both are real, evidence-gated outcomes, not aspirational. (2)
+      // Nothing on the product-explanation pages said what happens to a
+      // MISSED session — "doesn't chase missed-session debt" previously
+      // only existed as a Pricing feature bullet, reached after a visitor
+      // has already left "understand the product" behind. Stated here in
+      // plain outcomes, no internal state names (no HOLD/PROGRESS/ADAPT/
+      // RECOVER, no "Plan Evolution").
+      "A missed session doesn't spiral into a rescue plan — the days worth rescheduling get another chance when the calendar allows it, the rest are simply left behind, because that protects the training itself, not a completion percentage. And a change is never automatically a step back: Valhalla knows when to hold the current plan, when to let progression continue, and when recovery matters more than the schedule.",
       // PHASE 2 AUDIT: was "It's a coach that's actually looking at it" —
       // flagged against Business's unearned-claim list ("coach-like",
       // "understands training"). Rewritten to keep the not-a-dashboard

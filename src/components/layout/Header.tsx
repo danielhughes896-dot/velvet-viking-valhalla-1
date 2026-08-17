@@ -1,5 +1,7 @@
+import Link from "next/link";
 import HeaderBrand from "@/components/layout/HeaderBrand";
 import MobileNav from "@/components/layout/MobileNav";
+import { nav } from "@/content/site";
 
 // Prototype header: wordmark + a single universal menu control, at every
 // breakpoint. No inline nav links, no permanent CTA — both now live inside
@@ -20,6 +22,34 @@ export default function Header() {
         <HeaderBrand />
         <MobileNav />
       </div>
+      {/* PHASE 4: MobileNav's link list only ever exists in the DOM via a
+          client portal gated on hydration (useIsClient) — without JS, the
+          hamburger button is inert AND the nav links themselves are never
+          rendered at all, leaving only the "/" wordmark reachable. This
+          <noscript> fallback is the browser's own JS-off/JS-on switch, not
+          React state, so it is inert and invisible whenever scripting is
+          enabled — the approved MobileNav experience is byte-for-byte
+          unchanged for every real visitor. Reuses Footer's existing
+          legal-link styling rather than inventing a new visual treatment. */}
+      <noscript>
+        <nav
+          aria-label="Primary"
+          className="border-t border-vv-line-soft bg-vv-bg px-6 py-3 sm:px-8"
+        >
+          <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+            {nav.links.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="font-head text-xs font-medium uppercase tracking-[0.15em] text-vv-ink-faint hover:text-vv-ink"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </noscript>
     </header>
   );
 }
