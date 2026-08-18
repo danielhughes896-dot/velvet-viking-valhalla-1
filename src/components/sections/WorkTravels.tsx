@@ -11,6 +11,12 @@ type WorkTravelsProps = {
   temple: LocationTile;
   map: LocationTile;
   alt: string;
+  /** Appended to the outer <section> className. Used exactly once, on this
+   * component's own homepage instance, to pull this section up over
+   * RaceBreak's pinned sticky media — see RaceBreak.tsx for the transition
+   * mechanics. Optional and additive: omitting it changes nothing about
+   * this component's own layout, background or composition. */
+  className?: string;
 };
 
 // A thin, muted gold line — restrained enough to read as a premium
@@ -49,9 +55,10 @@ export default function WorkTravels({
   temple,
   map,
   alt,
+  className = "",
 }: WorkTravelsProps) {
   return (
-    <section className="theme-dark bg-vv-bg">
+    <section className={`theme-dark bg-vv-bg ${className}`}>
       {/* DESKTOP POLISH: widened to match the rest of the page's max-w-6xl
           rhythm — this section's own container was a step narrower than
           its neighbours, which read as an unintended dip in scale between

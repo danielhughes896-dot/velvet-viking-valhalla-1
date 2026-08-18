@@ -24,21 +24,37 @@ type RaceBreakProps = {
 // width-unconstrained. Same photo, same crop (none), different authority.
 //
 // CONSISTENCY COMPOUNDS SCROLL RESTORATION: this is the one deliberate
-// immersive scroll moment on the homepage, restoring the spirit of the
-// original FullWidthPhoto sticky transition (see git history: commit
+// immersive scroll moment on the homepage, restoring the original
+// FullWidthPhoto sticky-then-covered transition (see git history: commit
 // 5afaf41 introduced it, replaced by this component without it in 9c7cd45)
-// without either of that version's two problems for THIS photo — its
-// fragile "-mt-[100vh] + z-index" cross-section cover mechanic (Work
-// Travels, the section after this one, is untouched by this change), and
-// its assumption of a full-bleed landscape source (this photo keeps its
-// own portrait box above, never force-cropped). The photo box itself pins
-// in place (pure CSS position: sticky, no scroll-jacking) at sm+ only; the
-// spacer below gives it a real but restrained ~40vh of hold before it
-// releases on its own and the caption, then Work Travels, follow exactly
-// as they already did. Sits out entirely on mobile — no sticky, no
-// spacer, identical to the previous static rendering — and under
-// prefers-reduced-motion, where a held-in-place element while the rest of
-// the page keeps moving is itself a motion effect worth switching off.
+// adapted to THIS photo rather than reused verbatim — that version assumed
+// a full-bleed landscape source and force-cropped to fill the frame; this
+// photo keeps its own portrait box above, never cropped. The photo box
+// itself pins in place (pure CSS position: sticky, no scroll-jacking) at
+// sm+ only; the spacer below gives it real scroll room to hold before
+// WorkTravels — pulled up over this section from below, see the className
+// passed to it in page.tsx — visibly rises and covers it, the same "next
+// section rolls over the pinned image" behaviour the original had. Sits
+// out entirely on mobile — no sticky, no spacer, identical to the
+// previous static rendering — and under prefers-reduced-motion, where a
+// held-in-place element while the rest of the page keeps moving is itself
+// a motion effect worth switching off.
+//
+// KNOWN SIDE EFFECT, FLAGGED RATHER THAN SILENTLY FIXED: the caption below
+// is untouched (same position, same className as the previously-approved
+// hold-then-release version) but scroll-trace verification shows it is no
+// longer visible on screen at any scroll position once the cover
+// transition reaches it — it sits in the exact document region WorkTravels'
+// pull-up now occupies. An earlier attempt at this fix nested the caption
+// inside the sticky wrapper so it would hold and disappear together with
+// the photo; that didn't work either, because photo+caption pinned
+// together (~1000px) is taller than many sm+ viewports (900px and
+// below), so the caption fell below the fold for the entire pin regardless
+// of the cover transition. Solving this for real means overlaying the
+// caption on the photo itself (closer to the original FullWidthPhoto
+// treatment) — a genuine redesign of the caption's visual treatment, which
+// this task's own brief asks to keep unchanged. Left as-is and reported
+// rather than decided unilaterally; see the report for the options.
 export default function RaceBreak({ src, alt, caption }: RaceBreakProps) {
   return (
     <section className="theme-dark bg-vv-bg">

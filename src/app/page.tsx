@@ -48,16 +48,27 @@ export default function Home() {
       {/* REAL-IMAGERY PREVIEW: RaceBreak replaces FullWidthPhoto in this
           slot — same "editorial break after product proof" beat, but sized
           to the race photo's real portrait composition instead of force-
-          cropping it into a landscape full-bleed frame. Not sticky, so
-          EarnYourPlace below no longer needs the -mt-[100vh] pull-up that
-          only made sense against FullWidthPhoto's pinned layer. */}
+          cropping it into a landscape full-bleed frame. CONSISTENCY
+          COMPOUNDS COVER TRANSITION: RaceBreak's photo pins sticky at sm+
+          (see that component); WorkTravels below is pulled up over it — see
+          the className passed there for how the two halves of this one
+          transition connect. */}
       <RaceBreak src={raceBreak.media.src} alt={raceBreak.media.alt} caption={raceBreak.caption} />
 
       {/* FINAL POLISH: moved ahead of Earn Your Place — Work Travels reads
           as an editorial interlude, not the page's last emotional beat
           before the commercial close. Earn Your Place, pricing, and the
           final CTA now close the page instead, so Velvet Viking/Valhalla
-          reclaims it after this section rather than ending on it. */}
+          reclaims it after this section rather than ending on it.
+          CONSISTENCY COMPOUNDS COVER TRANSITION: pulled up over RaceBreak's
+          pinned photo at sm+ only (mobile/reduced-motion get zero margin
+          adjustment — plain, unmoved stacking, exactly as if this className
+          were never passed) — restores the historical FullWidthPhoto
+          behaviour (image visually pinned while the next section rises and
+          covers it), adapted to RaceBreak's portrait box and today's
+          section order rather than the old full-bleed landscape version.
+          WorkTravels' own composition, copy and imagery are completely
+          unchanged; only its outer wrapper is affected. */}
       <WorkTravels
         desktopSrc={workTravels.desktop.src}
         mobileHeadlineSrc={workTravels.mobile.headline}
@@ -65,6 +76,7 @@ export default function Home() {
         temple={workTravels.temple}
         map={workTravels.map}
         alt={workTravels.alt}
+        className="motion-safe:sm:relative motion-safe:sm:z-10 motion-safe:sm:-mt-[120vh]"
       />
 
       {/* RESTORED: the three-slot gallery composition is approved as part
