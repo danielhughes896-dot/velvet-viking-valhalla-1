@@ -40,21 +40,40 @@ type RaceBreakProps = {
 // held-in-place element while the rest of the page keeps moving is itself
 // a motion effect worth switching off.
 //
-// KNOWN SIDE EFFECT, FLAGGED RATHER THAN SILENTLY FIXED: the caption below
-// is untouched (same position, same className as the previously-approved
-// hold-then-release version) but scroll-trace verification shows it is no
-// longer visible on screen at any scroll position once the cover
-// transition reaches it — it sits in the exact document region WorkTravels'
-// pull-up now occupies. An earlier attempt at this fix nested the caption
-// inside the sticky wrapper so it would hold and disappear together with
-// the photo; that didn't work either, because photo+caption pinned
-// together (~1000px) is taller than many sm+ viewports (900px and
-// below), so the caption fell below the fold for the entire pin regardless
-// of the cover transition. Solving this for real means overlaying the
-// caption on the photo itself (closer to the original FullWidthPhoto
-// treatment) — a genuine redesign of the caption's visual treatment, which
-// this task's own brief asks to keep unchanged. Left as-is and reported
-// rather than decided unilaterally; see the report for the options.
+// CAPTION VISIBILITY FIX: the below-photo caption previously became
+// permanently invisible once the cover transition engaged — it sat in the
+// exact document region WorkTravels' pull-up occupies (confirmed by direct
+// scroll tracing; nesting it inside the sticky unit didn't work either,
+// since photo+caption pinned together is taller than many sm+ viewports).
+// Fixed by giving it two renderings, gated on the exact same
+// `motion-safe:sm:` condition the sticky/cover mechanic itself uses:
+//   - at motion-safe:sm+ (where the photo pins and gets covered), the
+//     caption moves INTO the photo's own relative container as a small,
+//     restrained overlay — reusing the same "small tracked label +
+//     text-shadow for legibility over a real photo" treatment WorkTravels'
+//     own location labels already use elsewhere on this page, not a new
+//     visual language. It is now part of the same pinned surface as the
+//     photo, so it holds and gets covered together with it.
+//   - below sm, and under prefers-reduced-motion at any width (where the
+//     photo is a plain static block), the ORIGINAL below-photo caption
+//     renders completely unchanged — same classes, same position, same
+//     size — exactly as it did before the cover transition existed.
+// The wording is identical in both; only which one is shown, and how the
+// sm+/motion-safe one is styled, differs.
+//
+// OVERLAY POSITIONED NEAR THE TOP, NOT THE BOTTOM, OF THE PHOTO: the
+// pull-up amount that guarantees WorkTravels fully closes over the photo
+// before the pin releases (see the className passed to WorkTravels in
+// page.tsx) necessarily means WorkTravels already covers most of the
+// photo's lower two-thirds from the moment the pin engages — verified by
+// direct measurement: the uncovered band at pin-start is only the photo's
+// own top ~130px, shrinking to zero well before the hold ends. A caption
+// placed near the bottom, however small, would be covered before or at
+// the instant it appears — never actually seen. Top placement is the only
+// position genuinely visible for a meaningful stretch of the pin. This is
+// a deliberate deviation from a literal "over the lower part of the
+// photograph" for that reason, not an oversight — see the report for the
+// exact measurements this was based on.
 export default function RaceBreak({ src, alt, caption }: RaceBreakProps) {
   return (
     <section className="theme-dark bg-vv-bg">
@@ -67,14 +86,30 @@ export default function RaceBreak({ src, alt, caption }: RaceBreakProps) {
             sizes="(min-width: 640px) 55vw, 90vw"
             className="object-cover"
           />
+          {caption ? (
+            <p
+              className="pointer-events-none absolute inset-x-0 top-3 hidden text-center font-head text-xs font-semibold uppercase tracking-[0.24em] text-vv-gold-text motion-safe:sm:block sm:top-5 sm:text-sm"
+              style={{ textShadow: "0 1px 6px rgba(0,0,0,0.6)" }}
+            >
+              {caption}
+            </p>
+          ) : null}
         </div>
       </div>
       {/* Pure scroll-distance spacer, not a visible element — see comment
           above for why the sticky box needs this to hold for a moment
           rather than releasing the instant it's pinned. */}
       <div aria-hidden className="hidden motion-safe:sm:block motion-safe:sm:h-[40vh]" />
+      {/* motion-safe:sm:invisible, not hidden: this paragraph must keep
+          occupying its original box at that breakpoint (the overlay
+          caption above is position:absolute and contributes no height of
+          its own) so the sticky pin's hold duration — calibrated against
+          this section's total document height — stays exactly what it
+          was before this fix. visibility:hidden also removes it from the
+          accessibility tree, same as display:none would, so there's no
+          duplicate-caption announcement at sm+ either. */}
       {caption ? (
-        <p className="mt-10 pb-20 text-center font-display text-xl font-semibold uppercase tracking-[0.08em] text-vv-ink sm:pb-28 sm:text-3xl">
+        <p className="mt-10 pb-20 text-center font-display text-xl font-semibold uppercase tracking-[0.08em] text-vv-ink sm:pb-28 sm:text-3xl motion-safe:sm:invisible">
           {caption}
         </p>
       ) : null}
