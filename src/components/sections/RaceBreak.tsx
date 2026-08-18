@@ -36,44 +36,67 @@ type RaceBreakProps = {
 // there it's a plain static block, same as it always renders below the
 // sm breakpoint... except there is no such breakpoint carve-out any more.
 //
-// REDONE FOR EVERY WIDTH, WITH A GENUINE HOLD BEFORE THE COVER BEGINS:
-// the first version of this transition pulled WorkTravels up by a flat
-// -mt-[120vh] restricted to sm+, calibrated only so the cover completed
-// before the pin released. That satisfied "fully covers" but not the
-// actual requested EXPERIENCE: WorkTravels was already intruding on the
-// photo from the instant the pin engaged, with no period where the photo
-// was the only thing on screen — it read as the next section being
-// yanked up through the current one, not sliding over it once ready.
+// GEOMETRY, DERIVED RATHER THAN TUNED. Writing the whole derivation down
+// because two earlier attempts failed by picking a pull-up number first
+// and letting everything else fall out of it. Document-space terms:
 //
-// This version derives the geometry from three named phases instead of
-// one flat number:
-//   1. HOLD (~30vh of scroll): photo pins, WorkTravels is still entirely
-//      below the viewport — not just below the photo, below the fold —
-//      so the photo is the only thing visible and fully readable.
-//   2. COVER (~100vh of scroll): WorkTravels enters at the viewport's
-//      own bottom edge and rises to fully cover the pinned photo, top to
-//      bottom — literally "the next section sliding up from the bottom
-//      of the screen," not appearing already partway up the photo.
-//   3. RELEASE: the pin's own scroll room (the spacer below) is sized to
-//      outlast HOLD+COVER with a margin, so full coverage is always
-//      reached while still pinned — the same reason this margin existed
-//      in the previous version, just recalculated for the new geometry.
+//   P    sticky wrapper's natural top      T    sticky top offset (96px)
+//   Hs   sticky wrapper height             VH   viewport height
+//   Ctail  section content BELOW the wrapper (spacer + caption block)
+//   SB   section bottom  = P + Hs + Ctail
+//   M    WorkTravels' negative margin-top; its top W = SB + M
 //
-// The spacer height (140vh, pure vh — it's scroll distance, which is a
-// viewport-HEIGHT-relative concept regardless of device) is the same at
-// every width. The WorkTravels pull-up is not: the photo's own height is
-// viewport-height-driven at sm+ (h-[78vh]) but viewport-WIDTH-driven
-// below sm (a fixed-ratio box whose height follows its own width, capped
-// at max-w-sm) — see the two className values passed to WorkTravels in
-// page.tsx, each solving the same "start WorkTravels at hold+cover below
-// the viewport at pin-engage" equation against that breakpoint's actual
-// box-height formula, verified against this breakpoint's real rendered
-// numbers rather than assumed.
+//   pin engages           Y_pin   = P - T
+//   WorkTravels appears   Y_enter = W - VH          (its top hits the fold)
+//   cover completes       Y_cover = W - T           (its top reaches the photo's)
+//   sticky releases       Y_rel   = SB - Hs - T
 //
-// CAPTION: unchanged from the previous fix — a small overlay near the
-// TOP of the photo (see below), now even more reliably visible than
-// before, since WorkTravels no longer touches the photo at all during
-// the entire HOLD phase.
+//   HOLD  = Y_enter - Y_pin = Hs + Ctail + M - VH + T
+//   SWEEP = Y_cover - Y_enter = VH - T        (inherent; not a free choice)
+//
+// Requiring cover to finish B px before release, and solving for M with
+// HOLD as the CHOSEN input rather than the leftover:
+//
+//   Ctail = HOLD + (VH - T) + B     and then     |M| = Hs + B
+//
+// So the pull-up is just "the pinned photo's own height plus a safety
+// margin" — it does not encode the hold at all. The hold lives entirely
+// in Ctail, which is why it can now be set to a deliberate short beat
+// (a PERCEIVED 150px mobile / 200px sm+ — see the spacer's own note for
+// why perceived and geometric differ) instead of being whatever distance
+// happened to remain after guaranteeing coverage. That inversion is the
+// fix for the "page feels stuck" dead scroll: the previous build's
+// geometric hold measured 401/543/458/512px at 390/820/1440/1920.
+//
+// Hs differs by breakpoint because the photo box is sized differently:
+// width-authority below sm (pt-20 + a 3:4 box whose height follows its
+// own width) and height-authority at sm+ (pt-28 + a flat 78vh). Hence the
+// two pull-up values in page.tsx. The spacer carries Ctail minus the
+// caption block's own height (measured: 147px mobile / 188px sm+).
+//
+// WHY THE PHOTO USED TO REAPPEAR, AND WHERE THAT IS FIXED: the pinned
+// photo is `position: sticky`, i.e. a POSITIONED element with
+// z-index:auto, while the sections below are `position: static`.
+// Positioned elements paint above static ones, so wherever their boxes
+// overlapped, the photo painted ON TOP OF Earn Your Place and reappeared
+// long after it had been covered. The pull-up is what makes that overlap
+// possible: after release the photo sits in [SB-Hs, SB] while WorkTravels
+// sits in [SB+M, SB+M+WT_h], so WorkTravels alone only keeps it hidden
+// while WT_h >= |M| — a coincidence that happened to hold at 390/1440 and
+// failed at 820/1920.
+//
+// The fix is NOT here; it is the z-index passed to the Earn Your Place
+// section in page.tsx, which is the same mechanism the original
+// FullWidthPhoto transition used ("higher z-index, opaque background").
+// Recorded here because this component is where the cause lives: making
+// this section `isolation: isolate` was tried first, on the theory that a
+// non-positioned stacking context paints atomically in flow order and so
+// would fall below later siblings. Measured, it does not — browsers paint
+// such a context at the z-index:0 level, still above static content — and
+// 820px still reappeared with it applied. Do not re-add it expecting a
+// fix; give any future section that overlaps this one a z-index instead.
+//
+// CAPTION: unchanged — a small overlay near the TOP of the photo (below).
 export default function RaceBreak({ src, alt, caption }: RaceBreakProps) {
   return (
     <section className="theme-dark bg-vv-bg">
@@ -96,10 +119,21 @@ export default function RaceBreak({ src, alt, caption }: RaceBreakProps) {
           ) : null}
         </div>
       </div>
-      {/* Pure scroll-distance spacer, not a visible element — HOLD(~30vh)
-          + COVER(~100vh) + a safety margin, see the comment above. Applies
-          at every width now, not just sm+. */}
-      <div aria-hidden className="hidden motion-safe:block motion-safe:h-[140vh]" />
+      {/* Pure scroll-distance spacer, not a visible element. Carries
+          Ctail minus the caption block below it, i.e.
+          HOLD + (100vh - 96px) + 40px safety - captionHeight. HOLD is
+          set from the PERCEIVED beat, not the geometric one: WorkTravels'
+          own top padding (80px mobile / 112px sm+) is the same dark
+          colour as this section's background, so a viewer registers
+          nothing until its hero image crosses the fold. Targeting a
+          perceived 150px (mobile) / 200px (sm+) means a geometric hold of
+          70px / 88px, giving (100vh - 133px) and (100vh - 156px). See the
+          derivation above — this is where the hold lives, which is why it
+          can be short. */}
+      <div
+        aria-hidden
+        className="hidden motion-safe:block motion-safe:h-[calc(100vh_-_133px)] motion-safe:sm:h-[calc(100vh_-_156px)]"
+      />
       {/* motion-safe:invisible, not hidden: this paragraph must keep
           occupying its original box (the overlay caption above is
           position:absolute and contributes no height of its own) so the

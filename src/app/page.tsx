@@ -67,29 +67,31 @@ export default function Home() {
           adjustment — plain, unmoved stacking, exactly as if this
           className were never passed).
 
-          The two pull-up values solve the same equation — "WorkTravels'
-          own top should sit ~130vh below the viewport at the instant the
-          pin engages (30vh of pure hold + 100vh of cover-sweep room),
-          measured against RaceBreak's real pinned height at that
-          breakpoint" — against two different height formulas, because
-          RaceBreak's photo box is sized differently below/above sm:
+          Each pull-up is exactly "RaceBreak's own pinned height at this
+          breakpoint, plus a 40px safety margin" — see the full derivation
+          in RaceBreak.tsx. It deliberately does NOT encode the hold; the
+          hold lives in that component's spacer instead, which is what
+          lets the hold be a short, chosen beat rather than the leftover
+          distance after guaranteeing coverage. Two values are needed
+          because the photo box is sized differently either side of sm:
             - below sm: width-authority, aspect-3/4, so its height is
               133.333% of its own rendered width (100vw minus the section's
-              48px of horizontal padding) plus the 80px of pt-20 above it.
+              48px of horizontal padding) plus the 80px of pt-20 above it
+              — hence 16px + 133.333vw, plus 40px safety = 56px + 133.333vw.
             - sm and up: height-authority, a flat 78vh, plus the 112px of
-              pt-28 above it.
+              pt-28 above it — hence 112px + 78vh, plus 40px = 152px + 78vh.
           Both were checked against this component's actual rendered
           numbers via direct scroll-position tracing, not taken from the
           algebra alone — see the report for the measurements.
 
           Restores the historical FullWidthPhoto behaviour (image visually
           held in place, untouched, before the next section slides up from
-          the bottom of the screen and covers it) rather than the "already
-          intruding from the moment the pin engages" version this replaces
-          — adapted to RaceBreak's portrait box and today's section order,
-          not the old full-bleed landscape version. WorkTravels' own
+          the bottom of the screen and covers it). WorkTravels' own
           composition, copy and imagery are completely unchanged; only its
-          outer wrapper is affected. */}
+          outer wrapper is affected. This section no longer has to be
+          taller than the pinned photo for the photo to stay hidden
+          afterwards — the z-index on Earn Your Place below handles that
+          now, so the two are no longer coupled. */}
       <WorkTravels
         desktopSrc={workTravels.desktop.src}
         mobileHeadlineSrc={workTravels.mobile.headline}
@@ -97,14 +99,29 @@ export default function Home() {
         temple={workTravels.temple}
         map={workTravels.map}
         alt={workTravels.alt}
-        className="motion-safe:relative motion-safe:z-10 motion-safe:-mt-[calc(112px_+_133.333vw_+_10vh)] motion-safe:sm:-mt-[calc(208px_+_88vh)]"
+        className="motion-safe:relative motion-safe:z-10 motion-safe:-mt-[calc(56px_+_133.333vw)] motion-safe:sm:-mt-[calc(152px_+_78vh)]"
       />
 
       {/* RESTORED: the three-slot gallery composition is approved as part
           of the visual architecture — see earnYourPlace.gallery in
-          site.ts. Deliberately empty until real photography exists for
-          it, not filled with founder/race imagery merely to occupy the
-          space. */}
+          site.ts. Now carries real photography.
+
+          CONSISTENCY COMPOUNDS RELEASE FIX (outerClassName only — nothing
+          about this section's own design, copy, imagery or layout
+          changes): RaceBreak's pinned photo is `position: sticky`, so it
+          is a POSITIONED element and paints above STATIC ones. WorkTravels'
+          pull-up drags this section's box up far enough to overlap the
+          tail of RaceBreak's, and this section was static — so once
+          WorkTravels' own box ended, the photo painted straight over the
+          top of Earn Your Place and visibly came back, measured at 820px
+          and 1920px. Giving it the same `relative z-10` WorkTravels
+          already has puts it in the same paint layer, so the photo is
+          permanently finished the moment it is covered, at every
+          viewport, without depending on WorkTravels being taller than the
+          photo. This is the mechanism the original FullWidthPhoto
+          transition used too ("higher z-index, an opaque background" —
+          this section is opaque already), and `outerClassName` exists on
+          EditorialSplit for exactly this purpose. */}
       <EditorialSplit
         theme="light"
         eyebrow={earnYourPlace.eyebrow}
@@ -114,6 +131,7 @@ export default function Home() {
         mediaAlt={earnYourPlace.media.alt}
         galleryItems={earnYourPlace.gallery}
         reverse
+        outerClassName="motion-safe:relative motion-safe:z-10"
       />
 
       <FutureWorld />
