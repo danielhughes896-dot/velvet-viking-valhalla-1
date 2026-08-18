@@ -13,9 +13,12 @@ export const metadata: Metadata = {
 const plan = plans.standard;
 const currencySymbol = plan.price.currency === "GBP" ? "£" : "";
 
+// HUMAN COPY PASS: step 2 was "Add a card — 14 days free, on us". The other
+// three steps carry no terminal punctuation, so a full stop mid-item would
+// have read oddly; a parenthetical is the natural British alternative here.
 const steps = [
   "Create your account",
-  `Add a card — ${trial.days} days free, on us`,
+  `Add a card (${trial.days} days free, on us)`,
   `Train on ${plan.name} for the full ${trial.days} days, no charge`,
   trial.autoConverts
     ? `Continues at ${currencySymbol}${plan.price.amount.toFixed(2)}/${plan.price.period} afterwards, unless you cancel first`
@@ -40,8 +43,8 @@ export default function StartPage() {
                 Not open yet
               </p>
               <p className="mt-2 text-sm leading-relaxed text-vv-ink-dim">
-                Trial signup isn&apos;t live. Account creation and billing switch on together, once
-                that&apos;s ready.
+                Trial signup isn’t live. Account creation and billing switch on together, once
+                that’s ready.
               </p>
             </div>
           ) : null}
@@ -70,9 +73,13 @@ export default function StartPage() {
             </div>
           </div>
 
+          {/* HUMAN COPY PASS: the dash was bolting two independent clauses
+              into one 33-word sentence. Split in two, which is what the
+              dash was standing in for. "from having one" dropped as
+              redundant once the clauses are separate sentences. */}
           <p className="max-w-sm text-center text-xs leading-relaxed text-vv-ink-faint">
-            Your account is what holds your trial and your training — installing the app on your
-            phone is a separate step from having one, and comes after this.
+            Your account is what holds your trial and your training. Installing the app on your
+            phone is a separate step, and it comes after this.
           </p>
 
           {/* FIVE-PERSON PRIVATE BETA: a quiet, clearly-labelled side door for

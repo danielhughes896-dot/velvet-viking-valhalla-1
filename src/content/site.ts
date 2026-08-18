@@ -62,7 +62,14 @@ export const hero = {
   // periods stay" rule for this specific set of major display headlines —
   // no full stop anywhere in this heading now, internal or terminal.
   heading: ["Valhalla Awaits", "Earn Your Place"],
-  sub: "Endurance coaching that pays attention — to what you actually do, not just what was planned.",
+  // HUMAN COPY PASS: the dash after "pays attention" severed the verb from
+  // its own complement and did no grammatical work. layout.tsx's meta
+  // description had ALREADY been written without it, so the two surfaces
+  // now state the same sentence identically instead of differing by a
+  // stray mark on the site's most-read line. Wording is otherwise
+  // untouched; "actually" is kept here because it carries the real
+  // contrast against "what was planned".
+  sub: "Endurance coaching that pays attention to what you actually do, not just what was planned.",
   cta: { label: "Explore Valhalla", href: "/valhalla" },
   media: {
     placeholder: "[HERO PHOTOGRAPH]",
@@ -74,7 +81,7 @@ export const brandStory = {
   eyebrow: "Velvet Viking",
   // FINAL TYPOGRAPHY CONSISTENCY CHANGE: no full stop anywhere in this
   // heading now — see the matching note on hero.heading above.
-  heading: ["Performance isn't given", "It's built"],
+  heading: ["Performance isn’t given", "It’s built"],
   body: "Not punishment. Not luck. Progress comes from showing up, doing the right work, and knowing when to push and when to recover.",
   media: {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
@@ -93,11 +100,17 @@ export const valhallaProduct = {
   // decides) as this section's lead sentence, so it reads as a headline
   // claim before the "Adaptation with purpose" point below elaborates on
   // it — not just a third repeated variant of "pays attention."
-  body: "A training plan shouldn't go stale the moment real training starts. Valhalla watches what actually happens — and waits for a real pattern before it changes anything. When a change is genuinely justified, it tells you why, and you decide whether to take it.",
+  // HUMAN COPY PASS: a dash placed before a coordinating "and" is one of the
+  // most recognisable machine-writing tics, and it was doing nothing a
+  // reader could hear. Deleted outright rather than swapped for another
+  // mark. "actually" also dropped from "what actually happens" — the
+  // sentence is unchanged in meaning without it, and the word appeared ten
+  // times across the site.
+  body: "A training plan shouldn’t go stale the moment real training starts. Valhalla watches what happens and waits for a real pattern before it changes anything. When a change is genuinely justified, it tells you why, and you decide whether to take it.",
   points: [
     {
       heading: "Training built around you",
-      body: "Your fitness, training zones, race target and available days shape the plan from day one — down to the paces and effort that are actually right for you.",
+      body: "Your fitness, training zones, race target and available days shape the plan from day one, down to the paces and effort that are right for you.",
     },
     {
       heading: "Adaptation with purpose",
@@ -106,11 +119,21 @@ export const valhallaProduct = {
       // you decide whether to take it") in the very next scroll position.
       // Reweighted to the one facet the body states but doesn't elaborate —
       // that the reason is visible — instead of repeating the threshold.
-      body: "Every proposed adjustment comes with the pattern behind it — never a change without a reason you can see.",
+      // HUMAN COPY PASS: the clause after the dash restated the clause
+      // before it, negated ("comes with the pattern" / "never a change
+      // without a reason"). Restatement-by-inversion is a machine-writing
+      // signature, and this one also duplicated commerce.ts's own
+      // "Explains why, every time" feature. Cut rather than repunctuated:
+      // the first clause already says all of it.
+      body: "Every proposed adjustment comes with the pattern behind it.",
     },
     {
       heading: "Coaching, not just data",
-      body: "Pace, heart rate, effort and execution are read together — not as separate charts, but as one picture of how a session actually went.",
+      // HUMAN COPY PASS: was a dash plus the "not X, but Y" frame in one
+      // sentence. Removing only the dash would have left the giveaway
+      // construction, so the contrast is now carried by an ordinary
+      // "rather than" and the sentence keeps the same claim.
+      body: "Pace, heart rate, effort and execution are read together, as one picture of how a session went rather than four separate charts.",
     },
   ],
   cta: { label: "Explore Valhalla", href: "/valhalla" },
@@ -127,12 +150,12 @@ export const valhallaProduct = {
     primary: {
       src: "/photography/app-today.jpg",
       placeholder: "[VALHALLA — TODAY]",
-      alt: "Valhalla's Today screen: the day's Next Move card and pace reference table",
+      alt: "Valhalla’s Today screen: the day’s Next Move card and pace reference table",
     },
     secondary: {
       src: "/photography/app-full-plan.jpg",
       placeholder: "[VALHALLA — FULL PLAN]",
-      alt: "Valhalla's Full Plan screen: the training block broken into weeks and phases",
+      alt: "Valhalla’s Full Plan screen: the training block broken into weeks and phases",
     },
   },
 } as const;
@@ -177,10 +200,16 @@ export const provenance = {
   // FINAL TYPOGRAPHY CONSISTENCY CHANGE: no full stop anywhere in this
   // heading now — see the matching note on hero.heading above.
   heading: ["Built by a runner", "For runners"],
-  body: "A training plan that doesn't adapt to real life isn't much of a plan. Dan built Valhalla after enough of those — plans that looked perfect on paper and fell apart the moment an actual week got in the way.",
+  // HUMAN COPY PASS: this is the ONE em dash deliberately retained in body
+  // copy site-wide. It introduces a genuine appositive afterthought in
+  // spoken rhythm ("after enough of those — plans that…"), which a colon
+  // would make more formal and a comma would make ambiguous. Keeping one
+  // considered dash is what stops the copy reading as mechanically
+  // de-dashed; the other twenty-two were habit, this one is a choice.
+  body: "A training plan that doesn’t adapt to real life isn’t much of a plan. Dan built Valhalla after enough of those — plans that looked perfect on paper and fell apart the moment an actual week got in the way.",
   media: {
     src: "/photography/founder-medal.jpg",
-    alt: "Dan holding his marathon finisher's medal, smiling",
+    alt: "Dan holding his marathon finisher’s medal, smiling",
   },
 } as const;
 
@@ -199,7 +228,10 @@ export const workTravels = {
   mobile: {
     headline: "/photography/work-travels-mobile-headline.jpg",
   },
-  alt: "The Work Travels With You — different place, same purpose. You don't need perfect conditions, you need consistency. Earn Your Place.",
+  // The dash here is NOT ours to remove: this alt text transcribes the
+  // headline physically baked into the supplied composite artwork. Editing
+  // it would make the alt text stop describing the image.
+  alt: "The Work Travels With You — different place, same purpose. You don’t need perfect conditions, you need consistency. Earn Your Place.",
   heroLocation: "Athens, Greece",
   temple: {
     src: "/photography/work-travels-temple.jpg",
@@ -270,7 +302,12 @@ export const futureWorld = {
   // FINAL TYPOGRAPHY CONSISTENCY CHANGE: no full stop anywhere in this
   // heading now — see the matching note on hero.heading above.
   heading: ["One philosophy", "Different expressions"],
-  body: "Velvet Viking begins with Valhalla, but it isn't defined by a single product. The same standards of purpose, performance and refinement will shape everything that carries the name.",
+  // HUMAN COPY PASS: dropped the abstract trio "purpose, performance and
+  // refinement" — three nouns that named nothing checkable and made this
+  // the vaguest passage on the homepage. "The same standards" still points
+  // at Philosophy and About, which is where the standard is actually
+  // stated. Nothing factual is lost; the sentence is eleven words shorter.
+  body: "Velvet Viking begins with Valhalla, but it isn’t defined by a single product. The same standards will shape everything that carries the name.",
   // Deliberately framed as direction, not a product list — none of these
   // exist yet. The kicker label above the words in FutureWorld.tsx exists
   // specifically so this can't be misread as an active business structure.
@@ -280,7 +317,7 @@ export const futureWorld = {
 
 export const finalCta = {
   heading: "Valhalla Awaits",
-  sub: "Training doesn't stand still. Neither should your coaching.",
+  sub: "Training doesn’t stand still. Neither should your coaching.",
   // PHASE 3: was { label: "Explore Valhalla", href: "/valhalla" } — the
   // homepage's own Hero and ProductShowcase CTAs already send readers to
   // /valhalla twice before this section. As the page's final, bottom-of-
@@ -331,20 +368,28 @@ export const pages = {
   pricing: {
     eyebrow: "Standard",
     heading: "Pricing",
-    sub: "One plan. The full Valhalla coaching core.",
-    body: "No tiers to compare and nothing held back for later — Standard is Valhalla, in full.",
+    // HUMAN COPY PASS: "coaching core" was product-team vocabulary, not
+    // customer vocabulary, and it appeared twice inside one viewport (here
+    // and again as the plan tagline in commerce.ts). Both are now plain
+    // English, and deliberately different from each other. The body's dash
+    // was standing in for a full stop, so it became one.
+    sub: "One plan. Everything Valhalla does.",
+    body: "No tiers to compare, nothing held back for later. Standard is Valhalla, in full.",
   },
   start: {
     eyebrow: "Standard",
     heading: "Start Your Trial",
-    sub: "Here's exactly what happens next.",
-    body: "Trial signup isn't open yet. This is the journey as it's designed to work, and it'll go live here the moment it's real.",
+    sub: "Here’s exactly what happens next.",
+    // HUMAN COPY PASS: "the journey as it's designed to work" — "journey"
+    // was the one piece of soft marketing jargon on the site, and it meant
+    // nothing more than "the signup steps".
+    body: "Trial signup isn’t open yet. This is how it will work, and it’ll go live here the moment it’s real.",
   },
   valhalla: {
     eyebrow: valhallaProduct.eyebrow,
     heading: valhallaProduct.heading,
     sub: valhallaProduct.sub,
-    body: "A closer look at how Valhalla actually works.",
+    body: "A closer look at how Valhalla works.",
     // PHASE 3: this page previously had no closing action at all — after
     // the screenshots, the scroll just ended. That's the literal "dead
     // end" the Phase 2 audit flagged in the CTA graph. Now closes into the
@@ -354,7 +399,12 @@ export const pages = {
     // see the device mockups below it on this page. Nothing here describes
     // functionality beyond what the app genuinely does today.
     expanded: [
-      "Valhalla builds your plan from what's true about you — your current fitness, a real benchmark performance, your race target and the days you can actually train. From there, it works out the paces and effort levels that make sense for your training, not generic ones.",
+      // HUMAN COPY PASS: the dash was introducing a list, which is what a
+      // colon is for. Straight character swap; wording untouched.
+      // "actually" is kept in "the days you can actually train" — there it
+      // carries a real contrast (days available in life, not days on a
+      // calendar) rather than acting as filler.
+      "Valhalla builds your plan from what’s true about you: your current fitness, a real benchmark performance, your race target and the days you can actually train. From there, it works out the paces and effort levels that make sense for your training, not generic ones.",
       // FINAL QA FIX PASS: was near-identical to valhallaProduct.body's own
       // closing ("waits for a real pattern... you decide whether to take
       // it") one scroll after the homepage already said it. Kept the
@@ -363,7 +413,15 @@ export const pages = {
       // target for the next session, not a rewritten plan — grounded in
       // valhallaProduct.points above, not a new claim. Closing reframed so
       // it advances the homepage's line instead of repeating it verbatim.
-      "Once training starts, Valhalla pays attention. Every session is compared with what was planned — pace, heart rate, effort, execution — but a single hard day doesn't change anything on its own. Only once a real pattern shows up does Valhalla act, and what changes is specific: the pace or effort target set for your next session, not a plan rewritten from scratch. You see exactly what's proposed and the reasoning behind it — the choice to act on it is still yours.",
+      // HUMAN COPY PASS: three em dashes and a colon inside 78 words made
+      // this the second-densest passage on the site. Repunctuating alone
+      // wouldn't have fixed it — the problem was four ideas welded into
+      // three sentences — so it's now six shorter ones. Every claim is
+      // carried over verbatim in substance, and the phrase
+      // "the pace or effort target set for your next session, not a plan
+      // rewritten from scratch" is preserved exactly (finalQaFixPass.test.js
+      // asserts on it).
+      "Once training starts, Valhalla pays attention. Every session is compared with what was planned: pace, heart rate, effort, execution. But a single hard day doesn’t change anything on its own. Only once a real pattern shows up does Valhalla act, and what changes is specific. It’s the pace or effort target set for your next session, not a plan rewritten from scratch. You see exactly what’s proposed and the reasoning behind it, and the choice to act on it is still yours.",
       // PHASE 4 AUDIT: two genuine gaps, not duplication — confirmed against
       // the app's real decision engine before writing this. (1) Every other
       // paragraph on this page frames "change" as something cautious/
@@ -377,14 +435,25 @@ export const pages = {
       // has already left "understand the product" behind. Stated here in
       // plain outcomes, no internal state names (no HOLD/PROGRESS/ADAPT/
       // RECOVER, no "Plan Evolution").
-      "A missed session doesn't spiral into a rescue plan — the days worth rescheduling get another chance when the calendar allows it; the rest are simply left behind, because that protects the training itself, not a completion percentage. And a change is never automatically a step back: Valhalla knows when to hold the current plan, when to let progression continue, and when recovery matters more than the schedule.",
+      // HUMAN COPY PASS: the densest passage on the site — one em dash,
+      // the site's only semicolon and a colon inside 62 words. Now five
+      // plain sentences with none of the three. No claim added, removed or
+      // softened; "the training itself" lost "itself" as redundant.
+      "A missed session doesn’t spiral into a rescue plan. The days worth rescheduling get another chance when the calendar allows it. The rest are simply left behind, because that protects the training, not a completion percentage. And a change isn’t automatically a step back. Valhalla knows when to hold the current plan, when to let progression continue, and when recovery matters more than the schedule.",
       // PHASE 2 AUDIT: was "It's a coach that's actually looking at it" —
       // flagged against Business's unearned-claim list ("coach-like",
       // "understands training"). Rewritten to keep the not-a-dashboard
       // contrast without asserting the product is a cognitive/coaching
       // agent — reuses "pays attention," already established in hero.sub,
       // rather than a new anthropomorphizing claim.
-      "It isn't a dashboard of your data. It's built to pay attention to it — and tell you only what actually matters.",
+      // HUMAN COPY PASS: was "It isn't a dashboard of your data. It's built
+      // to pay attention to it — and tell you only what actually matters."
+      // Three problems in one short paragraph: the "X isn't Y, it's Z"
+      // frame (used three times site-wide), a second dash-before-"and", and
+      // a fourth "actually". Recast so the contrast with a dashboard is
+      // still made — that positioning point is worth keeping — but stated
+      // positively, about what each thing does, rather than as a denial.
+      "A dashboard shows you everything. Valhalla reads your training and tells you only what matters.",
     ],
   },
   // GALLERY: a curated visual home, not a rehearsal of Valhalla/Philosophy/
@@ -393,15 +462,15 @@ export const pages = {
   // is to let the photography carry it.
   gallery: {
     eyebrow: "Velvet Viking",
-    heading: "The Work, In Pictures",
-    sub: "Training, racing, and the places they happen.",
+    heading: "The Work, in Pictures",
+    sub: "Training, racing and the places they happen.",
     body: "Real moments, not staged for a shoot.",
   },
   philosophy: {
     eyebrow: "Velvet Viking",
     heading: "Earn Your Place",
     sub: "The philosophy behind the brand.",
-    body: "Earn Your Place is not a slogan. It's the standard everything else is built on.",
+    body: "Earn Your Place is not a slogan. It’s the standard everything else is built on.",
     // COPY AUDIT: paragraph 1 was trimmed — its back half ("showing up,
     // doing the right session on the right day, and letting progress come
     // from that, rather than from a single perfect effort") duplicated
@@ -410,15 +479,33 @@ export const pages = {
     // — not proving anything to anyone else). Paragraph 2 drops the
     // trailing "— every time": an absolute claim the copy hadn't earned.
     expanded: [
-      "Earn Your Place isn't about suffering for its own sake, and it isn't about proving something to anyone else. It's about doing the right work on the right day — not chasing a single perfect effort.",
-      "That means knowing when to push. It also means knowing when to hold back, because recovery is part of the work, not a break from it. Consistency, applied intelligently, beats intensity applied carelessly.",
-      "Valhalla exists to support that: to help you do the right work, understand what it's telling you, and keep coming back to it.",
+      // HUMAN COPY PASS: dash to comma, no rewriting. This is the ONE
+      // "isn't X, it's Y" construction deliberately kept of the three that
+      // existed — here the denial is doing real work, pre-empting a genuine
+      // misreading of Earn Your Place as an invitation to suffer. The other
+      // two (on /valhalla and /about) were denials nobody needed and are
+      // now positive statements.
+      "Earn Your Place isn’t about suffering for its own sake, and it isn’t about proving something to anyone else. It’s about doing the right work on the right day, not chasing a single perfect effort.",
+      // HUMAN COPY PASS: closing line was "Consistency, applied
+      // intelligently, beats intensity applied carelessly." — a perfectly
+      // mirrored aphorism (noun + adverbial participle, twice, with
+      // antonyms in both slots) that read as generated rather than spoken.
+      // Same claim, said the way someone would actually say it, and the
+      // preceding two sentences already carry the "applied intelligently"
+      // nuance.
+      "That means knowing when to push. It also means knowing when to hold back, because recovery is part of the work, not a break from it. Consistency beats heroics.",
+      "Valhalla exists to support that: to help you do the right work, understand what it’s telling you, and keep coming back to it.",
     ],
   },
   about: {
     eyebrow: "Velvet Viking",
     heading: "About",
-    sub: "A performance brand, built with intent.",
+    // HUMAN COPY PASS: was "A performance brand, built with intent." —
+    // the vaguest line on the site, and the second thing a reader sees on
+    // this page. "Built with intent" asserts nothing checkable. Replaced
+    // with a plain statement of what the page contains, which is also what
+    // the body below it goes on to say.
+    sub: "What Velvet Viking is, and what it builds.",
     // COPY AUDIT: was "...that real progress comes from consistent,
     // intelligent work — not shortcuts, not hype..." — that's Philosophy's
     // thesis, restated here for roughly the sixth time site-wide. About's
@@ -443,7 +530,12 @@ export const pages = {
     // established language ("the standard everything else is built on")
     // rather than inventing a new claim.
     expanded: [
-      "Earn Your Place isn't a marketing line here — it's the bar every decision at Velvet Viking has to clear before it ships.",
+      // HUMAN COPY PASS: was "Earn Your Place isn't a marketing line here —
+      // it's the bar every decision at Velvet Viking has to clear before it
+      // ships." The "X isn't Y — it's Z" frame is the single most
+      // recognisable machine-writing shape, and the denial pre-empted a
+      // doubt no reader had yet. The positive half was always the sentence.
+      "Earn Your Place is the bar every decision at Velvet Viking has to clear before it ships.",
     ],
   },
 } as const;

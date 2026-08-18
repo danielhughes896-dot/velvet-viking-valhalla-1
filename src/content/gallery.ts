@@ -49,7 +49,7 @@ export const raceFinish: GalleryImageItem = {
 
 export const founderMedal: GalleryImageItem = {
   src: "/photography/founder-medal.jpg",
-  alt: "Dan holding his marathon finisher's medal, smiling",
+  alt: "Dan holding his marathon finisher’s medal, smiling",
   aspect: "629 / 864",
   caption: "The Work",
 };

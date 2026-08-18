@@ -138,7 +138,7 @@ export default function EditorialSplit({
                   nothing inside it is itself focusable. */}
               <div
                 tabIndex={0}
-                aria-label="Training photography — scroll to preview more"
+                aria-label="Training photography, scroll to preview more"
                 className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain"
               >
                 {galleryItems.map((item) => (

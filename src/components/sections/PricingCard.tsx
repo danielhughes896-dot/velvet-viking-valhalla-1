@@ -28,8 +28,12 @@ export default function PricingCard() {
         <span className="font-head text-sm text-vv-ink-faint">/ {plan.price.period}</span>
       </div>
 
+      {/* HUMAN COPY PASS: was "Includes a 14-day free trial — card
+          required." The dash was appending a two-word qualifier where a
+          full stop reads more naturally in British English. Same two
+          facts, same conditional on trial.cardRequired. */}
       <p className="mt-3 text-sm text-vv-ink-dim">
-        Includes a {trial.days}-day free trial{trial.cardRequired ? " — card required" : ""}.
+        Includes a {trial.days}-day free trial.{trial.cardRequired ? " Card required." : ""}
       </p>
 
       <CtaButton href="/start" className="mt-8 w-full">

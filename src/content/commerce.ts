@@ -16,7 +16,11 @@ export const plans = {
   standard: {
     id: "standard",
     name: "Standard",
-    tagline: "The full Valhalla coaching core.",
+    // HUMAN COPY PASS: "coaching core" is internal product vocabulary, and
+    // it also appeared verbatim as pages.pricing.sub, so the same phrase
+    // ran twice inside one viewport. Both are now plain English and
+    // deliberately different from each other.
+    tagline: "The whole of Valhalla.",
     // Working hypothesis, not yet finalized pricing.
     price: { amount: 11.99, currency: "GBP", period: "month" },
     // Possible founding-launch offer. `enabled: false` until pricing is
@@ -29,13 +33,24 @@ export const plans = {
       price: { amount: 9.99, currency: "GBP", period: "month" },
       months: 12,
     },
+    // HUMAN COPY PASS. Four of these seven carried a machine-writing
+    // pattern, and none of the fixes changes what is being promised:
+    //   1. dash used as a colon, and "from day one" also appeared verbatim
+    //      in valhallaProduct.points on the homepage;
+    //   3. a fourth "not just" (seven site-wide) plus a redundant
+    //      "actually";
+    //   5. the clause after the dash restated the clause before it — the
+    //      same defect as the homepage's "Adaptation with purpose" bullet,
+    //      which it also duplicated;
+    //   6. "doesn't spiral into a rescue plan" was word-for-word identical
+    //      to a sentence on /valhalla.
     features: [
-      "Training built around you — your fitness, pace zones and race target shape the plan from day one.",
+      "Training built around you: your fitness, pace zones and race target set the plan from the start.",
       "Clear guidance for every session: exactly what to do, and how it should feel.",
-      "Reads how a session actually went, not just whether it happened.",
+      "Reads how a session went, not whether you ticked it off.",
       "Waits for a real pattern before it changes anything.",
-      "Explains why, every time — you always see the reason behind a change.",
-      "Doesn't chase missed-session debt. A skipped day doesn't spiral into a rescue plan.",
+      "Explains why, every time.",
+      "Doesn’t chase missed-session debt. A skipped day never turns into a backlog.",
       "You decide. Every proposed change is yours to accept or decline.",
     ],
   },
