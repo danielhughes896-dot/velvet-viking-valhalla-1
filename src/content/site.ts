@@ -53,12 +53,10 @@ export const hero = {
   // than repeating the brand name a second time in the same viewport.
   // heading/sub/cta below are unchanged and remain protected verbatim.
   eyebrow: "The Flagship",
-  // TITLE-PUNCTUATION FOLLOW-UP: HQ rule — display headings never end in a
-  // terminal full stop; a period between two sentences inside one heading
-  // is internal punctuation and stays (see brandStory.heading below for
-  // the same pattern). Line 1 keeps its period because line 2 follows it
-  // in the same <h1>; line 2 lost its because it's the heading's end.
-  heading: ["Valhalla Awaits.", "Earn Your Place"],
+  // FINAL TYPOGRAPHY CONSISTENCY CHANGE: supersedes the earlier "internal
+  // periods stay" rule for this specific set of major display headlines —
+  // no full stop anywhere in this heading now, internal or terminal.
+  heading: ["Valhalla Awaits", "Earn Your Place"],
   sub: "Endurance coaching that pays attention — to what you actually do, not just what was planned.",
   cta: { label: "Explore Valhalla", href: "/valhalla" },
   media: {
@@ -69,10 +67,9 @@ export const hero = {
 
 export const brandStory = {
   eyebrow: "Velvet Viking",
-  // TITLE-PUNCTUATION FOLLOW-UP: HQ's own worked example — internal period
-  // after "given" stays (mid-heading sentence break), terminal period
-  // after "built" is removed (end of the heading).
-  heading: ["Performance isn't given.", "It's built"],
+  // FINAL TYPOGRAPHY CONSISTENCY CHANGE: no full stop anywhere in this
+  // heading now — see the matching note on hero.heading above.
+  heading: ["Performance isn't given", "It's built"],
   body: "Not punishment. Not luck. Progress comes from showing up, doing the right work, and knowing when to push and when to recover.",
   media: {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
@@ -172,7 +169,9 @@ export const raceBreak = {
 // for this pass is explicit that nothing should be invented.
 export const provenance = {
   eyebrow: "Velvet Viking",
-  heading: ["Built by a runner.", "For runners"],
+  // FINAL TYPOGRAPHY CONSISTENCY CHANGE: no full stop anywhere in this
+  // heading now — see the matching note on hero.heading above.
+  heading: ["Built by a runner", "For runners"],
   body: "A training plan that doesn't adapt to real life isn't much of a plan. Dan built Valhalla after enough of those — plans that looked perfect on paper and fell apart the moment an actual week got in the way.",
   media: {
     src: "/photography/founder-medal.jpg",
@@ -254,9 +253,9 @@ export const earnYourPlace = {
 
 export const futureWorld = {
   eyebrow: "Beyond Valhalla",
-  // TITLE-PUNCTUATION FOLLOW-UP: same pattern as brandStory.heading —
-  // internal period stays, terminal one is removed.
-  heading: ["One philosophy.", "Different expressions"],
+  // FINAL TYPOGRAPHY CONSISTENCY CHANGE: no full stop anywhere in this
+  // heading now — see the matching note on hero.heading above.
+  heading: ["One philosophy", "Different expressions"],
   body: "Velvet Viking begins with Valhalla, but it isn't defined by a single product. The same standards of purpose, performance and refinement will shape everything that carries the name.",
   // Deliberately framed as direction, not a product list — none of these
   // exist yet. The kicker label above the words in FutureWorld.tsx exists
