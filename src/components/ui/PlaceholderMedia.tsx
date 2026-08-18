@@ -19,6 +19,11 @@ type PlaceholderMediaProps = {
   fit?: "cover" | "contain";
   priority?: boolean;
   sizes?: string;
+  /** CSS object-position, e.g. "center 20%" — for a "cover" crop where the
+   * subject isn't centered in the source photograph (a running head near
+   * the top of frame, a standing figure lower in a tall landscape shot).
+   * Ignored for fit="contain", where nothing is cropped in the first place. */
+  objectPosition?: string;
 };
 
 const aspectClass: Record<NonNullable<PlaceholderMediaProps["aspect"]>, string> = {
@@ -45,6 +50,7 @@ export default function PlaceholderMedia({
   fit = "cover",
   priority = false,
   sizes = "100vw",
+  objectPosition,
 }: PlaceholderMediaProps) {
   return (
     <div
@@ -64,6 +70,7 @@ export default function PlaceholderMedia({
           priority={priority}
           sizes={sizes}
           className={fit === "contain" ? "object-contain" : "object-cover"}
+          style={objectPosition && fit !== "contain" ? { objectPosition } : undefined}
         />
       ) : (
         <>

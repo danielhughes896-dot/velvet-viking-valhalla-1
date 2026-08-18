@@ -196,10 +196,13 @@ export const workTravels = {
   alt: "The Work Travels With You — different place, same purpose. You don't need perfect conditions, you need consistency. Earn Your Place.",
 } as const;
 
-// RESTORED: the three-slot gallery composition below is approved as part of
-// the visual architecture and stays deliberately empty until real Velvet
-// Viking photography exists for it — not filled with founder/race imagery
-// just to occupy the space.
+// RESTORED, NOW POPULATED: the three-slot gallery composition is approved
+// as part of the visual architecture. All three slots now carry real,
+// unaltered photographs — a uniform "portrait" aspect across all three per
+// the brief's "equal visual slots, consistent dimensions" instruction
+// (previously varied portrait/square/landscape while empty). Each
+// objectPosition is tuned per source photo so a runner's head is never
+// clipped by the crop — see PlaceholderMedia's objectPosition prop.
 export const earnYourPlace = {
   eyebrow: "Velvet Viking",
   heading: "Earn Your Place",
@@ -208,15 +211,31 @@ export const earnYourPlace = {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
     alt: "[ATHLETE / TRAINING PHOTOGRAPH — placeholder]",
   },
-  // Slots for a future horizontal gallery of training moments — "the work
-  // you return to, again and again" reads more naturally as several images
-  // than one. Each is a placeholder position, not a real photograph; swap
-  // labels for real alt text/src when photography exists, no layout change
-  // required.
   gallery: [
-    { placeholder: "[TRAINING MOMENT]", alt: "[TRAINING MOMENT — placeholder]", aspect: "portrait" },
-    { placeholder: "[ATHLETE DETAIL]", alt: "[ATHLETE DETAIL — placeholder]", aspect: "square" },
-    { placeholder: "[ENVIRONMENT]", alt: "[ENVIRONMENT — placeholder]", aspect: "landscape" },
+    {
+      placeholder: "[TRAINING MOMENT]",
+      src: "/photography/earn-your-place-training-moment.jpg",
+      alt: "Dan on a mountain trail, pack on, overlooking a wide valley",
+      caption: "The Work",
+      aspect: "portrait",
+      objectPosition: "center 25%",
+    },
+    {
+      placeholder: "[ATHLETE DETAIL]",
+      src: "/photography/earn-your-place-athlete-detail.jpg",
+      alt: "Dan mid-stride at a road race, bib 2268",
+      caption: "The Athlete",
+      aspect: "portrait",
+      objectPosition: "center 0%",
+    },
+    {
+      placeholder: "[ENVIRONMENT]",
+      src: "/photography/earn-your-place-environment.jpg",
+      alt: "Dan mid-stride finishing a road race, bib 2345",
+      caption: "The Environment",
+      aspect: "portrait",
+      objectPosition: "center 0%",
+    },
   ],
 } as const;
 

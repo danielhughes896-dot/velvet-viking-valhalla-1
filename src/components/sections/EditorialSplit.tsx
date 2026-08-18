@@ -5,6 +5,15 @@ type MediaItem = {
   placeholder: string;
   alt: string;
   aspect: "landscape" | "portrait" | "square" | "wide";
+  /** Real photograph for this slot. Omit to keep the slot an intentional
+   * empty placeholder — see PlaceholderMedia's own src-optional design. */
+  src?: string;
+  /** CSS object-position for a "cover" crop — see PlaceholderMedia. */
+  objectPosition?: string;
+  /** Small editorial label rendered under the photograph itself, not
+   * inside it — e.g. "The Work". Only meaningful alongside `src`; an
+   * empty placeholder slot has no caption to show. */
+  caption?: string;
 };
 
 type EditorialSplitProps = {
@@ -119,13 +128,24 @@ export default function EditorialSplit({
                 className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain"
               >
                 {galleryItems.map((item) => (
-                  <PlaceholderMedia
-                    key={item.placeholder}
-                    label={item.placeholder}
-                    aspect={item.aspect}
-                    bleed
-                    className={`shrink-0 snap-start ${STRIP_WIDTHS[item.aspect]}`}
-                  />
+                  // Photo + caption as one unit — a shared shrink-0/snap-start
+                  // wrapper so the caption scrolls with its own photograph
+                  // rather than drifting from it in the horizontal strip.
+                  <div key={item.placeholder} className={`shrink-0 snap-start ${STRIP_WIDTHS[item.aspect]}`}>
+                    <PlaceholderMedia
+                      label={item.placeholder}
+                      aspect={item.aspect}
+                      bleed
+                      src={item.src}
+                      alt={item.alt}
+                      objectPosition={item.objectPosition}
+                    />
+                    {item.caption ? (
+                      <p className="mt-3 text-center font-head text-[11px] font-semibold uppercase tracking-[0.22em] text-vv-bronze-text">
+                        {item.caption}
+                      </p>
+                    ) : null}
+                  </div>
                 ))}
               </div>
             </div>
