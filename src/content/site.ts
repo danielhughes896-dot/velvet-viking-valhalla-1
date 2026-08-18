@@ -135,6 +135,16 @@ export const valhallaProduct = {
   },
 } as const;
 
+// RESTORED: an intentional, permanent seam for a future real Velvet Viking
+// reel — not an accidental unfinished box. Deliberately kept even after the
+// zero-placeholder pass elsewhere on the homepage; see DocumentaryReel.tsx.
+export const documentaryReel = {
+  media: {
+    placeholder: "[DOCUMENTARY REEL — placeholder]",
+    alt: "[DOCUMENTARY REEL — placeholder, opening motion piece, footage to be confirmed]",
+  },
+} as const;
+
 export const fullWidthPhoto = {
   media: {
     placeholder: "[CAMPAIGN PHOTOGRAPH]",
@@ -186,6 +196,10 @@ export const workTravels = {
   alt: "The Work Travels With You — different place, same purpose. You don't need perfect conditions, you need consistency. Earn Your Place.",
 } as const;
 
+// RESTORED: the three-slot gallery composition below is approved as part of
+// the visual architecture and stays deliberately empty until real Velvet
+// Viking photography exists for it — not filled with founder/race imagery
+// just to occupy the space.
 export const earnYourPlace = {
   eyebrow: "Velvet Viking",
   heading: "Earn Your Place",

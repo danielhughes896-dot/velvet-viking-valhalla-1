@@ -1,4 +1,5 @@
 import Hero from "@/components/sections/Hero";
+import DocumentaryReel from "@/components/sections/DocumentaryReel";
 import EditorialSplit from "@/components/sections/EditorialSplit";
 import ProductShowcase from "@/components/sections/ProductShowcase";
 import RaceBreak from "@/components/sections/RaceBreak";
@@ -13,12 +14,16 @@ export default function Home() {
     <>
       <Hero />
 
-      {/* FINAL POLISH: no genuine footage exists for the opening documentary
-          reel or a photograph for this statement yet, so both ship
-          text-only rather than with an empty/placeholder media frame — see
-          EditorialSplit's no-media branch. The reel had no copy of its own
-          to fall back on, so that section is removed outright rather than
-          rendered empty. */}
+      {/* RESTORED: an intentional, permanent seam for a future real Velvet
+          Viking reel, not an accidental unfinished box — see
+          DocumentaryReel.tsx and documentaryReel in site.ts. */}
+      <DocumentaryReel />
+
+      {/* FINAL POLISH: no genuine photograph exists yet for this statement,
+          so it ships text-only rather than with an empty/placeholder media
+          frame — see EditorialSplit's no-media branch. (Unlike the reel
+          above and the Earn Your Place gallery below, this specific media
+          slot was not flagged for restoration.) */}
       <EditorialSplit
         theme="light"
         eyebrow={brandStory.eyebrow}
@@ -56,11 +61,20 @@ export default function Home() {
         alt={workTravels.alt}
       />
 
+      {/* RESTORED: the three-slot gallery composition is approved as part
+          of the visual architecture — see earnYourPlace.gallery in
+          site.ts. Deliberately empty until real photography exists for
+          it, not filled with founder/race imagery merely to occupy the
+          space. */}
       <EditorialSplit
         theme="light"
         eyebrow={earnYourPlace.eyebrow}
         heading={earnYourPlace.heading}
         body={earnYourPlace.body}
+        mediaLabel={earnYourPlace.media.placeholder}
+        mediaAlt={earnYourPlace.media.alt}
+        galleryItems={earnYourPlace.gallery}
+        reverse
       />
 
       <FutureWorld />
