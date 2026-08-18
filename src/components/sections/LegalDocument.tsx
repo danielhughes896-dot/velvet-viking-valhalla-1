@@ -53,7 +53,11 @@ export default function LegalDocument({ doc }: { doc: LegalDocumentContent }) {
     <section className="bg-vv-bg">
       <div className="mx-auto max-w-2xl px-6 py-28 sm:px-8 sm:py-36">
         <div className="text-center">
-          <SectionHeading eyebrow={doc.eyebrow} heading={doc.heading} align="center" />
+          {/* FINAL QA FIX PASS: this is always the first (and only)
+              top-level heading on whatever legal page renders it — the same
+              reasoning PageIntro already applies — so it must be the h1,
+              not fall through to SectionHeading's h2 default. */}
+          <SectionHeading eyebrow={doc.eyebrow} heading={doc.heading} align="center" level="h1" />
           <p className="mx-auto mt-6 max-w-lg text-lg text-vv-ink-dim">{doc.sub}</p>
         </div>
 

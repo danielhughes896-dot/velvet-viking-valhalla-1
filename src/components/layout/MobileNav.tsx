@@ -1,13 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Crest from "@/components/ui/Crest";
 import { brand, nav } from "@/content/site";
 import { commerceSeams } from "@/content/commerce";
 
 const subscribeNoop = () => () => {};
+
+// Used both to focus the first link on open and to keep Tab/Shift+Tab
+// cycling within the panel while it's open — a full-screen overlay is a
+// modal, and a modal with underlying page content still in the DOM needs
+// its own focus trap or a keyboard user tabs straight through it.
+const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 // SSR-safe "has this hydrated on the client yet" check, without the extra
 // render a useState+useEffect("mounted") pair would cost — the portal
@@ -40,6 +46,12 @@ export default function MobileNav() {
   // because the header's backdrop-blur establishes a containing block for
   // fixed descendants.
   const isClient = useIsClient();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  // Tracks a genuine open->close transition so focus is only ever handed
+  // back to the button after the menu was actually open — not on first
+  // mount, when open starts false and nothing should steal focus.
+  const wasOpenRef = useRef(false);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -48,10 +60,43 @@ export default function MobileNav() {
     };
   }, [open]);
 
+  // FINAL QA FIX PASS: move focus into the panel on open (first link, not
+  // the panel itself, so a keyboard/AT user lands somewhere meaningful) and
+  // back to the button that opened it on close.
+  useEffect(() => {
+    if (open) {
+      panelRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus();
+      wasOpenRef.current = true;
+    } else if (wasOpenRef.current) {
+      wasOpenRef.current = false;
+      buttonRef.current?.focus();
+    }
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      // Focus trap: while the panel is open, Tab/Shift+Tab cycle only
+      // within its own focusable elements instead of escaping into the
+      // page content sitting behind the overlay.
+      const focusable = panelRef.current
+        ? Array.from(panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
+        : [];
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -60,6 +105,7 @@ export default function MobileNav() {
   return (
     <>
       <button
+        ref={buttonRef}
         type="button"
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
@@ -76,7 +122,13 @@ export default function MobileNav() {
 
       {open && isClient
         ? createPortal(
-            <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-vv-bg">
+            <div
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site menu"
+              className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-vv-bg"
+            >
               {/* justify-center still centers this block within the padded
                   box, but pt < pb shifts that center upward — a controlled
                   nudge toward the masthead rather than a top-anchored
@@ -119,7 +171,14 @@ export default function MobileNav() {
                   <span
                     aria-disabled="true"
                     title="Coming soon"
-                    className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink-faint/50"
+                    // FINAL QA FIX PASS: was text-vv-ink-faint/50 — stacking
+                    // 50% opacity on an already-muted token dropped this
+                    // below AA contrast for small text. The unmodified
+                    // token alone still reads as visually quieter than the
+                    // active links above (it's a full color-token step
+                    // down), so dropping the opacity modifier keeps the
+                    // "disabled" feel while meeting a real contrast floor.
+                    className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink-faint"
                   >
                     {nav.signIn.label}
                     <span className="sr-only"> — Coming soon</span>

@@ -350,7 +350,15 @@ export const pages = {
     // functionality beyond what the app genuinely does today.
     expanded: [
       "Valhalla builds your plan from what's true about you — your current fitness, a real benchmark performance, your race target and the days you can actually train. From there, it works out the paces and effort levels that make sense for your training, not generic ones.",
-      "Once training starts, Valhalla pays attention. Every session is compared with what was planned — pace, heart rate, effort, execution. But one hard day doesn't change anything on its own. Valhalla waits for a real pattern before it acts, then proposes a specific adjustment to what comes next. You decide whether to take it.",
+      // FINAL QA FIX PASS: was near-identical to valhallaProduct.body's own
+      // closing ("waits for a real pattern... you decide whether to take
+      // it") one scroll after the homepage already said it. Kept the
+      // pattern-before-acting claim (it's true and belongs here too), but
+      // deepened it with what an adjustment actually is — the pace/effort
+      // target for the next session, not a rewritten plan — grounded in
+      // valhallaProduct.points above, not a new claim. Closing reframed so
+      // it advances the homepage's line instead of repeating it verbatim.
+      "Once training starts, Valhalla pays attention. Every session is compared with what was planned — pace, heart rate, effort, execution — but a single hard day doesn't change anything on its own. Only once a real pattern shows up does Valhalla act, and what changes is specific: the pace or effort target set for your next session, not a plan rewritten from scratch. You see exactly what's proposed and the reasoning behind it — the choice to act on it is still yours.",
       // PHASE 4 AUDIT: two genuine gaps, not duplication — confirmed against
       // the app's real decision engine before writing this. (1) Every other
       // paragraph on this page frames "change" as something cautious/
@@ -412,8 +420,15 @@ export const pages = {
     // sentence on the homepage. FutureWorld already owns that forward-
     // looking claim; this one stays about the Valhalla/Velvet Viking
     // relationship instead.
+    // FINAL QA FIX PASS: was "Valhalla is not a side project. It is Velvet
+    // Viking's first product..." — restating body's own "first product"
+    // fact a second time, back-to-back, on a two-sentence page. body keeps
+    // that fact as the page's one statement of it; this reframes toward
+    // the standard behind it instead, drawing on Philosophy's own
+    // established language ("the standard everything else is built on")
+    // rather than inventing a new claim.
     expanded: [
-      "Valhalla is not a side project. It is Velvet Viking's first product, built to the same standard the name is meant to carry.",
+      "Earn Your Place isn't a marketing line here — it's the bar every decision at Velvet Viking has to clear before it ships.",
     ],
   },
 } as const;
