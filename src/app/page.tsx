@@ -2,10 +2,12 @@ import Hero from "@/components/sections/Hero";
 import DocumentaryReel from "@/components/sections/DocumentaryReel";
 import EditorialSplit from "@/components/sections/EditorialSplit";
 import ProductShowcase from "@/components/sections/ProductShowcase";
-import FullWidthPhoto from "@/components/sections/FullWidthPhoto";
+import RaceBreak from "@/components/sections/RaceBreak";
+import Provenance from "@/components/sections/Provenance";
+import WorkTravels from "@/components/sections/WorkTravels";
 import FutureWorld from "@/components/sections/FutureWorld";
 import FinalCta from "@/components/sections/FinalCta";
-import { brandStory, earnYourPlace, fullWidthPhoto } from "@/content/site";
+import { brandStory, earnYourPlace, raceBreak, provenance, workTravels } from "@/content/site";
 
 export default function Home() {
   return (
@@ -24,10 +26,20 @@ export default function Home() {
 
       <ProductShowcase />
 
-      <FullWidthPhoto
-        mediaLabel={fullWidthPhoto.media.placeholder}
-        mediaAlt={fullWidthPhoto.media.alt}
-        caption={fullWidthPhoto.caption}
+      {/* REAL-IMAGERY PREVIEW: RaceBreak replaces FullWidthPhoto in this
+          slot — same "editorial break after product proof" beat, but sized
+          to the race photo's real portrait composition instead of force-
+          cropping it into a landscape full-bleed frame. Not sticky, so
+          EarnYourPlace below no longer needs the -mt-[100vh] pull-up that
+          only made sense against FullWidthPhoto's pinned layer. */}
+      <RaceBreak src={raceBreak.media.src} alt={raceBreak.media.alt} caption={raceBreak.caption} />
+
+      <Provenance
+        eyebrow={provenance.eyebrow}
+        heading={provenance.heading}
+        body={provenance.body}
+        src={provenance.media.src}
+        alt={provenance.media.alt}
       />
 
       <EditorialSplit
@@ -39,7 +51,14 @@ export default function Home() {
         mediaAlt={earnYourPlace.media.alt}
         galleryItems={earnYourPlace.gallery}
         reverse
-        outerClassName="relative z-10 -mt-[100vh] flex min-h-screen items-center"
+      />
+
+      <WorkTravels
+        desktopSrc={workTravels.desktop.src}
+        mobileHeadlineSrc={workTravels.mobile.headline}
+        mobileTempleSrc={workTravels.mobile.temple}
+        mobileMapSrc={workTravels.mobile.map}
+        alt={workTravels.alt}
       />
 
       <FutureWorld />

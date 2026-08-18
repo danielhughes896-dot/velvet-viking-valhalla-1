@@ -28,10 +28,18 @@ export default function ProductShowcase() {
           <DeviceFrame
             kind="mobile"
             label={valhallaProduct.screenshots.primary.placeholder}
+            src={valhallaProduct.screenshots.primary.src}
+            alt={valhallaProduct.screenshots.primary.alt}
+            priority
             className="sm:-mr-14"
           />
           <div className="relative z-10 origin-top scale-[0.84] sm:mt-20 md:mt-28">
-            <DeviceFrame kind="mobile" label={valhallaProduct.screenshots.secondary.placeholder} />
+            <DeviceFrame
+              kind="mobile"
+              label={valhallaProduct.screenshots.secondary.placeholder}
+              src={valhallaProduct.screenshots.secondary.src}
+              alt={valhallaProduct.screenshots.secondary.alt}
+            />
           </div>
         </div>
 

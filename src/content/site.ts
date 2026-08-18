@@ -116,14 +116,21 @@ export const valhallaProduct = {
   // desktop app to screenshot. `primary` is Next Move/Plan Evolution (the
   // dominant, foregrounded frame); `secondary` is Execution Review (the
   // smaller, offset frame). Renamed from desktop/mobile.
+  // REAL-IMAGERY PASS: real screenshots, so alt text now describes what the
+  // screen actually is rather than an aspirational placeholder concept —
+  // "Today" (Next Move + Pace Reference) and "Full Plan" (the block/week
+  // structure), not the previous "Execution Review" placeholder, which
+  // isn't the screen supplied.
   screenshots: {
     primary: {
-      placeholder: "[VALHALLA — NEXT MOVE / PLAN EVOLUTION]",
-      alt: "[VALHALLA SCREENSHOT — Next Move / Plan Evolution, placeholder]",
+      src: "/photography/app-today.jpg",
+      placeholder: "[VALHALLA — TODAY]",
+      alt: "Valhalla's Today screen: the day's Next Move card and pace reference table",
     },
     secondary: {
-      placeholder: "[VALHALLA — EXECUTION REVIEW]",
-      alt: "[VALHALLA SCREENSHOT — Execution Review, placeholder]",
+      src: "/photography/app-full-plan.jpg",
+      placeholder: "[VALHALLA — FULL PLAN]",
+      alt: "Valhalla's Full Plan screen: the training block broken into weeks and phases",
     },
   },
 } as const;
@@ -141,6 +148,46 @@ export const fullWidthPhoto = {
     alt: "[CAMPAIGN PHOTOGRAPH — full-width training/environment moment, placeholder]",
   },
   caption: "Consistency Compounds",
+} as const;
+
+// REAL-IMAGERY PREVIEW: replaces fullWidthPhoto in this exact homepage slot
+// (see RaceBreak.tsx for why it isn't force-cropped the same way) — kept as
+// a distinct export rather than overwriting fullWidthPhoto above, since
+// that placeholder config is still correct for whatever eventually fills
+// that slot if this preview isn't shipped.
+export const raceBreak = {
+  media: {
+    src: "/photography/race-finish.jpg",
+    alt: "Dan running a marathon, arms out, cheered on by the crowd",
+  },
+  caption: "Consistency Compounds",
+} as const;
+
+// REAL-IMAGERY PREVIEW: concise provenance, not a biography — see
+// Provenance.tsx. No race time, placing, or count of marathons is claimed;
+// none of that is established anywhere in this repository, and the brief
+// for this pass is explicit that nothing should be invented.
+export const provenance = {
+  eyebrow: "Velvet Viking",
+  heading: ["Built by a runner.", "For runners"],
+  body: "A training plan that doesn't adapt to real life isn't much of a plan. Dan built Valhalla after enough of those — plans that looked perfect on paper and fell apart the moment an actual week got in the way.",
+  media: {
+    src: "/photography/founder-medal.jpg",
+    alt: "Dan holding his marathon finisher's medal, smiling",
+  },
+} as const;
+
+// REAL-IMAGERY PREVIEW: the finished "Work Travels" creative — see
+// WorkTravels.tsx for why mobile gets a different crop of the same file
+// rather than a shrunk copy of the desktop composite.
+export const workTravels = {
+  desktop: { src: "/photography/work-travels-with-you.jpg" },
+  mobile: {
+    headline: "/photography/work-travels-mobile-headline.jpg",
+    temple: "/photography/work-travels-mobile-temple.jpg",
+    map: "/photography/work-travels-mobile-map.jpg",
+  },
+  alt: "The Work Travels With You — different place, same purpose. You don't need perfect conditions, you need consistency. Earn Your Place.",
 } as const;
 
 export const earnYourPlace = {

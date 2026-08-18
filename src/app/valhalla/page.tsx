@@ -34,10 +34,17 @@ export default function ValhallaPage() {
             <DeviceFrame
               kind="mobile"
               label={valhallaProduct.screenshots.primary.placeholder}
+              src={valhallaProduct.screenshots.primary.src}
+              alt={valhallaProduct.screenshots.primary.alt}
               className="sm:-mr-10"
             />
             <div className="scale-[0.86]">
-              <DeviceFrame kind="mobile" label={valhallaProduct.screenshots.secondary.placeholder} />
+              <DeviceFrame
+                kind="mobile"
+                label={valhallaProduct.screenshots.secondary.placeholder}
+                src={valhallaProduct.screenshots.secondary.src}
+                alt={valhallaProduct.screenshots.secondary.alt}
+              />
             </div>
           </div>
         </div>
