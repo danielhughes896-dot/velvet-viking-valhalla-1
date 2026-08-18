@@ -62,11 +62,11 @@ type RaceBreakProps = {
 // So the pull-up is just "the pinned photo's own height plus a safety
 // margin" — it does not encode the hold at all. The hold lives entirely
 // in Ctail, which is why it can now be set to a deliberate short beat
-// (a PERCEIVED 150px mobile / 200px sm+ — see the spacer's own note for
+// (a PERCEIVED ~100px mobile / ~132px sm+ — see the spacer's own note for
 // why perceived and geometric differ) instead of being whatever distance
 // happened to remain after guaranteeing coverage. That inversion is the
-// fix for the "page feels stuck" dead scroll: the previous build's
-// geometric hold measured 401/543/458/512px at 390/820/1440/1920.
+// fix for the "page feels stuck" dead scroll. Successive measured holds:
+// 401/543/458/512px (original) -> 152/201/201/201px -> ~100/132px now.
 //
 // Hs differs by breakpoint because the photo box is sized differently:
 // width-authority below sm (pt-20 + a 3:4 box whose height follows its
@@ -85,16 +85,24 @@ type RaceBreakProps = {
 // while WT_h >= |M| — a coincidence that happened to hold at 390/1440 and
 // failed at 820/1920.
 //
-// The fix is NOT here; it is the z-index passed to the Earn Your Place
-// section in page.tsx, which is the same mechanism the original
-// FullWidthPhoto transition used ("higher z-index, opaque background").
-// Recorded here because this component is where the cause lives: making
-// this section `isolation: isolate` was tried first, on the theory that a
-// non-positioned stacking context paints atomically in flow order and so
-// would fall below later siblings. Measured, it does not — browsers paint
-// such a context at the z-index:0 level, still above static content — and
-// 820px still reappeared with it applied. Do not re-add it expecting a
-// fix; give any future section that overlaps this one a z-index instead.
+// The fix is NOT here; it is in page.tsx, where every section that
+// follows this one is wrapped in a single `relative z-10` layer. That is
+// the same mechanism the original FullWidthPhoto transition used ("higher
+// z-index, opaque background"), but applied to the whole remainder of the
+// page rather than to one named section, so it cannot silently stop
+// covering when a section height or the pull-up changes.
+//
+// Two narrower attempts are recorded here so they are not retried:
+//   - `isolation: isolate` on this section, on the theory that a
+//     non-positioned stacking context paints atomically in flow order and
+//     would therefore fall below later siblings. It does not — browsers
+//     paint such a context at the z-index:0 level, still above static
+//     content — and 820px still reappeared with it applied.
+//   - z-index on the Earn Your Place section alone. Correct as far as it
+//     went, but it left every LATER section (One Philosophy, the final
+//     CTA) static and therefore still paintable-over, with safety
+//     depending on the arithmetic accident |M| < WT_h + eypH rather than
+//     on anything structural.
 //
 // CAPTION: unchanged — a small overlay near the TOP of the photo (below).
 export default function RaceBreak({ src, alt, caption }: RaceBreakProps) {
@@ -126,13 +134,24 @@ export default function RaceBreak({ src, alt, caption }: RaceBreakProps) {
           own top padding (80px mobile / 112px sm+) is the same dark
           colour as this section's background, so a viewer registers
           nothing until its hero image crosses the fold. Targeting a
-          perceived 150px (mobile) / 200px (sm+) means a geometric hold of
-          70px / 88px, giving (100vh - 133px) and (100vh - 156px). See the
+          perceived ~100px (mobile) / ~132px (sm+) means a geometric hold
+          of 20px, giving (100vh - 183px) and (100vh - 224px).
+
+          The geometric hold is kept slightly POSITIVE rather than pushed
+          to zero or below, because it is what guarantees WorkTravels'
+          leading edge is still off-screen at the instant the photo pins.
+          An earlier pass here used a negative geometric hold on the
+          reasoning that the edge is invisible anyway (dark padding on a
+          dark background) — true at three of the four tested widths, but
+          at 1440x900 it put WorkTravels 36px OVER the bottom of the photo
+          at pin, because there the photo box (208px of chrome + 78vh) is
+          910px tall in a 900px viewport and so already reaches the fold.
+          20px keeps clearance positive at 390/820/1440/1920 alike. See the
           derivation above — this is where the hold lives, which is why it
-          can be short. */}
+          can be set directly at all. */}
       <div
         aria-hidden
-        className="hidden motion-safe:block motion-safe:h-[calc(100vh_-_133px)] motion-safe:sm:h-[calc(100vh_-_156px)]"
+        className="hidden motion-safe:block motion-safe:h-[calc(100vh_-_183px)] motion-safe:sm:h-[calc(100vh_-_224px)]"
       />
       {/* motion-safe:invisible, not hidden: this paragraph must keep
           occupying its original box (the overlay caption above is

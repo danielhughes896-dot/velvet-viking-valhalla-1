@@ -56,6 +56,24 @@ export default function Home() {
           where the two pull-up numbers come from. */}
       <RaceBreak src={raceBreak.media.src} alt={raceBreak.media.alt} caption={raceBreak.caption} />
 
+      {/* CONSISTENCY COMPOUNDS — POST-STICKY PAINT LAYER. RaceBreak's
+          pinned photo is `position: sticky`, i.e. a POSITIONED element,
+          and positioned elements paint above STATIC ones. WorkTravels'
+          pull-up deliberately drags the rest of the page up into
+          RaceBreak's own box, so without this layer the expired photo
+          paints over whichever following section happens to overlap it —
+          which is how it kept reappearing behind Earn Your Place. Wrapping
+          the whole remainder of the page in one `relative z-10` layer
+          makes every later section paint above the expired sticky section
+          unconditionally, rather than that depending on section heights
+          lining up (the previous per-section z-index left One Philosophy
+          and the final CTA still static, and therefore still exposed).
+          Layout is untouched: this div has no padding or border, so
+          WorkTravels' negative margin still collapses through it exactly
+          as before, and nothing inside gains a background, a size change
+          or a position of its own. Reduced-motion opens no layer at all —
+          there is no pull-up and no sticky there to correct for. */}
+      <div className="motion-safe:relative motion-safe:z-10">
       {/* FINAL POLISH: moved ahead of Earn Your Place — Work Travels reads
           as an editorial interlude, not the page's last emotional beat
           before the commercial close. Earn Your Place, pricing, and the
@@ -88,10 +106,10 @@ export default function Home() {
           held in place, untouched, before the next section slides up from
           the bottom of the screen and covers it). WorkTravels' own
           composition, copy and imagery are completely unchanged; only its
-          outer wrapper is affected. This section no longer has to be
-          taller than the pinned photo for the photo to stay hidden
-          afterwards — the z-index on Earn Your Place below handles that
-          now, so the two are no longer coupled. */}
+          outer wrapper is affected. This section no longer needs a
+          z-index of its own — it inherits the shared paint layer opened
+          above — and it no longer has to be taller than the pinned photo
+          for the photo to stay hidden afterwards. */}
       <WorkTravels
         desktopSrc={workTravels.desktop.src}
         mobileHeadlineSrc={workTravels.mobile.headline}
@@ -99,29 +117,17 @@ export default function Home() {
         temple={workTravels.temple}
         map={workTravels.map}
         alt={workTravels.alt}
-        className="motion-safe:relative motion-safe:z-10 motion-safe:-mt-[calc(56px_+_133.333vw)] motion-safe:sm:-mt-[calc(152px_+_78vh)]"
+        className="motion-safe:-mt-[calc(56px_+_133.333vw)] motion-safe:sm:-mt-[calc(152px_+_78vh)]"
       />
 
       {/* RESTORED: the three-slot gallery composition is approved as part
           of the visual architecture — see earnYourPlace.gallery in
           site.ts. Now carries real photography.
 
-          CONSISTENCY COMPOUNDS RELEASE FIX (outerClassName only — nothing
-          about this section's own design, copy, imagery or layout
-          changes): RaceBreak's pinned photo is `position: sticky`, so it
-          is a POSITIONED element and paints above STATIC ones. WorkTravels'
-          pull-up drags this section's box up far enough to overlap the
-          tail of RaceBreak's, and this section was static — so once
-          WorkTravels' own box ended, the photo painted straight over the
-          top of Earn Your Place and visibly came back, measured at 820px
-          and 1920px. Giving it the same `relative z-10` WorkTravels
-          already has puts it in the same paint layer, so the photo is
-          permanently finished the moment it is covered, at every
-          viewport, without depending on WorkTravels being taller than the
-          photo. This is the mechanism the original FullWidthPhoto
-          transition used too ("higher z-index, an opaque background" —
-          this section is opaque already), and `outerClassName` exists on
-          EditorialSplit for exactly this purpose. */}
+          This section carries no z-index of its own: it sits inside the
+          shared post-RaceBreak paint layer opened above, which covers it
+          and everything after it, so it stays visually continuous with
+          One Philosophy below rather than being singled out. */}
       <EditorialSplit
         theme="light"
         eyebrow={earnYourPlace.eyebrow}
@@ -131,11 +137,11 @@ export default function Home() {
         mediaAlt={earnYourPlace.media.alt}
         galleryItems={earnYourPlace.gallery}
         reverse
-        outerClassName="motion-safe:relative motion-safe:z-10"
       />
 
       <FutureWorld />
       <FinalCta />
+      </div>
     </>
   );
 }
