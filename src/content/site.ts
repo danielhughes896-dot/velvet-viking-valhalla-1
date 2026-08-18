@@ -180,20 +180,33 @@ export const provenance = {
   },
 } as const;
 
-// REAL-IMAGERY PREVIEW: the finished "Work Travels" creative — see
-// WorkTravels.tsx for why mobile gets a different crop of the same file
-// rather than a shrunk copy of the desktop composite.
-// FINAL POLISH: the temple selfie crop was dropped from the mobile support
-// row — next to the map crop's clean "a real route, somewhere else" read,
-// the temple photo leaned personal-holiday-photo rather than
-// running-and-consistency. The map now carries the supporting role alone.
+// REAL-IMAGERY PREVIEW / EDITORIAL TRAVEL GRID: the finished "Work Travels"
+// creative is one flat composite (headline band + temple + map baked into
+// a single file) — see WorkTravels.tsx for how the hero crops that same
+// file to its top band via CSS object-position rather than a separate
+// file, while temple and map are real, unaltered sub-crops saved as their
+// own files (object-fit alone can't isolate an arbitrary interior
+// rectangle of a source image, only a full-width or full-height slice).
+// Mobile keeps its own dedicated headline crop for text legibility at
+// narrow widths — a wide crop shrunk to 390px reads as illegible, not
+// just smaller.
 export const workTravels = {
   desktop: { src: "/photography/work-travels-with-you.jpg" },
   mobile: {
     headline: "/photography/work-travels-mobile-headline.jpg",
-    map: "/photography/work-travels-mobile-map.jpg",
   },
   alt: "The Work Travels With You — different place, same purpose. You don't need perfect conditions, you need consistency. Earn Your Place.",
+  heroLocation: "Athens, Greece",
+  temple: {
+    src: "/photography/work-travels-temple.jpg",
+    alt: "A gilded Buddha shrine at a temple in Koh Samui, Thailand, with Dan smiling in front of it",
+    location: "Koh Samui, Thailand",
+  },
+  map: {
+    src: "/photography/work-travels-map.jpg",
+    alt: "A GPS running route traced along the coastline of Koh Tao, Thailand",
+    location: "Koh Tao, Thailand",
+  },
 } as const;
 
 // RESTORED, NOW POPULATED: the three-slot gallery composition is approved

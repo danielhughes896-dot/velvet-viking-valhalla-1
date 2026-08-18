@@ -57,7 +57,9 @@ export default function Home() {
       <WorkTravels
         desktopSrc={workTravels.desktop.src}
         mobileHeadlineSrc={workTravels.mobile.headline}
-        mobileMapSrc={workTravels.mobile.map}
+        heroLocation={workTravels.heroLocation}
+        temple={workTravels.temple}
+        map={workTravels.map}
         alt={workTravels.alt}
       />
 
