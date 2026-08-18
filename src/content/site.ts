@@ -223,12 +223,21 @@ export const earnYourPlace = {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
     alt: "[ATHLETE / TRAINING PHOTOGRAPH — placeholder]",
   },
+  // FINAL POLISH — CAPTION/PHOTO SEMANTIC CORRECTION: the mountain trail
+  // shot is the one image with genuine, legible environmental context (a
+  // wide valley backdrop) — the two race photos are both close, blurred-
+  // background effort shots with little sense of place between them, so
+  // "The Environment" belongs on the trail photo, not either race photo.
+  // Of the two race photos, the grey-shirt shot (mid-stride, visible
+  // strain) reads as the grind in progress — "The Work" — while the
+  // orange-shirt finish-line shot reads more as a composed portrait of
+  // the athlete himself — "The Athlete".
   gallery: [
     {
       placeholder: "[TRAINING MOMENT]",
       src: "/photography/earn-your-place-training-moment.jpg",
       alt: "Dan on a mountain trail, pack on, overlooking a wide valley",
-      caption: "The Work",
+      caption: "The Environment",
       aspect: "portrait",
       objectPosition: "center 25%",
     },
@@ -236,7 +245,7 @@ export const earnYourPlace = {
       placeholder: "[ATHLETE DETAIL]",
       src: "/photography/earn-your-place-athlete-detail.jpg",
       alt: "Dan mid-stride at a road race, bib 2268",
-      caption: "The Athlete",
+      caption: "The Work",
       aspect: "portrait",
       objectPosition: "center 0%",
     },
@@ -244,7 +253,7 @@ export const earnYourPlace = {
       placeholder: "[ENVIRONMENT]",
       src: "/photography/earn-your-place-environment.jpg",
       alt: "Dan mid-stride finishing a road race, bib 2345",
-      caption: "The Environment",
+      caption: "The Athlete",
       aspect: "portrait",
       objectPosition: "center 0%",
     },

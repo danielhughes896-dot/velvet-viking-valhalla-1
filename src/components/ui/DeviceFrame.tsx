@@ -27,7 +27,13 @@ export default function DeviceFrame({
   if (kind === "mobile") {
     return (
       <div
-        className={`w-[220px] rounded-[28px] border border-vv-line bg-vv-bg-2 p-2.5 shadow-vv sm:w-[248px] ${className}`}
+        // DESKTOP POLISH: a fixed 248px cap never grew past the sm
+        // breakpoint, so on a genuinely wide monitor two small phone
+        // mockups sat in the middle of a much larger section with no
+        // proportional relationship to the viewport. The lg/xl steps are
+        // modest — still a phone-sized frame, not "enormous" — and mobile/
+        // tablet are untouched below lg.
+        className={`w-[220px] rounded-[28px] border border-vv-line bg-vv-bg-2 p-2.5 shadow-vv sm:w-[248px] lg:w-[276px] xl:w-[300px] ${className}`}
       >
         <PlaceholderMedia
           label={label}
@@ -35,7 +41,7 @@ export default function DeviceFrame({
           src={src}
           fit="contain"
           priority={priority}
-          sizes="(min-width: 640px) 248px, 220px"
+          sizes="(min-width: 1280px) 300px, (min-width: 1024px) 276px, (min-width: 640px) 248px, 220px"
           aspect="portrait"
           className="rounded-[20px]"
         />

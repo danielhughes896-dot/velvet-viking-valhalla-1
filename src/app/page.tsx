@@ -33,14 +33,10 @@ export default function Home() {
 
       <ProductShowcase />
 
-      {/* REAL-IMAGERY PREVIEW: RaceBreak replaces FullWidthPhoto in this
-          slot — same "editorial break after product proof" beat, but sized
-          to the race photo's real portrait composition instead of force-
-          cropping it into a landscape full-bleed frame. Not sticky, so
-          EarnYourPlace below no longer needs the -mt-[100vh] pull-up that
-          only made sense against FullWidthPhoto's pinned layer. */}
-      <RaceBreak src={raceBreak.media.src} alt={raceBreak.media.alt} caption={raceBreak.caption} />
-
+      {/* HOMEPAGE STORY ORDER: moved ahead of Consistency Compounds — once
+          the visitor understands what Valhalla is, the next natural
+          question is why it exists and who built it, before the page
+          moves on to proving consistency and real-world use. */}
       <Provenance
         eyebrow={provenance.eyebrow}
         heading={provenance.heading}
@@ -48,6 +44,14 @@ export default function Home() {
         src={provenance.media.src}
         alt={provenance.media.alt}
       />
+
+      {/* REAL-IMAGERY PREVIEW: RaceBreak replaces FullWidthPhoto in this
+          slot — same "editorial break after product proof" beat, but sized
+          to the race photo's real portrait composition instead of force-
+          cropping it into a landscape full-bleed frame. Not sticky, so
+          EarnYourPlace below no longer needs the -mt-[100vh] pull-up that
+          only made sense against FullWidthPhoto's pinned layer. */}
+      <RaceBreak src={raceBreak.media.src} alt={raceBreak.media.alt} caption={raceBreak.caption} />
 
       {/* FINAL POLISH: moved ahead of Earn Your Place — Work Travels reads
           as an editorial interlude, not the page's last emotional beat

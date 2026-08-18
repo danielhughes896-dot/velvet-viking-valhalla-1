@@ -79,9 +79,23 @@ export default function EditorialSplit({
   galleryItems,
   outerClassName = "",
 }: EditorialSplitProps) {
+  // DESKTOP POLISH — reverse (the gallery/Earn Your Place variant): the
+  // old viewport-relative breakout dragged the gallery toward the true
+  // viewport edge on a wide monitor while the text column stayed pinned
+  // to the content container, so the gap between them grew large and,
+  // beyond ~1536px, unboundedly. The two halves need to read as one
+  // composition, so this drops the viewport-scaling escape in favor of a
+  // small, constant nudge past the grid column — present at lg+, capped,
+  // never growing with viewport width.
+  //
+  // non-reverse (Philosophy's original full-bleed-both-sides treatment):
+  // no current caller uses this with real media (Philosophy ships
+  // text-only — see the no-media branch below), so it's untouched other
+  // than the same 96rem cap it already had, kept for whenever it's
+  // reactivated.
   const mediaClassName = reverse
-    ? "mr-[calc(50%-50vw)] md:mr-0 md:-translate-x-[calc((100vw-min(100vw,72rem))/2)] md:self-end md:-my-20"
-    : "ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] md:ml-0 md:mr-0 md:translate-x-[calc((100vw-min(100vw,72rem))/2)] md:self-start md:-my-14";
+    ? "mr-[calc(50%-50vw)] md:mr-0 md:self-end md:-my-20 lg:-mr-10 xl:-mr-16"
+    : "ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] md:ml-0 md:mr-0 md:translate-x-[calc((min(100vw,96rem)-min(100vw,72rem))/2)] md:self-start md:-my-14";
 
   // FINAL POLISH: no genuine photograph exists yet for this section — the
   // brief is explicit that an empty/placeholder media slot must not ship.
@@ -91,7 +105,7 @@ export default function EditorialSplit({
   if (!mediaLabel && !galleryItems) {
     return (
       <section className={`${theme === "light" ? "theme-light bg-vv-bg" : "bg-vv-bg"}`}>
-        <div className="mx-auto max-w-2xl px-6 py-24 text-center sm:px-8 sm:py-32">
+        <div className="mx-auto max-w-2xl px-6 py-24 text-center sm:px-8 sm:py-32 md:max-w-4xl">
           <SectionHeading eyebrow={eyebrow} heading={heading} align="center" />
           <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-vv-ink-dim">{body}</p>
         </div>

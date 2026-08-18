@@ -52,7 +52,11 @@ export default function WorkTravels({
 }: WorkTravelsProps) {
   return (
     <section className="theme-dark bg-vv-bg">
-      <div className="mx-auto max-w-5xl px-6 py-20 sm:px-8 sm:py-28">
+      {/* DESKTOP POLISH: widened to match the rest of the page's max-w-6xl
+          rhythm — this section's own container was a step narrower than
+          its neighbours, which read as an unintended dip in scale between
+          sections rather than a deliberate choice. */}
+      <div className="mx-auto max-w-5xl px-6 py-20 sm:px-8 sm:py-28 lg:max-w-6xl">
         <div
           className={`relative aspect-[1000/515] w-full overflow-hidden rounded-vv shadow-vv sm:aspect-[1536/513] ${GOLD_HAIRLINE}`}
         >
@@ -80,7 +84,7 @@ export default function WorkTravels({
         <div className="mt-10 flex flex-wrap items-start justify-center gap-x-8 gap-y-10 sm:mt-14 sm:gap-x-10">
           <figure className="flex flex-col items-center">
             <div
-              className={`relative h-56 w-auto overflow-hidden rounded-vv shadow-vv sm:h-64 md:h-72 aspect-[284/377] ${GOLD_HAIRLINE}`}
+              className={`relative h-56 w-auto overflow-hidden rounded-vv shadow-vv sm:h-64 md:h-72 lg:h-80 xl:h-96 aspect-[284/377] ${GOLD_HAIRLINE}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- real sub-crop of the supplied composite, same rationale as the hero <picture> above */}
               <img src={temple.src} alt={temple.alt} className="h-full w-full object-cover" />
@@ -90,7 +94,7 @@ export default function WorkTravels({
 
           <figure className="flex flex-col items-center">
             <div
-              className={`relative h-56 w-auto overflow-hidden rounded-vv shadow-vv sm:h-64 md:h-72 aspect-[504/377] ${GOLD_HAIRLINE}`}
+              className={`relative h-56 w-auto overflow-hidden rounded-vv shadow-vv sm:h-64 md:h-72 lg:h-80 xl:h-96 aspect-[504/377] ${GOLD_HAIRLINE}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- real sub-crop of the supplied composite, same rationale as the hero <picture> above */}
               <img src={map.src} alt={map.alt} className="h-full w-full object-cover" />
