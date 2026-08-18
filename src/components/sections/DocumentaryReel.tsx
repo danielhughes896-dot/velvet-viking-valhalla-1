@@ -1,10 +1,21 @@
-import { documentaryReel } from "@/content/site";
-
 // Prototype-only "opening media" slot, directly under the hero. A neutral
 // poster/placeholder at a realistic final aspect for a short documentary
 // piece — NOT fabricated footage or a stock clip. The play affordance is
 // purely a compositional cue for what this slot is for; it isn't wired to
 // anything, and this component takes no autoplay/video dependency.
+//
+// NO VISIBLE LABEL. This frame used to print documentaryReel.media
+// .placeholder — the literal string "[DOCUMENTARY REEL — placeholder]" —
+// as public-facing text on the homepage. Every other placeholder label in
+// the codebase became unreachable once real photography landed (see
+// PlaceholderMedia, which renders its label only when given no `src`);
+// this was the last one still reaching the DOM, and internal bracketed
+// production shorthand is not something a visitor should ever read. The
+// frame itself is unchanged: same aspect, same tint, same dashed inner
+// marker, same play glyph, same section padding. The `documentaryReel`
+// export in content/site.ts is deliberately left in place — it is the
+// seam for real footage later — but nothing reads it now, so restoring a
+// caption is an explicit decision rather than an accident.
 export default function DocumentaryReel() {
   return (
     <section className="bg-vv-bg">
@@ -26,9 +37,6 @@ export default function DocumentaryReel() {
               <svg viewBox="0 0 24 24" className="ml-1 h-5 w-5 fill-vv-ink sm:h-6 sm:w-6" aria-hidden>
                 <path d="M6 4.5v15l14-7.5z" />
               </svg>
-            </span>
-            <span className="font-head text-[11px] font-medium uppercase tracking-[0.2em] text-vv-ink-faint">
-              {documentaryReel.media.placeholder}
             </span>
           </div>
         </div>
