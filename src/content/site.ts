@@ -135,13 +135,6 @@ export const valhallaProduct = {
   },
 } as const;
 
-export const documentaryReel = {
-  media: {
-    placeholder: "[DOCUMENTARY REEL — placeholder]",
-    alt: "[DOCUMENTARY REEL — placeholder, opening motion piece, footage to be confirmed]",
-  },
-} as const;
-
 export const fullWidthPhoto = {
   media: {
     placeholder: "[CAMPAIGN PHOTOGRAPH]",
@@ -180,11 +173,14 @@ export const provenance = {
 // REAL-IMAGERY PREVIEW: the finished "Work Travels" creative — see
 // WorkTravels.tsx for why mobile gets a different crop of the same file
 // rather than a shrunk copy of the desktop composite.
+// FINAL POLISH: the temple selfie crop was dropped from the mobile support
+// row — next to the map crop's clean "a real route, somewhere else" read,
+// the temple photo leaned personal-holiday-photo rather than
+// running-and-consistency. The map now carries the supporting role alone.
 export const workTravels = {
   desktop: { src: "/photography/work-travels-with-you.jpg" },
   mobile: {
     headline: "/photography/work-travels-mobile-headline.jpg",
-    temple: "/photography/work-travels-mobile-temple.jpg",
     map: "/photography/work-travels-mobile-map.jpg",
   },
   alt: "The Work Travels With You — different place, same purpose. You don't need perfect conditions, you need consistency. Earn Your Place.",

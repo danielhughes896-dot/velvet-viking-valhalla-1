@@ -1,5 +1,4 @@
 import Hero from "@/components/sections/Hero";
-import DocumentaryReel from "@/components/sections/DocumentaryReel";
 import EditorialSplit from "@/components/sections/EditorialSplit";
 import ProductShowcase from "@/components/sections/ProductShowcase";
 import RaceBreak from "@/components/sections/RaceBreak";
@@ -13,15 +12,18 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <DocumentaryReel />
 
+      {/* FINAL POLISH: no genuine footage exists for the opening documentary
+          reel or a photograph for this statement yet, so both ship
+          text-only rather than with an empty/placeholder media frame — see
+          EditorialSplit's no-media branch. The reel had no copy of its own
+          to fall back on, so that section is removed outright rather than
+          rendered empty. */}
       <EditorialSplit
         theme="light"
         eyebrow={brandStory.eyebrow}
         heading={brandStory.heading}
         body={brandStory.body}
-        mediaLabel={brandStory.media.placeholder}
-        mediaAlt={brandStory.media.alt}
       />
 
       <ProductShowcase />
@@ -42,23 +44,23 @@ export default function Home() {
         alt={provenance.media.alt}
       />
 
+      {/* FINAL POLISH: moved ahead of Earn Your Place — Work Travels reads
+          as an editorial interlude, not the page's last emotional beat
+          before the commercial close. Earn Your Place, pricing, and the
+          final CTA now close the page instead, so Velvet Viking/Valhalla
+          reclaims it after this section rather than ending on it. */}
+      <WorkTravels
+        desktopSrc={workTravels.desktop.src}
+        mobileHeadlineSrc={workTravels.mobile.headline}
+        mobileMapSrc={workTravels.mobile.map}
+        alt={workTravels.alt}
+      />
+
       <EditorialSplit
         theme="light"
         eyebrow={earnYourPlace.eyebrow}
         heading={earnYourPlace.heading}
         body={earnYourPlace.body}
-        mediaLabel={earnYourPlace.media.placeholder}
-        mediaAlt={earnYourPlace.media.alt}
-        galleryItems={earnYourPlace.gallery}
-        reverse
-      />
-
-      <WorkTravels
-        desktopSrc={workTravels.desktop.src}
-        mobileHeadlineSrc={workTravels.mobile.headline}
-        mobileTempleSrc={workTravels.mobile.temple}
-        mobileMapSrc={workTravels.mobile.map}
-        alt={workTravels.alt}
       />
 
       <FutureWorld />

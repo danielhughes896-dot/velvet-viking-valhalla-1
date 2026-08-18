@@ -11,8 +11,11 @@ type EditorialSplitProps = {
   eyebrow?: string;
   heading: string | readonly string[];
   body: string;
-  mediaLabel: string;
-  mediaAlt: string;
+  /** Omit both this and galleryItems when no genuine photograph exists yet
+   * for this section — see the no-media branch below. Do not fill either
+   * with a placeholder label. */
+  mediaLabel?: string;
+  mediaAlt?: string;
   reverse?: boolean;
   theme?: "dark" | "light";
   /** When provided, renders a horizontally scrollable strip of media slots
@@ -71,6 +74,22 @@ export default function EditorialSplit({
     ? "mr-[calc(50%-50vw)] md:mr-0 md:-translate-x-[calc((100vw-min(100vw,72rem))/2)] md:self-end md:-my-20"
     : "ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] md:ml-0 md:mr-0 md:translate-x-[calc((100vw-min(100vw,72rem))/2)] md:self-start md:-my-14";
 
+  // FINAL POLISH: no genuine photograph exists yet for this section — the
+  // brief is explicit that an empty/placeholder media slot must not ship.
+  // Rather than the two-column split, the statement stands alone: same
+  // centered, text-led treatment as FutureWorld further down the page, so
+  // a text-only section reads as a deliberate choice, not a missing image.
+  if (!mediaLabel && !galleryItems) {
+    return (
+      <section className={`${theme === "light" ? "theme-light bg-vv-bg" : "bg-vv-bg"}`}>
+        <div className="mx-auto max-w-2xl px-6 py-24 text-center sm:px-8 sm:py-32">
+          <SectionHeading eyebrow={eyebrow} heading={heading} align="center" />
+          <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-vv-ink-dim">{body}</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       className={`overflow-hidden ${theme === "light" ? "theme-light bg-vv-bg" : "bg-vv-bg"} ${outerClassName}`}
@@ -111,7 +130,7 @@ export default function EditorialSplit({
               </div>
             </div>
           ) : (
-            <PlaceholderMedia label={mediaLabel} aspect="portrait" bleed className={mediaClassName} />
+            <PlaceholderMedia label={mediaLabel!} aspect="portrait" bleed className={mediaClassName} />
           )}
         </div>
       </div>
