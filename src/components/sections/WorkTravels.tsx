@@ -62,8 +62,21 @@ export default function WorkTravels({
       {/* DESKTOP POLISH: widened to match the rest of the page's max-w-6xl
           rhythm — this section's own container was a step narrower than
           its neighbours, which read as an unintended dip in scale between
-          sections rather than a deliberate choice. */}
-      <div className="mx-auto max-w-5xl px-6 py-20 sm:px-8 sm:py-28 lg:max-w-6xl">
+          sections rather than a deliberate choice.
+
+          TOP PADDING IS DELIBERATELY MUCH SMALLER THAN THE BOTTOM. This
+          section rises over the pinned Consistency Compounds photo (see
+          RaceBreak.tsx), and because both sections share the same dark
+          background, this padding IS the black gap a viewer sees between
+          the two image cards — measured at exactly py-20/py-28's 80px and
+          112px before this change. Reduced to 24px/32px so the two cards
+          read as a deliberate pair rather than separated by dead space
+          that could be mistaken for the end of the page. Only the TOP is
+          reduced: pb-20/pb-28 is unchanged, so this section's spacing
+          against Earn Your Place below it is exactly as before, as is its
+          appearance under prefers-reduced-motion, where RaceBreak's own
+          pb-20/pb-28 and visible caption still sit above it. */}
+      <div className="mx-auto max-w-5xl px-6 pt-6 pb-20 sm:px-8 sm:pt-8 sm:pb-28 lg:max-w-6xl">
         <div
           className={`relative aspect-[1000/515] w-full overflow-hidden rounded-vv shadow-vv sm:aspect-[1536/513] ${GOLD_HAIRLINE}`}
         >
