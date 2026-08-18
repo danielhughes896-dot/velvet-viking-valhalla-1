@@ -31,6 +31,11 @@ export const brand = {
 export const nav = {
   links: [
     { label: "Valhalla", href: "/valhalla" },
+    // GALLERY: MobileNav relabels "Valhalla" -> "Valhalla App" for display
+    // only; this array is also the source for Header's <noscript> fallback
+    // nav, so adding Gallery here (rather than hard-coding it into either
+    // component separately) keeps both surfaces in sync automatically.
+    { label: "Gallery", href: "/gallery" },
     { label: "Pricing", href: "/pricing" },
     { label: "Philosophy", href: "/philosophy" },
     { label: "About", href: "/about" },
@@ -381,6 +386,16 @@ export const pages = {
       // rather than a new anthropomorphizing claim.
       "It isn't a dashboard of your data. It's built to pay attention to it — and tell you only what actually matters.",
     ],
+  },
+  // GALLERY: a curated visual home, not a rehearsal of Valhalla/Philosophy/
+  // About's own claims — see gallery.ts for the photographs themselves and
+  // why each one was chosen. Copy stays minimal on purpose: the page's job
+  // is to let the photography carry it.
+  gallery: {
+    eyebrow: "Velvet Viking",
+    heading: "The Work, In Pictures",
+    sub: "Training, racing, and the places they happen.",
+    body: "Real moments, not staged for a shoot.",
   },
   philosophy: {
     eyebrow: "Velvet Viking",

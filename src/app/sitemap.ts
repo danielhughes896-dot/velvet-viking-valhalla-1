@@ -10,7 +10,7 @@ import { siteUrl } from "@/content/site";
 // from navigation. Same treatment the private beta's own terms page already
 // gets below. Add each one back here once its own LEGAL_APPROVALS flag flips
 // to true.
-const routes = ["", "/valhalla", "/pricing", "/start", "/philosophy", "/about", "/privacy"];
+const routes = ["", "/valhalla", "/gallery", "/pricing", "/start", "/philosophy", "/about", "/privacy"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return routes.map((route) => ({
