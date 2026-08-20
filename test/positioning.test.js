@@ -108,12 +108,15 @@ test('protected brand language survived the positioning pass', () => {
 test('Standard carries both a monthly and an annual price', () => {
   const commerce = code(read('src/content/commerce.ts'));
   assert.match(commerce, /price:\s*\{\s*amount:\s*11\.99,\s*currency:\s*"GBP",\s*period:\s*"month"\s*\}/);
-  assert.match(commerce, /priceAnnual:\s*\{\s*amount:\s*79\.99,\s*currency:\s*"GBP",\s*period:\s*"year"\s*\}/);
+  assert.match(commerce, /priceAnnual:\s*\{\s*amount:\s*89\.99,\s*currency:\s*"GBP",\s*period:\s*"year"\s*\}/);
 });
 
 test('no savings, discount or urgency framing is stored or rendered anywhere in the pricing surface', () => {
-  // The arithmetic that would produce a savings claim (11.99 x 12 = 143.88)
-  // is recorded only in a source comment, deliberately out of the UI's reach.
+  // The arithmetic that would produce a savings claim is recorded only in a
+  // source comment, deliberately out of the UI's reach. At the final approved
+  // prices that is 11.99 x 12 = 143.88 annualised, 53.89 more than the 89.99
+  // annual price, and an effective 7.50 a month. None of those three numbers
+  // may appear in shipped code.
   const banned = [
     /\bsave\b/i,
     /\bsavings?\b/i,
@@ -122,9 +125,9 @@ test('no savings, discount or urgency framing is stored or rendered anywhere in 
     /\bdiscount/i,
     /equivalent/i,
     /line-through/i,
-    /\b63\.89\b/,
+    /\b53\.89\b/,
     /\b143\.88\b/,
-    /\b6\.6[0-9]\b/,
+    /\b7\.[45][0-9]\b/,
   ];
   for (const file of ['src/components/sections/PricingCard.tsx', 'src/content/commerce.ts']) {
     const src = code(read(file));
