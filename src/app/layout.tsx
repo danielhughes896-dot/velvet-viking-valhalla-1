@@ -29,15 +29,21 @@ export const metadata: Metadata = {
     default: "Velvet Viking — Valhalla Awaits. Earn Your Place.",
     template: "%s — Velvet Viking",
   },
+  // POSITIONING PASS: "Endurance coaching" -> "Endurance training", here
+  // and in the Open Graph description below. These two are the site's
+  // widest-reach copy — the search-result snippet and the link preview
+  // pasted into any chat or social post — so a coach claim here reached
+  // people who never opened the site. Kept character-identical to
+  // hero.sub in content/site.ts, which is the same sentence.
   description:
-    "Endurance coaching that pays attention to what you actually do, not just what was planned. Valhalla by Velvet Viking.",
+    "Endurance training that pays attention to what you actually do, not just what was planned. Valhalla by Velvet Viking.",
   // Site-wide default; every route below overrides this with its own path
   // so each page declares its own canonical URL rather than inheriting "/".
   alternates: { canonical: "/" },
   openGraph: {
     title: "Velvet Viking",
     description:
-      "Endurance coaching that pays attention to what you actually do, not just what was planned. Valhalla by Velvet Viking.",
+      "Endurance training that pays attention to what you actually do, not just what was planned. Valhalla by Velvet Viking.",
     url: siteUrl,
     siteName: "Velvet Viking",
     // OVERNIGHT AUDIT: was the raw canonical crest (2.1MB) served directly

@@ -69,7 +69,16 @@ export const hero = {
   // stray mark on the site's most-read line. Wording is otherwise
   // untouched; "actually" is kept here because it carries the real
   // contrast against "what was planned".
-  sub: "Endurance coaching that pays attention to what you actually do, not just what was planned.",
+  // POSITIONING PASS: "Endurance coaching that pays attention…" became
+  // "Endurance training…". One word, because the rest of this line is
+  // already doing the right job: it describes a behaviour (paying
+  // attention to what happened rather than what was scheduled) instead of
+  // claiming a credential. "Training" is the honest category noun — it is
+  // what the athlete does and what the product plans — where "coaching"
+  // implied a qualified person behind it. layout.tsx's meta and Open Graph
+  // descriptions carry the same sentence and were changed identically, so
+  // the two surfaces still match exactly.
+  sub: "Endurance training that pays attention to what you actually do, not just what was planned.",
   cta: { label: "Explore Valhalla", href: "/valhalla" },
   media: {
     placeholder: "[HERO PHOTOGRAPH]",
@@ -92,7 +101,16 @@ export const brandStory = {
 export const valhallaProduct = {
   eyebrow: "The Flagship",
   heading: "Valhalla",
-  sub: "Endurance coaching that reads your training, not just your calendar.",
+  // POSITIONING PASS: was "Endurance coaching that reads your training,
+  // not just your calendar." Deliberately NOT resolved the same way as
+  // hero.sub above — repeating "Endurance training that…" twice on one
+  // scroll would be a mechanical find-and-replace rather than an edit.
+  // Dropping the category noun altogether leaves the verb doing the work,
+  // which is the whole point: what Valhalla does is read. This string is
+  // also pages.valhalla.sub, so it is the /valhalla page subheading and
+  // that route's meta description as well — it reads correctly under the
+  // "Valhalla" heading that precedes it in all three places.
+  sub: "Reads your training, not just your calendar.",
   // COPY AUDIT: was "...Valhalla pays attention to what you actually do,
   // and helps you understand what that means for what comes next." — a
   // near-duplicate of hero.sub one scroll later. Rewritten to state the
@@ -128,7 +146,13 @@ export const valhallaProduct = {
       body: "Every proposed adjustment comes with the pattern behind it.",
     },
     {
-      heading: "Coaching, not just data",
+      // POSITIONING PASS: was "Coaching, not just data" — the most direct
+      // coach claim in the product copy, and the one a visitor was most
+      // likely to read as "you are buying a coach". Keeps the original's
+      // "X, not just Y" shape and its contrast with raw numbers, but the
+      // thing being promised is now the behaviour the body goes on to
+      // describe: the session is read, not merely logged.
+      heading: "Read, not just recorded",
       // HUMAN COPY PASS: was a dash plus the "not X, but Y" frame in one
       // sentence. Removing only the dash would have left the giveaway
       // construction, so the contrast is now carried by an ordinary
@@ -317,7 +341,12 @@ export const futureWorld = {
 
 export const finalCta = {
   heading: "Valhalla Awaits",
-  sub: "Training doesn’t stand still. Neither should your coaching.",
+  // POSITIONING PASS: "Neither should your coaching." -> "your plan."
+  // One word, and the sentence gets stronger rather than weaker: the
+  // contrast the line wants is with a plan that stands still, which is
+  // exactly the second half of the claim boundary (not a coach, but not a
+  // static downloadable plan either). Rhythm and length unchanged.
+  sub: "Training doesn’t stand still. Neither should your plan.",
   // PHASE 3: was { label: "Explore Valhalla", href: "/valhalla" } — the
   // homepage's own Hero and ProductShowcase CTAs already send readers to
   // /valhalla twice before this section. As the page's final, bottom-of-
@@ -511,7 +540,14 @@ export const pages = {
     // thesis, restated here for roughly the sixth time site-wide. About's
     // job is the entity, not the training belief: what Velvet Viking is,
     // and its relationship to Valhalla.
-    body: "Velvet Viking is a performance brand. Valhalla, its endurance coaching product, is the first thing it has built.",
+    // POSITIONING PASS: "its endurance coaching product" -> "its endurance
+    // training app". Factual and already established elsewhere on the site
+    // (MobileNav labels it "Valhalla App"; /start explains installing the
+    // app on your phone), so this names the thing rather than implying a
+    // service staffed by coaches. "first thing it has built" is preserved
+    // verbatim — finalQaFixPass.test.js asserts that fact appears exactly
+    // once in this block.
+    body: "Velvet Viking is a performance brand. Valhalla, its endurance training app, is the first thing it has built.",
     // No founder/origin story: the repository holds no factual basis for
     // one, and inventing personal history is explicitly out of scope for
     // this pass. This page states only what's actually true.

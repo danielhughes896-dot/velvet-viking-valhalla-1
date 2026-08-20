@@ -4,10 +4,18 @@ import { hero } from "@/content/site";
 
 // Two-tier composition:
 //   1. MASTER-BRAND MOMENT — crest, a thin gold rule, and the category
-//      line "Endurance Performance, Coached With Intent." (copy audit:
-//      the earlier "Built Differently" line asserted differentiation
-//      without demonstrating it — this version points at the actual
-//      differentiator instead of a generic superiority claim.)
+//      line below. (copy audit: the earlier "Built Differently" line
+//      asserted differentiation without demonstrating it — this version
+//      points at the actual differentiator instead of a generic
+//      superiority claim.)
+//      POSITIONING PASS: that line read "Endurance Performance, Coached
+//      With Intent". "Coached" implied a qualified human coach behind the
+//      product, which is not what is being sold. Replaced with what the
+//      product actually does — decide from training evidence — so the
+//      line still names a differentiator rather than a credential. This
+//      is the one piece of public copy hard-coded in a component rather
+//      than read from content/site.ts, which is why an earlier
+//      config-only copy sweep did not catch it.
 //      REFINEMENT ROUND 2: the standalone "Velvet Viking" wordmark that
 //      previously sat
 //      between the crest and the rule was removed — the crest already
@@ -53,7 +61,7 @@ export default function Hero() {
             }}
           />
           <p className="mt-4 font-head text-[11px] font-semibold uppercase tracking-[0.32em] text-vv-ink-faint sm:text-xs">
-            Endurance Performance, Coached With Intent
+            Endurance Performance, Built On Evidence
           </p>
         </div>
 

@@ -23,6 +23,32 @@ export const plans = {
     tagline: "The whole of Valhalla.",
     // Working hypothesis, not yet finalized pricing.
     price: { amount: 11.99, currency: "GBP", period: "month" },
+    // ANNUAL BILLING OPTION for the SAME plan — not a second tier, and not
+    // a promotion. Standard is still one plan with one feature set; this is
+    // only a second billing period for it, which is why it lives beside
+    // `price` here rather than in the `basic`/`pro` tier architecture
+    // below, and why the pricing page still says "One plan" and "No tiers
+    // to compare" truthfully.
+    //
+    // DELIBERATELY NOT DERIVED, AND DELIBERATELY NOT COMPARED. There is no
+    // savings figure, no per-month equivalent, no discount percentage, no
+    // "best value" flag and no struck-through monthly total stored here,
+    // because none of that is to be shown. Anything computed from these two
+    // numbers (11.99 x 12 = 143.88, so annual is 53.89 less) is exactly the
+    // comparative-savings framing the brief rules out, so the arithmetic is
+    // recorded in this comment and nowhere the UI can reach it. The two
+    // prices are presented as equal, parallel choices.
+    //
+    // Distinct from `foundingOffer` below: that is a time-limited
+    // promotional price for the monthly plan and stays gated behind
+    // `enabled: false`. This is a permanent billing option and is live in
+    // the UI now — but, like the monthly price, it still cannot be
+    // purchased, because `trial.live` and the null commerceSeams URLs are
+    // what gate every commercial action on the site.
+    // FINAL APPROVED COMMERCIAL PRICING. Was 79.99 while the annual figure
+    // was still being decided; 89.99 is the settled number. Monthly is
+    // untouched at 11.99.
+    priceAnnual: { amount: 89.99, currency: "GBP", period: "year" },
     // Possible founding-launch offer. `enabled: false` until pricing is
     // explicitly approved for publication — do not flip this on, and do
     // not surface `discounted` anywhere in the UI, until that approval
