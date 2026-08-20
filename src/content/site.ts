@@ -423,7 +423,15 @@ export const pages = {
   },
   start: {
     eyebrow: "Standard",
-    heading: "Start Your Trial",
+    // HEADING ONLY. Was "Start Your Trial", which stopped being accurate the
+    // moment /trial went in front of this page: the trial is started there,
+    // and what happens here is the account. It also collided with /trial's
+    // own "Start Your Free Trial" one click earlier, so arriving via a button
+    // labelled "Continue to Account" landed on a heading that read like the
+    // previous step repeated. Everything else on this page — the eyebrow,
+    // sub, body, the four journey steps, the not-live notice, the CTAs and
+    // the private beta entry below them — is deliberately untouched.
+    heading: "Create Your Account",
     sub: "Here’s exactly what happens next.",
     // HUMAN COPY PASS: "the journey as it's designed to work" — "journey"
     // was the one piece of soft marketing jargon on the site, and it meant
