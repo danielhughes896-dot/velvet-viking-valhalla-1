@@ -3,6 +3,7 @@ import PageIntro from "@/components/sections/PageIntro";
 import CtaButton from "@/components/ui/CtaButton";
 import { pages, betaAccess } from "@/content/site";
 import { plans, trial, commerceSeams } from "@/content/commerce";
+import { formatPeriodPrice, readDisplayPeriod, type BillingPeriodId } from "@/content/billingPeriod";
 
 export const metadata: Metadata = {
   title: pages.start.heading,
@@ -11,26 +12,52 @@ export const metadata: Metadata = {
 };
 
 const plan = plans.standard;
-const currencySymbol = plan.price.currency === "GBP" ? "£" : "";
 
+// STEP 4 FOLLOWS THE CHOSEN PERIOD.
+//
+// It used to be a module constant reading plans.standard.price, so it said
+// "Continues at £11.99/month afterwards" to everyone — including a reader who
+// had just chosen Yearly one page earlier. That was accurate before /trial
+// existed and became wrong the moment it did.
+//
+// The period is a DISPLAY input, not payment authority. It arrives as a query
+// parameter that anybody can edit, which is fine for choosing which of two
+// already published prices to print and would not be fine for anything else.
+// readDisplayPeriod validates against the same two-word allow-list the backend
+// uses, and falls back rather than throwing, so no address-bar edit can make
+// this page render a broken price or a 500.
+//
+// WHEN COMMERCE IS REAL, THIS INPUT MUST CHANGE, NOT THIS FUNCTION. Once there
+// is an authenticated session the period must be read back from the server's
+// subscription state instead of the URL, because by then the value decides
+// what someone is billed. The formatting below can stay; the source cannot.
 // HUMAN COPY PASS: step 2 was "Add a card — 14 days free, on us". The other
 // three steps carry no terminal punctuation, so a full stop mid-item would
 // have read oddly; a parenthetical is the natural British alternative here.
-const steps = [
-  "Create your account",
-  `Add a card (${trial.days} days free, on us)`,
-  `Train on ${plan.name} for the full ${trial.days} days, no charge`,
-  trial.autoConverts
-    ? `Continues at ${currencySymbol}${plan.price.amount.toFixed(2)}/${plan.price.period} afterwards, unless you cancel first`
-    : `Choose whether to continue on ${plan.name} afterwards`,
-];
+function stepsFor(period: BillingPeriodId) {
+  return [
+    "Create your account",
+    `Add a card (${trial.days} days free, on us)`,
+    `Train on ${plan.name} for the full ${trial.days} days, no charge`,
+    trial.autoConverts
+      ? `Continues at ${formatPeriodPrice(period)} afterwards, unless you cancel first`
+      : `Choose whether to continue on ${plan.name} afterwards`,
+  ];
+}
 
 // This page's whole job is honesty about status: it describes the trial
 // journey exactly as designed, without ever letting a click resolve as a
 // working signup. `trial.live` (content/commerce.ts) is the single flag
 // this reads to decide that — flip it, and the status notice and CTAs
 // below update themselves; no other change required.
-export default function StartPage() {
+export default async function StartPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const period = readDisplayPeriod((await searchParams).billing);
+  const steps = stepsFor(period);
+
   return (
     <>
       <PageIntro {...pages.start} />

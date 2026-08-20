@@ -2,22 +2,36 @@
 
 import { useState } from "react";
 import CtaButton from "@/components/ui/CtaButton";
-import { plans, trial } from "@/content/commerce";
+import { trial } from "@/content/commerce";
+import {
+  DEFAULT_BILLING_PERIOD,
+  priceForPeriod,
+  type BillingPeriodId,
+} from "@/content/billingPeriod";
 
 const CURRENCY_SYMBOL: Record<string, string> = { GBP: "£" };
 
-// THE ONE CHOICE ON THIS PAGE. Both entries point at the same plan object —
+// THE ONE CHOICE ON THIS PAGE. Both entries resolve to the same plan object —
 // Standard — because that is the literal truth of what is being chosen: not
 // two products, not two tiers, not two feature sets, just how often the same
-// subscription is billed. Building the list from plans.standard rather than
-// from two hand-written blocks is what guarantees the prices here can never
-// drift from the ones on /pricing.
-const OPTIONS = [
-  { id: "monthly", label: "Monthly", price: plans.standard.price },
-  { id: "yearly", label: "Yearly", price: plans.standard.priceAnnual },
-] as const;
-
-type BillingPeriodId = (typeof OPTIONS)[number]["id"];
+// subscription is billed. Reading the prices through priceForPeriod rather
+// than writing two hand-written blocks is what guarantees they can never drift
+// from the ones on /pricing.
+//
+// The ids come from content/billingPeriod.ts, not from this file. They are the
+// same two words /start validates on arrival and the same two the backend's
+// allow-list accepts, so the offer, the reflection and the eventual request
+// cannot drift into three slightly different vocabularies.
+// The price type is derived from priceForPeriod rather than written out.
+// `plans` is declared `as const`, so `typeof plans.standard.price` is the
+// LITERAL type { amount: 11.99, period: "month" } and the yearly price is not
+// assignable to it — a type that describes one specific price cannot describe
+// both. Deriving the union from the resolver keeps this correct if a third
+// period is ever added.
+const OPTIONS: { id: BillingPeriodId; label: string; price: ReturnType<typeof priceForPeriod> }[] = [
+  { id: "monthly", label: "Monthly", price: priceForPeriod("monthly") },
+  { id: "yearly", label: "Yearly", price: priceForPeriod("yearly") },
+];
 
 // SELECTION IS NATIVE RADIO BEHAVIOUR, NOT REACT STATE.
 //
@@ -33,7 +47,7 @@ type BillingPeriodId = (typeof OPTIONS)[number]["id"];
 // useState exists for exactly ONE reason: to carry the choice into the CTA's
 // href. It is not the source of truth for what looks selected.
 export default function BillingPeriodChoice() {
-  const [selected, setSelected] = useState<BillingPeriodId>("monthly");
+  const [selected, setSelected] = useState<BillingPeriodId>(DEFAULT_BILLING_PERIOD);
 
   return (
     <div className="mx-auto w-full max-w-xl rounded-vv-lg border border-vv-line bg-vv-bg-2 p-8 shadow-vv sm:p-10">
@@ -84,7 +98,7 @@ export default function BillingPeriodChoice() {
                 type="radio"
                 name="billing-period"
                 value={option.id}
-                defaultChecked={option.id === "monthly"}
+                defaultChecked={option.id === DEFAULT_BILLING_PERIOD}
                 onChange={() => setSelected(option.id)}
                 className="sr-only"
               />
@@ -125,9 +139,16 @@ export default function BillingPeriodChoice() {
 
       {/* ONE CTA, never two. A second button beside it would turn a billing
           preference into a purchase decision, and there is nothing to
-          purchase. It carries the chosen period forward as a query parameter
-          so the account step can read it once that step is real; nothing
-          consumes it today, and nothing about /start changes because of it. */}
+          purchase.
+
+          The chosen period travels on the query string, and /start now READS
+          it: step four quotes the price for whichever period was chosen here
+          rather than always quoting the monthly one. That is display only.
+          The parameter is reader-editable by definition, which is fine for
+          choosing between two already published prices and would not be fine
+          for anything that decides what somebody is billed. When there is a
+          real session, /start must take the period from the server's
+          subscription state instead of from this link. */}
       <CtaButton href={`/start?billing=${selected}`} className="mt-8 w-full">
         Continue to Account
       </CtaButton>

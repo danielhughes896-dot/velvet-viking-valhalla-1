@@ -139,8 +139,15 @@ test('/trial does not gate, mention or interfere with beta access', () => {
 test('both billing options render through the same markup, so neither can be styled as preferred', () => {
   const choice = code(read('src/components/sections/BillingPeriodChoice.tsx'));
   assert.match(choice, /OPTIONS\.map\(/, 'the options must be mapped, not hand-written twice');
-  assert.match(choice, /plans\.standard\.price\b/);
-  assert.match(choice, /plans\.standard\.priceAnnual\b/);
+  // The prices used to be read straight off plans.standard here. They now
+  // resolve through priceForPeriod in content/billingPeriod.ts, which reads
+  // that same object — one more layer, same guarantee, and now shared with
+  // /start so the two pages cannot quote different figures.
+  assert.match(choice, /priceForPeriod\("monthly"\)/);
+  assert.match(choice, /priceForPeriod\("yearly"\)/);
+  const mod = code(read('src/content/billingPeriod.ts'));
+  assert.match(mod, /plans\.standard\.priceAnnual/, 'the shared module is the one that reads config');
+  assert.match(mod, /plans\.standard\.price\b/);
   // Equal width track: neither tile may be given a different basis or span.
   assert.match(choice, /grow basis-0/);
 });
