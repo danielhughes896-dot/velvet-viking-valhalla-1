@@ -68,8 +68,15 @@ export default function PricingCard() {
         Includes a {trial.days}-day free trial.{trial.cardRequired ? " Card required." : ""}
       </p>
 
-      <CtaButton href="/start" className="mt-8 w-full">
-        Start Trial
+      {/* ONE CTA FOR ONE PRODUCT. The card shows two billing periods but
+          deliberately does NOT sprout a button per period: that would turn
+          this page into a two-option checkout and make the periods read as
+          two products. The single CTA now goes to /trial, the billing
+          preference step, which is where that choice belongs. It used to
+          point straight at /start; /start is now the step after /trial, and
+          is otherwise untouched. */}
+      <CtaButton href="/trial" className="mt-8 w-full">
+        Start Free Trial
       </CtaButton>
 
       <ul className="mt-10 flex flex-col gap-4 border-t border-vv-line-soft pt-8">

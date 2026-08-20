@@ -405,9 +405,33 @@ export const pages = {
     sub: "One plan. Everything Valhalla does.",
     body: "No tiers to compare, nothing held back for later. Standard is Valhalla, in full.",
   },
+  // BILLING PREFERENCE STEP — the page the pricing CTA now lands on, sitting
+  // between /pricing and /start. Its whole job is one choice: how Standard
+  // continues once the free trial ends. Eyebrow is "Standard" rather than
+  // "Velvet Viking" to match /pricing and /start, the two pages either side
+  // of it in this journey, so the eyebrow keeps reading as "which plan am I
+  // in" all the way down the funnel.
+  //
+  // Deliberately says nothing comparative about the two periods. No savings
+  // figure, no effective monthly rate, no recommendation — the same rule the
+  // pricing card follows, for the same reason.
+  trial: {
+    eyebrow: "Standard",
+    heading: "Start Your Free Trial",
+    sub: "14 days of the whole of Valhalla.",
+    body: "Choose how you'd like to continue when the trial ends. The trial itself is the same either way.",
+  },
   start: {
     eyebrow: "Standard",
-    heading: "Start Your Trial",
+    // HEADING ONLY. Was "Start Your Trial", which stopped being accurate the
+    // moment /trial went in front of this page: the trial is started there,
+    // and what happens here is the account. It also collided with /trial's
+    // own "Start Your Free Trial" one click earlier, so arriving via a button
+    // labelled "Continue to Account" landed on a heading that read like the
+    // previous step repeated. Everything else on this page — the eyebrow,
+    // sub, body, the four journey steps, the not-live notice, the CTAs and
+    // the private beta entry below them — is deliberately untouched.
+    heading: "Create Your Account",
     sub: "Here’s exactly what happens next.",
     // HUMAN COPY PASS: "the journey as it's designed to work" — "journey"
     // was the one piece of soft marketing jargon on the site, and it meant
