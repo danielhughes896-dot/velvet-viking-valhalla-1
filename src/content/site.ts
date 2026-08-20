@@ -405,6 +405,22 @@ export const pages = {
     sub: "One plan. Everything Valhalla does.",
     body: "No tiers to compare, nothing held back for later. Standard is Valhalla, in full.",
   },
+  // BILLING PREFERENCE STEP — the page the pricing CTA now lands on, sitting
+  // between /pricing and /start. Its whole job is one choice: how Standard
+  // continues once the free trial ends. Eyebrow is "Standard" rather than
+  // "Velvet Viking" to match /pricing and /start, the two pages either side
+  // of it in this journey, so the eyebrow keeps reading as "which plan am I
+  // in" all the way down the funnel.
+  //
+  // Deliberately says nothing comparative about the two periods. No savings
+  // figure, no effective monthly rate, no recommendation — the same rule the
+  // pricing card follows, for the same reason.
+  trial: {
+    eyebrow: "Standard",
+    heading: "Start Your Free Trial",
+    sub: "14 days of the whole of Valhalla.",
+    body: "Choose how you'd like to continue when the trial ends. The trial itself is the same either way.",
+  },
   start: {
     eyebrow: "Standard",
     heading: "Start Your Trial",

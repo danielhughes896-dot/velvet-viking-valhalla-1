@@ -10,7 +10,21 @@ import { siteUrl } from "@/content/site";
 // from navigation. Same treatment the private beta's own terms page already
 // gets below. Add each one back here once its own LEGAL_APPROVALS flag flips
 // to true.
-const routes = ["", "/valhalla", "/gallery", "/pricing", "/start", "/philosophy", "/about", "/privacy"];
+// /trial is public, indexable and reachable from the pricing CTA, so it
+// belongs here alongside /start. It is not gated the way /terms and /cookies
+// are: nothing on it is unapproved or unreachable, it just describes a
+// choice that cannot be acted on yet.
+const routes = [
+  "",
+  "/valhalla",
+  "/gallery",
+  "/pricing",
+  "/trial",
+  "/start",
+  "/philosophy",
+  "/about",
+  "/privacy",
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return routes.map((route) => ({
