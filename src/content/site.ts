@@ -92,7 +92,17 @@ export const hero = {
   // implied a qualified person behind it. layout.tsx's meta and Open Graph
   // descriptions carry the same sentence and were changed identically, so
   // the two surfaces still match exactly.
-  sub: "Endurance training that pays attention to what you actually do, not just what was planned.",
+  // THE PRIMARY PROPOSITION. Was "Endurance training that pays attention to
+  // what you actually do, not just what was planned" — true, and it described
+  // attentiveness rather than the thing that actually compounds. What the
+  // product does that a plan generator cannot is get better at you over time,
+  // so that is what the first line a visitor reads now says.
+  //
+  // Deliberately "learns how you train", not "your coach". The positioning
+  // audit removed coaching-credential language from this site and it stays
+  // removed: a programme that learns is a description of behaviour, which is
+  // what we can substantiate, where a coach is a claim about a profession.
+  sub: "Training that learns how you train. The longer you run with Valhalla, the better it understands how you respond.",
   cta: { label: "Explore Valhalla", href: "/valhalla" },
   media: {
     placeholder: "[HERO PHOTOGRAPH]",
@@ -124,7 +134,7 @@ export const valhallaProduct = {
   // also pages.valhalla.sub, so it is the /valhalla page subheading and
   // that route's meta description as well — it reads correctly under the
   // "Valhalla" heading that precedes it in all three places.
-  sub: "Reads your training, not just your calendar.",
+  sub: "A programme that learns you, not a plan that forgets you.",
   // COPY AUDIT: was "...Valhalla pays attention to what you actually do,
   // and helps you understand what that means for what comes next." — a
   // near-duplicate of hero.sub one scroll later. Rewritten to state the
@@ -348,14 +358,19 @@ export const earnYourPlace = {
 export const yearRound = {
   eyebrow: "Beyond Race Day",
   heading: ["A race is a milestone", "Not the finish"],
-  body: "Most plans end when the race does, and leave you to work out the rest of the year on your own. Valhalla keeps going.",
+  body: "Most plans end when the race does and leave you to work out the rest of the year alone. Valhalla carries what it has learned about you into whatever comes next.",
+  // THE ATHLETE CHOOSES. Named after the app's own blocks so the website and
+  // the product use one vocabulary, and worded so nothing implies Valhalla
+  // moves anyone between phases by itself — app main is explicit that the
+  // athlete decides and that choosing nothing is a legitimate answer.
   stages: [
-    { label: "Race Build", body: "The block that gets you to the start line ready." },
+    { label: "Race Build", body: "The block that gets you to the start line ready for the goal you set." },
     { label: "Race", body: "The day itself, with the taper behind it." },
-    { label: "Recovery", body: "Real recovery afterwards, prescribed rather than guessed." },
-    { label: "Base & Speed", body: "Aerobic base and honest speed work, holding the fitness you just earned." },
-    { label: "Next Goal", body: "When the next race appears, you start from where you actually are." },
+    { label: "Recovery", body: "Real recovery afterwards, prescribed rather than guessed at." },
+    { label: "Maintain, Base or Speed", body: "Hold what you built, lay aerobic base, or sharpen. You pick which, and you can pick none." },
+    { label: "Next Goal", body: "When the next race appears, you start from what you have actually become, not from scratch." },
   ],
+  footnote: "You choose when to move on. Valhalla does not decide it for you.",
 } as const;
 
 export const futureWorld = {
@@ -383,7 +398,7 @@ export const finalCta = {
   // contrast the line wants is with a plan that stands still, which is
   // exactly the second half of the claim boundary (not a coach, but not a
   // static downloadable plan either). Rhythm and length unchanged.
-  sub: "Training doesn’t stand still. Neither should your plan.",
+  sub: "Every session teaches it something. Give it a year and see.",
   // PHASE 3: was { label: "Explore Valhalla", href: "/valhalla" } — the
   // homepage's own Hero and ProductShowcase CTAs already send readers to
   // /valhalla twice before this section. As the page's final, bottom-of-

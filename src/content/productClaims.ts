@@ -21,25 +21,35 @@ export const PRODUCT_CLAIMS = {
   adaptiveCoaching: true,
 
   /**
-   * YEAR-ROUND COACHING — BUILT, BUT NOT SHIPPED. DO NOT FLIP WITHOUT CHECKING.
+   * YEAR-ROUND — NOW SHIPPED, AND RE-VERIFIED BEFORE FLIPPING.
    *
-   * The lifecycle beyond race day (post-race recovery, Maintain, Aerobic Base,
-   * a next goal) lives on feature/year-round-coaching at 9a82431. It is real
-   * code and it works, and it is NOT merged into the app's main: verified with
-   * `git merge-base --is-ancestor`, which reports it is not an ancestor.
+   * This was false because the lifecycle lived on an unmerged branch. It has
+   * since reached the app's main, and the flip was made only after checking
+   * the app rather than on the strength of being told. On app main 87587b4:
+   * "Maintain & Protect", "Aerobic Base", "Race Goal" and "Measured Fitness"
+   * are all present, where every one of them returned zero files on the
+   * previous main (7578494).
    *
-   * On main the only blocks that exist are the four RACE-DISTANCE blocks —
-   * Aerobic & Tempo, Endurance & Long Run, Speed & Threshold, Time-on-Feet &
-   * Back-to-Back. "Speed & Threshold" in particular is a block chosen for 5K
-   * and 10K races, not an off-season phase, so quoting it as evidence of
-   * year-round coaching would be quoting it out of its own meaning.
-   *
-   * The copy is written and sits behind this flag. FLIP IT TO true THE DAY
-   * feature/year-round-coaching MERGES TO THE APP'S MAIN, and not before: at
-   * that point "Valhalla keeps coaching after race day" becomes a claim the
-   * product can substantiate, which is the only test that matters.
+   * ONE CLAIM WAS CHECKED PARTICULARLY CAREFULLY, because getting it wrong
+   * was the earlier risk: the copy must not imply Valhalla moves an athlete
+   * between phases on its own. The app is explicit that it does not —
+   * "ATHLETE DECIDES", and "the athlete chooses, and choosing nothing is a
+   * legitimate answer" — so the website says the athlete chooses too.
    */
-  yearRoundCoaching: false,
+  yearRoundCoaching: true,
+
+  /**
+   * THE LEARNING PROPOSITION — the primary hook, and substantiated on app
+   * main 87587b4 rather than asserted: response modelling across session
+   * families, recovery-pattern and volume-tolerance learning, measured
+   * performances and a longitudinal athlete record all exist there.
+   *
+   * What this flag does NOT license, and the copy does not say: that the
+   * product knows everything about an athlete, understands them medically,
+   * guarantees a performance, replaces a human coach, or is the only adaptive
+   * running product. Those are the claims to keep out.
+   */
+  learningProgramme: true,
 
   /**
    * GARMIN — GATED IN THE APP, SO GATED HERE.

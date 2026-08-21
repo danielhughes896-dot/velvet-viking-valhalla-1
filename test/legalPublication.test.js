@@ -294,9 +294,18 @@ test('beta terms are kept out of the public sitemap, privacy stays in', () => {
 
 test('beta terms stay noindex, and privacy no longer does', () => {
   assert.match(read('src/app/beta-terms/page.tsx'), /robots: \{ index: false/);
-  assert.ok(
-    !/robots: \{ index: false/.test(read('src/app/privacy/page.tsx')),
-    'the Privacy Policy is real content now and should be indexable'
+  // The published Privacy Policy is real content and must stay indexable. It
+  // now also carries a NOINDEX FOR ITS REVIEW VARIANT ONLY (?review=1, which
+  // renders the unapproved commercial draft), so a bare grep for "index: false"
+  // no longer expresses the intent. What must hold is that the directive is
+  // conditional on review and absent otherwise.
+  const privacy = read('src/app/privacy/page.tsx');
+  const noindexOccurrences = (privacy.match(/index: false/g) || []).length;
+  assert.equal(noindexOccurrences, 1, 'exactly one noindex, and it belongs to the review variant');
+  assert.match(
+    privacy,
+    /review\s*\?\s*\{\s*robots:\s*\{\s*index:\s*false/,
+    'the Privacy Policy must stay indexable except in review mode'
   );
   for (const [file] of GATED) {
     assert.match(read(file), /robots: \{ index: false/, file + ' is still a placeholder');
