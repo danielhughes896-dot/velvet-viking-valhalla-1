@@ -226,20 +226,28 @@ export const tradingDisclosure = {
 // the billing system can honour it would be a term we would then breach.
 export const COMMERCIAL_FEATURES = {
   /**
-   * FOUNDING PRICE LOCK — "your price stays the same for as long as you stay
-   * subscribed". System is designing the canonical implementation. Until it
-   * exists, the Terms describe the mechanism CONDITIONALLY: an offer may carry
-   * a locked price if it says so at the point of sale. That is truthful when
-   * no such offer is running, and becomes operative the moment one is, without
-   * ever making an unconditional public promise.
+   * FOUNDING PRICE LOCK. The implementation is now proven: a qualifying
+   * agreement stores the agreed price, renewal does not overwrite it, a valid
+   * pause preserves it, and cancelling then returning — or switching between
+   * monthly and annual — starts a new agreement at the current price.
+   *
+   * The flag stays FALSE because the PUBLIC CLAIM is not approved, which is a
+   * different question from whether the system can honour it. The Terms
+   * describe the mechanism conditionally, engaged only by an offer that says
+   * so at the point of sale, so they are accurate whether or not one is
+   * running and become operative without a rewrite.
    */
   foundingPriceLock: false,
 
   /**
-   * SUBSCRIPTION PAUSE — monthly subscribers pausing up to 3 months, once per
-   * rolling year. Approved in principle by Business; System is still
-   * implementing and provider-validating it. The Terms carry no pause
-   * entitlement while this is false.
+   * SUBSCRIPTION PAUSE — monthly only, one to three whole months, once per
+   * rolling 365 days, billing and access both stopping, automatic resume, the
+   * founding-price agreement preserved. The architecture is proven.
+   *
+   * Still FALSE, and for a concrete reason rather than caution: there is no
+   * athlete-facing way to trigger a pause yet. Promising a feature nobody can
+   * reach would be a term we could not perform. The Terms mention pause only
+   * where it has actually been offered to that subscriber.
    */
   subscriptionPause: false,
 } as const;
@@ -408,14 +416,16 @@ export const termsDraft: LegalDocument = {
       heading: "7. Payment",
       paragraphs: [
         "By providing a payment method and starting a trial or subscription, you authorise us to take the payments described in section 5 on the schedule you chose, until you cancel.",
-        "We are the merchant: you are buying the service from us, and we are responsible to you for it. Card payments are handled by a third-party payment processor on our behalf. Your full card details are given to that processor, not to us, and we do not store them.",
+        "We are the merchant: you are buying the service from us, and we are responsible to you for it. Card payments for web subscriptions are handled by Stripe, our payment processor. Your card details are given to Stripe, not to us. We do not receive or store your full card number, its expiry date or its security code.",
+        "Your subscription, including the trial period, is held as a subscription with that processor, which is what makes the dates and the automatic conversion described above work the way they do.",
         "If a payment fails we may retry it, and we may suspend paid access until it succeeds. We will tell you if that happens.",
       ],
     },
     {
       heading: "8. Cancelling",
       paragraphs: [
-        "You can cancel at any time through the account and billing controls in the product. Cancelling is meant to take a moment, and we will not put obstacles in the way of it.",
+        "You can cancel at any time. There is always a route to cancel a running subscription: on the web you can manage it through the billing controls in your account, and if that is unavailable to you for any reason, contact us and we will cancel it for you. Cancelling is meant to take a moment, and we will not put obstacles in the way of it.",
+        "Where you subscribed through an app store, that store's own subscription controls apply and we will tell you where to find them.",
         "Cancelling during the 14-day trial stops the subscription before it starts, and you are not charged.",
         "Cancelling an active subscription stops it renewing. Your access continues to the end of the period you have already paid for, and then ends. We do not cut short a period you have paid for, and we do not take further payments after a valid cancellation.",
         "Deleting the app from your phone does not cancel a subscription. Neither does simply not using it. Use the cancellation route in your account, and if that is not working for you, email us and we will deal with it.",
@@ -468,7 +478,7 @@ export const termsDraft: LegalDocument = {
         "We do not exclude or limit our liability where it would be unlawful to do so. That includes liability for death or personal injury caused by our negligence, for fraud or fraudulent misrepresentation, and for anything else that cannot lawfully be excluded.",
         "Otherwise, we are responsible for loss you suffer that is a foreseeable result of our breaking these terms or failing to use reasonable care and skill. We are not responsible for loss that was not foreseeable, or for business losses, since Valhalla is supplied for personal use.",
         TBC(
-          "liability cap, if any — a monetary cap has deliberately NOT been drafted here. Under the Consumer Rights Act 2015 an unreasonable cap in a consumer contract is unenforceable and its presence can taint the clause. If HQ wants one it should be set with legal advice; the clause is complete and enforceable without it.",
+          "liability cap, if any — for the solicitor, not for System. No monetary cap has been drafted: under the Consumer Rights Act 2015 an unreasonable cap in a consumer contract is unenforceable and its presence can taint the surrounding clause. This section is complete and enforceable as it stands. Decide whether to add one, rather than assuming one is missing.",
         ),
       ],
     },
@@ -593,7 +603,7 @@ export const privacyCommercialDraft: LegalDocument = {
         "Coaching output: what Valhalla produces about your training — execution reviews, athlete-state and readiness assessments, proposed plan changes, and whether you accepted or declined them. This accumulates into a longitudinal record of your training, which is what lets coaching decisions take your history into account.",
         "Subscription data: which plan you are on, your billing period, whether you are in a trial and when it ends, and the status of your payments. We do not receive or store your full card number, expiry or security code.",
         "Support correspondence: what you write to us and what we reply.",
-        "Operational and security information: records needed to keep the service running and to detect and prevent abuse, such as authentication events and error diagnostics.",
+        "Operational and security information: records needed to keep the service running and to detect and prevent abuse, such as authentication events and error diagnostics. This includes the date and time your account last received access, recorded no more than once an hour. It tells us an account is in use; it is not a behavioural analytics stream, and we deliberately do not build one. Our diagnostic logs are written so as not to contain email addresses, tokens, secrets, signatures or full provider error payloads.",
         "We do not use analytics, advertising or tracking technology, and we do not collect advertising identifiers.",
       ],
     },
@@ -604,7 +614,7 @@ export const privacyCommercialDraft: LegalDocument = {
         "We do not treat everything as health data, because that would be inaccurate, and we do not pretend none of it is, because that would be worse. Where you tell Valhalla you are injured, in pain or ill, that is information about your health, and you are choosing to give it to us so the product can respond to it.",
         "You are never required to provide it. The check-in is optional, notes are optional, and Valhalla works without them, with less to go on.",
         TBC(
-          "lawful basis and Article 9 condition for the health-indicating categories above — for a solicitor. The likely position is that contract covers the core training service and that explicit consent is the appropriate condition for the optional health-indicating fields, which would require a consent mechanism in the app that does not exist today. Do not publish this policy until that is settled and, if consent is the answer, until the app actually asks for it. This draft deliberately does not assert a basis it cannot evidence.",
+          "Article 9 condition for the health-indicating categories above — THE ONE SUBSTANTIVE LEGAL DECISION LEFT, and a solicitor's, not System's. The ordinary account, subscription and training processing rests on the contract between us. That does not by itself resolve Article 9, and this draft does not pretend it does. The likely answer for the optional inputs that can reveal health — heart rate, sleep, injury or pain, how you feel — is explicit consent, which would require the app to ask for it, and today the app does not. Decide the condition, then decide whether a consent step must ship before this policy is published. Confirmed by System: none of this information is sent to monday.com or to Stripe, none of it is used for advertising, and none of it feeds a secondary analytics warehouse.",
         ),
       ],
     },
@@ -632,9 +642,9 @@ export const privacyCommercialDraft: LegalDocument = {
       paragraphs: [
         "We use a small number of service providers, each acting on our instructions under contract, and each with access only to what it needs.",
         "Hosting and database: our managed database is provided by Supabase and hosted in the European Union. Vercel hosts the website, the application and the server functions that talk to the database.",
-        "Authentication and email: the sign-in links we send you are sent through our authentication and email infrastructure, which necessarily processes your email address.",
-        "Payments: card payments are handled by a third-party payment processor. Your card details go to that processor and not to us. We receive the status of your subscription and payments, not your card number.",
-        "Internal operations: we use monday.com as an internal working tool for commercial and operational tasks. It does not receive your training history, heart rate, pace, session notes, check-in entries, readiness assessments or any other coaching evidence about you.",
+        "Authentication and database: Supabase provides our authentication and our managed database. Signing in uses a link we email you rather than a password, so no password for Valhalla exists to be stored or stolen. Sending that link necessarily processes your email address, and the sign-in email is currently delivered through our authentication provider's own sending infrastructure.",
+        "Payments: card payments for web subscriptions are handled by Stripe as our payment processor. Your card details go to Stripe and not to us. We receive the state of your subscription and its payments — whether you are in a trial, when it ends, whether a payment succeeded — and never your full card number, expiry or security code.",
+        "Internal operations: we use monday.com as an operational mirror for commercial and lifecycle tasks. It receives operational state only, against a pseudonymous reference rather than your account identifier. It does not receive your training sessions, heart rate, pace, perceived effort, readiness or athlete-state information, your notes, your training history, any other coaching evidence about you, or your payment-provider customer identifier. It is not a source of truth about what you are entitled to.",
         "We do not otherwise disclose your data, except where we are legally required to.",
       ],
     },
@@ -642,8 +652,10 @@ export const privacyCommercialDraft: LegalDocument = {
       heading: "Connected services, when you choose to use them",
       paragraphs: [
         "Valhalla supports optional connections to services you already use. Every one of them is off until you connect it, requires your authorisation through the other service, and can be disconnected at any time from your account settings.",
-        "Strava. Where the connection is available and you choose to enable it, we store the access credentials for that connection and the activity data it returns, and we use that data as part of your training record. We ask only for the access needed to read the activities you choose to share. Disconnecting stops further data coming across. Strava is a separate company with its own privacy policy, and it does not endorse Valhalla.",
-        "Devices and watches, including Garmin. This integration is not switched on, and no device data is being collected through it. If we enable it, we will update this policy to describe exactly what is collected before any data flows, and connecting will remain your choice.",
+        "Strava. If you choose to connect it, we ask Strava only for permission to read your activities. We do not ask for permission to write anything back to Strava, and we do not ask for your Strava profile. The access credentials for the connection are held server-side in storage that is closed to direct access, and the activities we receive become part of your training record.",
+        "Disconnecting is immediate and complete: we delete the stored credentials, delete the Strava activities we had staged, and tell Strava to revoke our access. If Strava stops accepting our credentials, we clear the connection rather than leave it looking connected when it is not.",
+        "Strava is a separate company with its own privacy policy and terms, and it does not endorse Valhalla.",
+        "Devices and watches, including Garmin. Garmin is not currently available. No Garmin connection exists, no Garmin data is received and none is sent. The groundwork is in place on our side, but until it is switched on there is nothing to describe. If that changes we will update this policy before any data flows, and connecting will remain your choice.",
         "If a connection is not enabled for your account, no data passes to or from it.",
       ],
     },
@@ -660,7 +672,7 @@ export const privacyCommercialDraft: LegalDocument = {
       paragraphs: [
         "While your account is open we keep your training history, so it stays available to you and so coaching decisions can take it into account. We do not delete it routinely — losing your history would make the product worse for you.",
         "If you delete your account, we delete your account and the training data associated with it from our live systems. Copies can persist briefly in routine encrypted backups before those rotate out.",
-        "Records of payments we have taken are not deleted with your account. We are required to keep financial and tax records for a period set by law, and we keep them in the least identifying form that still satisfies that requirement. They are kept for accounting and legal compliance, not to reconstruct your training.",
+        "Records of payments we have taken are not deleted with your account, because we are required to keep financial and tax records. When your account is deleted, those billing records are separated from it: the account and subscription identifiers are cleared from them, leaving a de-identified financial record. That record holds no email address, no name, no postal address, no card details, no IP address and no payment-provider payload. It exists for accounting, tax, fraud prevention and legal obligations, and it cannot be used to reconstruct your training.",
         `If you would rather we deleted your account for you, email ${legalEntity.contactEmail}.`,
       ],
     },

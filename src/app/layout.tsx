@@ -36,14 +36,14 @@ export const metadata: Metadata = {
   // people who never opened the site. Kept character-identical to
   // hero.sub in content/site.ts, which is the same sentence.
   description:
-    "Endurance training that pays attention to what you actually do, not just what was planned. Valhalla by Velvet Viking.",
+    "Training that learns how you train. The longer you run with Valhalla, the better it understands how you respond.",
   // Site-wide default; every route below overrides this with its own path
   // so each page declares its own canonical URL rather than inheriting "/".
   alternates: { canonical: "/" },
   openGraph: {
     title: "Velvet Viking",
     description:
-      "Endurance training that pays attention to what you actually do, not just what was planned. Valhalla by Velvet Viking.",
+      "Training that learns how you train. The longer you run with Valhalla, the better it understands how you respond.",
     url: siteUrl,
     siteName: "Velvet Viking",
     // OVERNIGHT AUDIT: was the raw canonical crest (2.1MB) served directly

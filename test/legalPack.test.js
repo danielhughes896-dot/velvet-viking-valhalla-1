@@ -120,9 +120,16 @@ test('cancellation is described without friction or false mechanics', () => {
   const terms = legal.slice(legal.indexOf('export const termsDraft'), legal.indexOf('export const cookiesDraft'));
   assert.match(terms, /Deleting the app from your phone does not cancel a subscription/i);
   assert.match(terms, /we do not take further payments after a valid cancellation/i);
-  // No fabricated UI: the route is described in provider-neutral terms.
+  // There is always a route, and a human fallback when there is not.
+  assert.match(terms, /There is always a route to cancel a running subscription/i);
+  assert.match(terms, /contact us and we will cancel it for you/i);
+  // Scoped to the CANCELLATION section. Stripe is now named legitimately in the
+  // payment section — System has confirmed it as the processor — but the
+  // cancellation route must stay described no more specifically than the
+  // product guarantees, so no named portal UI here.
+  const cancelSection = terms.slice(terms.indexOf('8. Cancelling'), terms.indexOf('9. Refunds'));
   for (const rx of [/\bstripe\b/i, /billing portal/i, /customer portal/i]) {
-    assert.ok(!rx.test(terms), `${rx} names a mechanism System has not confirmed`);
+    assert.ok(!rx.test(cancelSection), `${rx} describes cancellation UI more specifically than guaranteed`);
   }
 });
 
@@ -143,10 +150,21 @@ test('unbuilt commercial features are gated, not promised', () => {
 // ---------------------------------------------------------------------------
 test('monday.com is never described as receiving coaching or training data', () => {
   const legal = read('src/content/legal.ts');
-  const idx = legal.indexOf('monday.com');
+  // Anchor on the OPERATIONAL-MIRROR SENTENCE, not on the first occurrence of
+  // the word. "monday.com" appears twice in the draft: once in the Article 9
+  // callout (as a negative — none of the health-indicating data goes there) and
+  // once in the processors list, which is the paragraph this test is about.
+  // Indexing from the top found the callout and read the wrong window.
+  const draft = legal.slice(legal.indexOf('export const privacyCommercialDraft'));
+  const idx = draft.indexOf('Internal operations:');
   assert.ok(idx > -1, 'the commercial privacy draft should account for monday.com');
-  const sentence = legal.slice(idx - 200, idx + 400);
-  assert.match(sentence, /does not receive your training history/i);
+  const sentence = draft.slice(idx, idx + 900);
+  // And the Article 9 callout must keep saying it goes nowhere near monday.
+  assert.match(draft, /none of this information is sent to monday\.com or to Stripe/i);
+  assert.match(sentence, /operational mirror/i);
+  assert.match(sentence, /pseudonymous reference/i);
+  assert.match(sentence, /It does not receive your training sessions/i);
+  assert.match(sentence, /not a source of truth about what you are entitled to/i);
   for (const rx of [/monday[^.]{0,120}(training history|heart rate|session notes|readiness)/i]) {
     // guarded by the explicit negative above; this catches an accidental positive claim
     assert.ok(/does not receive/i.test(sentence), `monday must be described negatively, got: ${rx}`);
@@ -156,7 +174,8 @@ test('monday.com is never described as receiving coaching or training data', () 
 test('Garmin is never described as operating', () => {
   const legal = read('src/content/legal.ts');
   const commercial = legal.slice(legal.indexOf('export const privacyCommercialDraft'), legal.indexOf('// ---', legal.indexOf('export const privacyCommercialDraft')));
-  assert.match(commercial, /not switched on/i);
+  assert.match(commercial, /Garmin is not currently available/i);
+  assert.match(commercial, /no Garmin data is received and none is sent/i);
   assert.ok(!/we collect (data )?from your Garmin/i.test(commercial));
 });
 

@@ -53,8 +53,12 @@ test('the website does not duplicate account creation or the plan builder', () =
 // ---------------------------------------------------------------------------
 test('year-round coaching stays unpublished until the app ships it', () => {
   const claims = code(read('src/content/productClaims.ts'));
-  assert.match(claims, /yearRoundCoaching:\s*false/,
-    'the feature is on an unmerged app branch; claiming it would be unsubstantiated');
+  // FLIPPED, and only after re-checking the app: on app main 87587b4 the
+  // year-round vocabulary is present where it returned zero files on the
+  // previous main. Garmin stays false because it is still flag-gated there.
+  assert.match(claims, /yearRoundCoaching:\s*true/,
+    'the app now ships the lifecycle, so the claim is substantiated');
+  assert.match(claims, /learningProgramme:\s*true/);
   assert.match(claims, /garminIntegration:\s*false/,
     'Garmin is behind VVV_GARMIN_ENABLED in the app and its application is incomplete');
   assert.match(claims, /adaptiveCoaching:\s*true/);
@@ -69,14 +73,15 @@ test('the year-round section gates itself rather than trusting its caller', () =
   assert.match(code(read('src/app/page.tsx')), /<YearRound \/>/);
 });
 
-test('no unsubstantiated year-round or Garmin claim leaks into ungated copy', () => {
+test('no unsubstantiated Garmin claim leaks into ungated copy', () => {
   // The gated strings live in site.ts's `yearRound` block and in the component.
   // Nothing else on the site may assert them.
   const site = read('src/content/site.ts');
   const gatedStart = site.indexOf('export const yearRound');
   const gatedEnd = site.indexOf('export const futureWorld');
   const ungated = code(site.slice(0, gatedStart) + site.slice(gatedEnd));
-  for (const rx of [/year-round/i, /after race day/i, /off-season/i, /Maintain & Protect/i, /\bgarmin\b/i]) {
+  // Year-round is no longer in this list: it is substantiated and published.
+  for (const rx of [/\bgarmin\b/i]) {
     assert.ok(!rx.test(ungated), `ungated copy asserts ${rx}, which the shipped app does not do`);
   }
 });
@@ -118,6 +123,11 @@ test('commerce remains fail-closed and no payment code exists on the website', (
   for (const f of srcFiles()) {
     const src = code(read(f));
     for (const rx of [/\bstripe\b/i, /sk_(live|test)_/, /price_[A-Za-z0-9]{6,}/, /entitlement/i]) {
+      // content/legal.ts may NAME Stripe: System confirmed it as the payment
+      // processor, and a privacy policy that hides the processor is worse than
+      // one that names it. Prose, not integration — legalPack.test.js asserts
+      // separately that no Stripe SDK, key or endpoint exists anywhere in src.
+      if (f === 'src/content/legal.ts' && String(rx) === String(/\bstripe\b/i)) continue;
       assert.ok(!rx.test(src), `${f} introduces ${rx}`);
     }
   }

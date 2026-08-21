@@ -61,6 +61,15 @@ export default function YearRound() {
             </li>
           ))}
         </ol>
+
+        {/* THE ATHLETE CHOOSES, SAID EXPLICITLY. The stages above could be read
+            as an automatic conveyor if nothing contradicted it, and app main is
+            clear that they are not: the athlete decides, and choosing nothing
+            is a legitimate answer. Stating it once, plainly, under the
+            sequence is cheaper than hedging every stage. */}
+        <p className="mx-auto mt-12 max-w-xl text-center text-sm leading-relaxed text-vv-ink-faint">
+          {yearRound.footnote}
+        </p>
       </div>
     </section>
   );

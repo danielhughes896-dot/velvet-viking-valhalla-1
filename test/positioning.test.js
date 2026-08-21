@@ -81,7 +81,7 @@ test('the copy still asserts the product is not a static plan', () => {
   // without this, the site would read as a plain downloadable training plan.
   const site = code(read('src/content/site.ts'));
   for (const claim of [
-    /Neither should your plan/,
+    /not a plan that forgets you/,
     /waits for a real pattern before it changes anything/i,
     /shouldn’t go stale the moment real training starts/,
   ]) {
@@ -157,4 +157,79 @@ test('adding a second price added no purchase behaviour', () => {
     !/<(select|input|form)\b/i.test(card),
     'no billing-period control may be offered while there is nowhere to submit it'
   );
+});
+
+// ---------------------------------------------------------------------------
+// THE LEARNING PROPOSITION — the primary hook, and the claims around its edges
+// ---------------------------------------------------------------------------
+test('the primary hook is the learning proposition, not a coaching credential', () => {
+  const site = code(read('src/content/site.ts'));
+  const hero = site.slice(site.indexOf('export const hero'), site.indexOf('export const brandStory'));
+  assert.match(hero, /Training that learns how you train/,
+    'the hero must lead with what compounds, not with attentiveness');
+  assert.match(hero, /the better it understands how you respond/);
+  // The whole point of choosing "learns" over "coach".
+  assert.ok(!/coach/i.test(hero));
+});
+
+test('the meta and Open Graph descriptions carry the same proposition, verbatim', () => {
+  // They are the search snippet and the link preview, so they reach people who
+  // never load a page. They drifted from the hero once before.
+  const layout = code(read('src/app/layout.tsx'));
+  const site = code(read('src/content/site.ts'));
+  const heroLine = /Training that learns how you train\. The longer you run with Valhalla, the better it understands how you respond\./;
+  assert.match(site, heroLine);
+  // Counting needs the global flag — a non-global match returns one result no
+  // matter how many times the string occurs, which made this pass-by-accident
+  // in either direction.
+  const both = new RegExp(heroLine.source, 'g');
+  assert.equal((layout.match(both) || []).length, 2, 'meta and og:description must both match the hero line');
+});
+
+test('the learning claim does not overreach', () => {
+  const files = ['src/content/site.ts', 'src/app/layout.tsx', 'src/content/commerce.ts'];
+  const banned = [
+    /knows everything about you/i,
+    /understands your body/i,
+    /medical/i,
+    /diagnos/i,
+    /guarantee[sd]? (a )?(personal best|pb|performance|result)/i,
+    /\bthe only\b/i,
+    /replaces? (a|your) coach/i,
+    /like having a coach/i,
+    /\bAI coach\b/i,
+  ];
+  for (const f of files) {
+    const src = code(read(f));
+    for (const rx of banned) {
+      assert.ok(!rx.test(src), `${f} overreaches on the learning claim: ${rx}`);
+    }
+  }
+});
+
+test('the year-round lifecycle is published and says the athlete chooses', () => {
+  const claims = code(read('src/content/productClaims.ts'));
+  assert.match(claims, /yearRoundCoaching:\s*true/);
+  const site = code(read('src/content/site.ts'));
+  const yr = site.slice(site.indexOf('export const yearRound'), site.indexOf('export const futureWorld'));
+  for (const stage of ['Race Build', 'Race', 'Recovery', 'Maintain, Base or Speed', 'Next Goal']) {
+    assert.ok(yr.includes(stage), `the lifecycle is missing "${stage}"`);
+  }
+  // No forced transitions: app main is explicit that the athlete decides.
+  assert.match(yr, /You choose when to move on\. Valhalla does not decide it for you\./);
+  assert.match(yr, /you can pick none/i);
+  assert.match(code(read('src/components/sections/YearRound.tsx')), /yearRound\.footnote/,
+    'the "athlete chooses" line must actually render');
+});
+
+test('the gated claims that remain gated', () => {
+  const claims = code(read('src/content/productClaims.ts'));
+  assert.match(claims, /garminIntegration:\s*false/, 'Garmin is still not available');
+  const legal = code(read('src/content/legal.ts'));
+  assert.match(legal, /foundingPriceLock:\s*false/, 'the public founding-price claim is not approved');
+  assert.match(legal, /subscriptionPause:\s*false/, 'there is no athlete-facing pause trigger yet');
+  assert.match(legal, /terms:\s*false/);
+  assert.match(legal, /cookies:\s*false/);
+  assert.match(legal, /privacyCommercial:\s*false/);
+  assert.match(code(read('src/content/commerce.ts')), /live:\s*false/);
 });
