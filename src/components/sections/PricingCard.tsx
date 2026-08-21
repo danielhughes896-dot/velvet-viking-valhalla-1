@@ -60,12 +60,24 @@ export default function PricingCard() {
         ))}
       </div>
 
-      {/* HUMAN COPY PASS: was "Includes a 14-day free trial — card
-          required." The dash was appending a two-word qualifier where a
-          full stop reads more naturally in British English. Same two
-          facts, same conditional on trial.cardRequired. */}
-      <p className="mt-3 text-sm text-vv-ink-dim">
-        Includes a {trial.days}-day free trial.{trial.cardRequired ? " Card required." : ""}
+      {/* THE TRIAL, STATED IN FULL RATHER THAN FLATTERINGLY.
+          Was "Includes a 14-day free trial. Card required." — true as far as
+          it went, and it left out the two things an athlete most needs to
+          know: that the period is chosen up front, and that the subscription
+          starts by itself unless they cancel. "Card required" alone invites
+          the assumption that nothing happens automatically. Each clause is
+          conditional on its own flag in content/commerce.ts, so if the
+          commercial model ever changes the sentence changes with it. */}
+      <p className="mt-3 text-sm leading-relaxed text-vv-ink-dim">
+        {trial.days}-day free trial.
+        {trial.periodChosenUpfront && trial.cardRequired
+          ? " Choose monthly or annual and add a payment method to start it."
+          : trial.cardRequired
+            ? " A payment method is required to start it."
+            : ""}
+        {trial.autoConverts
+          ? " Cancel before it ends and you won’t be charged. Otherwise your chosen subscription starts automatically."
+          : ""}
       </p>
 
       {/* ONE CTA FOR ONE PRODUCT. The card shows two billing periods but

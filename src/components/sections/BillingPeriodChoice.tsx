@@ -132,13 +132,24 @@ export default function BillingPeriodChoice() {
         Continue to Account
       </CtaButton>
 
-      {/* Accurate for the intended flow, and no further. It states the trial
-          length and that a card is needed, both of which are already true of
-          trial.days / trial.cardRequired. It promises nothing about
-          cancellation or refunds, because no such terms are approved. */}
+      {/* THE WHOLE DEAL, INCLUDING THE PART THAT COSTS MONEY.
+          This previously said only "You won't be charged during your 14-day
+          trial. A card will be required when billing is live." Both clauses
+          were true and together they implied a trial that simply expires,
+          which is not the authorised model: the period picked above and the
+          payment method are both taken before the trial starts, and the
+          subscription then begins on its own. Saying so here, next to the
+          choice, is the honest place for it.
+
+          Commercial facts only. It states what happens and when, and makes no
+          contractual promise about refunds or notice periods, because that
+          wording is not approved yet and is not this component's to invent. */}
       <p className="mt-4 text-center text-xs leading-relaxed text-vv-ink-faint">
-        You won’t be charged during your {trial.days}-day trial.
-        {trial.cardRequired ? " A card will be required when billing is live." : ""}
+        Your {trial.days}-day trial is free.
+        {trial.cardRequired ? " You add a payment method when you start it." : ""}
+        {trial.autoConverts
+          ? " Cancel before the trial ends and you won’t be charged. Otherwise the option you picked above starts automatically."
+          : ""}
       </p>
     </div>
   );

@@ -20,6 +20,20 @@
 // rather than a stale preview reference, and must stay exactly as it is.
 export const siteUrl = "https://velvetviking.co.uk";
 
+// THE CANONICAL APP ENTRY, IN ONE PLACE.
+//
+// The website is the shop window; the Valhalla app owns everything behind it —
+// account, plan builder, preview, trial. Every acquisition CTA that leaves this
+// site for the product lands here, and it is written down once for exactly the
+// reason siteUrl is: the previous app URL was a raw Vercel hostname pasted into
+// content, and a second copy is how the first one goes stale unnoticed.
+//
+// Separate from betaAccess.cta below on purpose. That one is the private beta's
+// own door on the app's /get, still used by the existing invited testers, and
+// it is NOT retired here — retiring it is HQ's call, not a side effect of
+// pointing the public CTAs at the front door.
+export const appUrl = "https://app.velvetviking.co.uk/start";
+
 export const brand = {
   name: "Velvet Viking",
   product: "Valhalla",
@@ -321,6 +335,29 @@ export const earnYourPlace = {
   ],
 } as const;
 
+// THE YEAR-ROUND STORY. Written, and deliberately not published: it renders
+// only while PRODUCT_CLAIMS.yearRoundCoaching is true, and that flag is false
+// because the feature is on an unmerged app branch. See productClaims.ts for
+// the evidence and for the one condition that should flip it.
+//
+// Five stages, not a feature matrix. Each names a moment an athlete already
+// recognises from their own year, and says what Valhalla does in it — the
+// point being that the fifth stage loops back to the first, which is the whole
+// argument. No feature names, because an athlete does not buy "Plan Evolution",
+// they buy not having to work out what to do in January.
+export const yearRound = {
+  eyebrow: "Beyond Race Day",
+  heading: ["A race is a milestone", "Not the finish"],
+  body: "Most plans end when the race does, and leave you to work out the rest of the year on your own. Valhalla keeps going.",
+  stages: [
+    { label: "Race Build", body: "The block that gets you to the start line ready." },
+    { label: "Race", body: "The day itself, with the taper behind it." },
+    { label: "Recovery", body: "Real recovery afterwards, prescribed rather than guessed." },
+    { label: "Base & Speed", body: "Aerobic base and honest speed work, holding the fitness you just earned." },
+    { label: "Next Goal", body: "When the next race appears, you start from where you actually are." },
+  ],
+} as const;
+
 export const futureWorld = {
   eyebrow: "Beyond Valhalla",
   // FINAL TYPOGRAPHY CONSISTENCY CHANGE: no full stop anywhere in this
@@ -419,7 +456,11 @@ export const pages = {
     eyebrow: "Standard",
     heading: "Start Your Free Trial",
     sub: "14 days of the whole of Valhalla.",
-    body: "Choose how you'd like to continue when the trial ends. The trial itself is the same either way.",
+    // COMMERCIAL CORRECTION: was "Choose how you'd like to continue when the
+    // trial ends", which put the decision after the trial. It is made before
+    // it, and it is what starts charging. Said plainly here so the choice
+    // below is understood as a commitment rather than a preference.
+    body: "Pick one now. It's what your subscription starts on when the 14-day trial ends, unless you cancel before then. The trial itself is the same either way.",
   },
   start: {
     eyebrow: "Standard",
@@ -518,6 +559,16 @@ export const pages = {
     heading: "The Work, in Pictures",
     sub: "Training, racing and the places they happen.",
     body: "Real moments, not staged for a shoot.",
+  },
+  // SUPPORT: a stable public URL, required by the app stores, Garmin and
+  // Stripe as much as by athletes. Copy stays plain and short — this is the
+  // page someone opens when something has gone wrong, and brand voice matters
+  // less there than being answered.
+  support: {
+    eyebrow: "Velvet Viking",
+    heading: "Support",
+    sub: "Something not working, or a question about your account?",
+    body: "Write to us and a person will read it.",
   },
   philosophy: {
     eyebrow: "Velvet Viking",
