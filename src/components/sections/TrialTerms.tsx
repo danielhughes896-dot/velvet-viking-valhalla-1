@@ -34,19 +34,24 @@ export default function TrialTerms() {
           reads, so when billing switches on this disappears by flipping one
           value rather than by somebody remembering to delete a paragraph.
 
-          It says what is true of BOTH gates, because they are two different
-          things and an athlete hitting either deserves to know which: paid
-          subscriptions are not switched on, and accounts are open to invited
-          testers only. The CTA below is real either way — it goes to the real
-          account surface, which will tell an uninvited address so plainly. */}
+          IT SPEAKS ONLY ABOUT THE COMMERCIAL STATE. It used to add "and
+          accounts are open to invited testers only" — true, and nobody’s
+          business. A marketing page announcing the shape of a private beta is
+          advertising internal plumbing to people who have no use for it, and it
+          reads as a closed door before a visitor has reached one.
+
+          THE ACCESS RULE IS UNCHANGED, and saying less about it here weakens
+          nothing: it is enforced by a trigger on auth.users, not by this
+          paragraph, and the app tells an uninvited address plainly at the point
+          they actually try. */}
       {!trial.live ? (
         <div className="mb-8 rounded-vv border border-vv-line bg-vv-bg px-5 py-4 text-center">
           <p className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text">
             Not open yet
           </p>
           <p className="mt-2 text-sm leading-relaxed text-vv-ink-dim">
-            Paid subscriptions aren’t switched on, and accounts are open to invited testers only.
-            Nothing below charges you or starts a trial.
+            Paid subscriptions aren’t switched on yet. Nothing below charges you or starts
+            a trial.
           </p>
         </div>
       ) : null}

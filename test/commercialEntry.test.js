@@ -60,6 +60,33 @@ test('the placeholder is gone, not merely reworded', () => {
   assert.ok(!/<ol/.test(start), 'and the list that rendered it');
 });
 
+test('the marketing site does not advertise internal beta plumbing', () => {
+  /* The status notice used to read "Paid subscriptions aren't switched on, and
+     accounts are open to invited testers only." The second clause was true and
+     nobody's business: a marketing page announcing the shape of a private beta
+     is internal plumbing shown to people who have no use for it, and it reads
+     as a closed door before a visitor has reached one.
+
+     THE ACCESS RULE IS UNCHANGED. It is enforced by a trigger on auth.users,
+     and the app tells an uninvited address plainly at the point they try. This
+     asserts only that the website stops narrating it -- comments stripped,
+     because the component legitimately quotes the removed wording while
+     explaining why it went. */
+  for (const f of ['src/components/sections/TrialTerms.tsx', 'src/app/start/page.tsx',
+                   'src/content/site.ts', 'src/components/sections/PricingCard.tsx']) {
+    const shipped = code(read(f));
+    for (const rx of [/invited testers/i, /invitation only/i, /private beta only/i,
+                      /closed beta/i, /allowlist/i, /waitlist/i]) {
+      assert.ok(!rx.test(shipped), `${f} advertises the beta gate to visitors: ${rx}`);
+    }
+  }
+  // The commercial half of the notice stays, because that is what trial.live is for.
+  const terms = code(read('src/components/sections/TrialTerms.tsx'));
+  assert.match(terms, /Paid subscriptions aren.t switched on yet/);
+  assert.match(terms, /Nothing below charges you or starts/);
+  assert.match(terms, /!trial\.live/, 'and it still reads the flag rather than hard-coding it');
+});
+
 test('the primary CTA creates an account, and says exactly that', () => {
   const start = code(read('src/app/start/page.tsx'));
   assert.match(start, /Continue to Create Account/);
