@@ -69,8 +69,13 @@ test('the year-round section gates itself rather than trusting its caller', () =
   const yr = code(read('src/components/sections/YearRound.tsx'));
   assert.match(yr, /if \(!PRODUCT_CLAIMS\.yearRoundCoaching\) return null;/,
     'mounting it from a new page must not be able to publish the claim');
-  // Mounted, so switching the claim on is a one-line change.
-  assert.match(code(read('src/app/page.tsx')), /<YearRound \/>/);
+  // STRUCTURE PASS: the mount moved from the homepage to /valhalla, where the
+  // lifecycle is an argument about the product rather than about the brand.
+  assert.match(code(read('src/app/valhalla/page.tsx')), /<YearRound \/>/);
+  assert.ok(
+    !/YearRound/.test(code(read('src/app/page.tsx'))),
+    'the timeline must live in exactly one place — a homepage copy would duplicate it'
+  );
 });
 
 test('no unsubstantiated Garmin claim leaks into ungated copy', () => {

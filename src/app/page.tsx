@@ -5,7 +5,6 @@ import ProductShowcase from "@/components/sections/ProductShowcase";
 import RaceBreak from "@/components/sections/RaceBreak";
 import Provenance from "@/components/sections/Provenance";
 import WorkTravels from "@/components/sections/WorkTravels";
-import YearRound from "@/components/sections/YearRound";
 import FutureWorld from "@/components/sections/FutureWorld";
 import FinalCta from "@/components/sections/FinalCta";
 import { brandStory, earnYourPlace, raceBreak, provenance, workTravels } from "@/content/site";
@@ -140,13 +139,12 @@ export default function Home() {
         reverse
       />
 
-      {/* YEAR-ROUND: placed after Earn Your Place and before One Philosophy,
-          so the page argues "here is the work" -> "here is the year that work
-          sits in" -> "here is the brand beyond it". Renders nothing today: it
-          gates itself on PRODUCT_CLAIMS.yearRoundCoaching, which is false
-          while the feature is on an unmerged app branch. Mounted now rather
-          than later so flipping the flag is the only step remaining. */}
-      <YearRound />
+      {/* YEAR-ROUND MOVED TO /valhalla. The lifecycle timeline used to sit
+          here, between Earn Your Place and One Philosophy. It is a product
+          argument, not a brand one, and it now opens the Valhalla page
+          directly under that page's promise, where the sections either side
+          of it are about the same thing. Deliberately NOT left mounted here
+          as well: one timeline, one place. */}
       <FutureWorld />
       <FinalCta />
       </div>
