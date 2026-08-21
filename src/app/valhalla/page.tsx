@@ -50,13 +50,20 @@ export default function ValhallaPage() {
             below. A visitor who is convinced by the explanation should not
             have to scroll past the screenshots to act on it, and a second
             pricing section would turn one decision into two. */}
-        <div className="flex justify-center pt-14 sm:pt-16">
+        {/* SPACING, AND WHY IT CHANGED. This CTA had pt-14/16 above it and the
+            device block's py-24 below it, so it floated in the middle of ~150px
+            of nothing and read as belonging to neither the explanation it
+            follows nor the screenshots it precedes. Pulled up against the
+            paragraphs it acts on, and the gap beneath it halved. Only the two
+            spacing utilities changed -- same CTA, same label, same destination,
+            same section order. */}
+        <div className="flex justify-center pt-10 sm:pt-12">
           <CtaButton href={pages.valhalla.closingCta.href}>
             {pages.valhalla.closingCta.label}
           </CtaButton>
         </div>
 
-        <div className="theme-dark mx-auto max-w-6xl px-6 py-24 sm:px-8">
+        <div className="theme-dark mx-auto max-w-6xl px-6 pb-24 pt-12 sm:px-8 sm:pt-14">
           {/* PROTOTYPE: two portrait frames, no desktop mockup — see
               ProductShowcase.tsx for the same primary/secondary rationale.
               theme-dark here too, matching the homepage's ProductShowcase:

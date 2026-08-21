@@ -25,9 +25,20 @@ const srcFiles = () => {
 test('the canonical app entry is declared once and is the .co.uk subdomain', () => {
   const site = code(read('src/content/site.ts'));
   assert.match(site, /export const appUrl = "https:\/\/app\.velvetviking\.co\.uk\/start"/);
-  // One copy, for the same reason siteUrl is one copy.
+  /* TWO declarations now, and the second is the point rather than a leak:
+     appUrl creates an account, appSignInUrl signs an existing one in, and they
+     are different pages in the app. They used to be one URL behind two labels,
+     which sent somebody who already had an account to the page that starts
+     one. What must stay true is that BOTH are the .co.uk subdomain and neither
+     is written inline at a call site. */
+  assert.match(site, /export const appSignInUrl = "https:\/\/app\.velvetviking\.co\.uk\/account"/);
   const declarations = (site.match(/= "https:\/\/app\.velvetviking\.co\.uk/g) || []).length;
-  assert.equal(declarations, 1, 'a second copy of the app origin is how the first goes stale');
+  assert.equal(declarations, 2, 'exactly two: the account door and the sign-in door');
+  for (const f of ['src/app/start/page.tsx']) {
+    const src = code(read(f));
+    assert.ok(!/https:\/\/app\.velvetviking/.test(src),
+      `${f} hard-codes the app origin instead of importing it`);
+  }
 });
 
 test('no customer-facing CTA renders as permanently disabled', () => {
@@ -35,7 +46,8 @@ test('no customer-facing CTA renders as permanently disabled', () => {
   assert.ok(!/commerceSeams\.(createAccount|signIn)/.test(start),
     'the account CTAs must hand off to the app, not render as dead null-href buttons');
   assert.match(start, /href=\{appUrl\}/);
-  assert.match(start, /Start Free Trial/);
+  assert.match(start, /Continue to Create Account/,
+    'the primary CTA is the one that creates the account, and says so');
 });
 
 test('the website does not duplicate account creation or the plan builder', () => {

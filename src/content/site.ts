@@ -34,6 +34,12 @@ export const siteUrl = "https://velvetviking.co.uk";
 // pointing the public CTAs at the front door.
 export const appUrl = "https://app.velvetviking.co.uk/start";
 
+// WHERE AN EXISTING ATHLETE GOES. The app serves a separate sign-in surface at
+// /account, so "Create account" and "Sign in" are two real destinations rather
+// than one URL behind two labels -- which is what they were, and which meant
+// somebody who already had an account was sent to the page that starts one.
+export const appSignInUrl = "https://app.velvetviking.co.uk/account";
+
 export const brand = {
   name: "Velvet Viking",
   product: "Valhalla",
@@ -405,7 +411,7 @@ export const finalCta = {
   // scroll moment, this is the "ready to commit" beat — the one CTA graph
   // dead end the Phase 2 audit flagged now resolves forward into the
   // commercial entry point instead of back to a page already reached.
-  cta: { label: "See Standard Pricing", href: "/pricing" },
+  cta: { label: "See Prices", href: "/pricing" },
 } as const;
 
 export const footer = {
@@ -457,42 +463,31 @@ export const pages = {
     sub: "One plan. Everything Valhalla does.",
     body: "No tiers to compare, nothing held back for later. Standard is Valhalla, in full.",
   },
-  // BILLING PREFERENCE STEP — the page the pricing CTA now lands on, sitting
-  // between /pricing and /start. Its whole job is one choice: how Standard
-  // continues once the free trial ends. Eyebrow is "Standard" rather than
-  // "Velvet Viking" to match /pricing and /start, the two pages either side
-  // of it in this journey, so the eyebrow keeps reading as "which plan am I
-  // in" all the way down the funnel.
-  //
-  // Deliberately says nothing comparative about the two periods. No savings
-  // figure, no effective monthly rate, no recommendation — the same rule the
-  // pricing card follows, for the same reason.
-  trial: {
-    eyebrow: "Standard",
-    heading: "Start Your Free Trial",
-    sub: "14 days of the whole of Valhalla.",
-    // COMMERCIAL CORRECTION: was "Choose how you'd like to continue when the
-    // trial ends", which put the decision after the trial. It is made before
-    // it, and it is what starts charging. Said plainly here so the choice
-    // below is understood as a commitment rather than a preference.
-    body: "Pick one now. It's what your subscription starts on when the 14-day trial ends, unless you cancel before then. The trial itself is the same either way.",
-  },
+  // THE BILLING PREFERENCE STEP IS GONE, and so is its copy. It sat between
+  // /pricing and /start and asked one question -- monthly or annual -- that the
+  // app asks again, properly, at the point the answer actually does something.
+  // Two pages asking the same question is not a funnel, it is a queue, and the
+  // one in the middle collected an answer nothing could act on. /trial now
+  // redirects to /start; see next.config.ts for why a redirect rather than a
+  // deletion. What was worth keeping from it -- both prices, and the sentence
+  // about what happens when the trial ends -- moved into /start, where the
+  // athlete is about to do something with it.
   start: {
     eyebrow: "Standard",
-    // HEADING ONLY. Was "Start Your Trial", which stopped being accurate the
-    // moment /trial went in front of this page: the trial is started there,
-    // and what happens here is the account. It also collided with /trial's
-    // own "Start Your Free Trial" one click earlier, so arriving via a button
-    // labelled "Continue to Account" landed on a heading that read like the
-    // previous step repeated. Everything else on this page — the eyebrow,
-    // sub, body, the four journey steps, the not-live notice, the CTAs and
-    // the private beta entry below them — is deliberately untouched.
-    heading: "Create Your Account",
-    sub: "Here’s exactly what happens next.",
-    // HUMAN COPY PASS: "the journey as it's designed to work" — "journey"
-    // was the one piece of soft marketing jargon on the site, and it meant
-    // nothing more than "the signup steps".
-    body: "Trial signup isn’t open yet. This is how it will work, and it’ll go live here the moment it’s real.",
+    // THE PLACEHOLDER IS GONE. This page used to be a numbered explanation of
+    // what account creation would eventually do, headed "Create Your Account"
+    // and opening with "Trial signup isn't open yet. This is how it will
+    // work." A page that describes a button instead of being one is a
+    // placeholder however carefully it is written, and this was the last one
+    // in the journey.
+    //
+    // It is now the commercial entry: the terms, the two prices, and the door.
+    // The account itself belongs to the app and always did -- see the CTA in
+    // start/page.tsx -- so this page's job is to make sure nobody arrives
+    // there without knowing what the trial turns into.
+    heading: "Start Your Free Trial",
+    sub: "Free for 14 days.",
+    body: "Your first 14 days are free. After your trial, your chosen subscription starts automatically unless you cancel beforehand.",
   },
   valhalla: {
     eyebrow: valhallaProduct.eyebrow,
@@ -503,7 +498,7 @@ export const pages = {
     // the screenshots, the scroll just ended. That's the literal "dead
     // end" the Phase 2 audit flagged in the CTA graph. Now closes into the
     // commercial entry point instead of looping back to itself.
-    closingCta: { label: "See Standard Pricing", href: "/pricing" },
+    closingCta: { label: "See Prices", href: "/pricing" },
     // STRUCTURE PASS: the deep-dive paragraphs below used to open the page
     // directly under the <h1>, so the intro carried them. The year-round
     // section now sits between the two, and a block of centred prose landing

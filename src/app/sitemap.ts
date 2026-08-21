@@ -10,16 +10,15 @@ import { siteUrl } from "@/content/site";
 // from navigation. Same treatment the private beta's own terms page already
 // gets below. Add each one back here once its own LEGAL_APPROVALS flag flips
 // to true.
-// /trial is public, indexable and reachable from the pricing CTA, so it
-// belongs here alongside /start. It is not gated the way /terms and /cookies
-// are: nothing on it is unapproved or unreachable, it just describes a
-// choice that cannot be acted on yet.
+//
+// /trial is not here because /trial no longer exists. It redirects permanently
+// to /start (next.config.ts); a removed page must not still be advertised for
+// indexing, and the redirect is what carries the indexed URL across.
 const routes = [
   "",
   "/valhalla",
   "/gallery",
   "/pricing",
-  "/trial",
   "/start",
   "/philosophy",
   "/about",

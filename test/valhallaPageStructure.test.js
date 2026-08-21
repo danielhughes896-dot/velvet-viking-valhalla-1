@@ -65,14 +65,18 @@ test('the same primary CTA appears exactly twice, from one source of truth', () 
   assert.equal((src.match(/pages\.valhalla\.closingCta\.href/g) || []).length, 2);
   assert.equal((src.match(/pages\.valhalla\.closingCta\.label/g) || []).length, 2);
   assert.ok(
-    !/href="\/pricing"|See Standard Pricing/.test(src),
+    !/href="\/pricing"|See Prices/.test(src),
     'neither CTA may hard-code its label or destination'
   );
 });
 
 test('the CTA still points at pricing, with its approved label', () => {
   const site = code(read('src/content/site.ts'));
-  assert.match(site, /closingCta: \{ label: "See Standard Pricing", href: "\/pricing" \}/);
+  /* "See Prices", not "See Standard Pricing". There is one plan, so naming it
+     in the button told a visitor nothing they could act on -- and it read as
+     though there might be a non-standard tier to see as well. */
+  assert.match(site, /closingCta: \{ label: "See Prices", href: "\/pricing" \}/);
+  assert.ok(!/See Standard Pricing/.test(site), 'the old label must not survive anywhere');
 });
 
 test('the second CTA follows the visuals and no second pricing block was added', () => {
