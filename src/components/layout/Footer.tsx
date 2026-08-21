@@ -29,6 +29,21 @@ export default function Footer() {
             are false, and reappear on their own the moment either flips,
             with no change required here. */}
         <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          {/* SUPPORT IS NOT APPROVAL-GATED, and sits deliberately outside
+              publicLegalLinks. That list is derived from LEGAL_APPROVALS
+              because a legal document may only appear once HQ has approved
+              its wording. A support address carries no such risk: it is
+              always correct to tell someone how to reach us, and the app
+              stores, Garmin and Stripe all require the route to be reachable
+              from the site regardless of what legal copy is published. */}
+          <li>
+            <Link
+              href="/support"
+              className="font-head text-xs font-medium uppercase tracking-[0.15em] text-vv-ink-faint transition-colors hover:text-vv-ink"
+            >
+              Support
+            </Link>
+          </li>
           {publicLegalLinks.map((link) => (
             <li key={link.href}>
               <Link

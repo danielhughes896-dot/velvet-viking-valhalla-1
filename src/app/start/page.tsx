@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import PageIntro from "@/components/sections/PageIntro";
 import CtaButton from "@/components/ui/CtaButton";
-import { pages, betaAccess } from "@/content/site";
-import { plans, trial, commerceSeams } from "@/content/commerce";
+import { pages, betaAccess, appUrl } from "@/content/site";
+import { plans, trial } from "@/content/commerce";
 
 export const metadata: Metadata = {
   title: pages.start.heading,
@@ -16,10 +16,17 @@ const currencySymbol = plan.price.currency === "GBP" ? "£" : "";
 // HUMAN COPY PASS: step 2 was "Add a card — 14 days free, on us". The other
 // three steps carry no terminal punctuation, so a full stop mid-item would
 // have read oddly; a parenthetical is the natural British alternative here.
+// WHAT ACTUALLY HAPPENS, IN THE APP. The website is the shop window and does
+// not run any of this: account, programme build, preview and trial all belong
+// to the Valhalla app, and duplicating any of them here would mean two places
+// that could disagree about the same athlete. Steps 2 and 3 were missing
+// before, which made the journey read as "pay, then find out" rather than
+// "see your programme, then decide".
 const steps = [
   "Create your account",
-  `Add a card (${trial.days} days free, on us)`,
-  `Train on ${plan.name} for the full ${trial.days} days, no charge`,
+  "Answer a few questions about your running, your race and the days you can train",
+  "Valhalla builds your programme, and you see it before anything is charged",
+  `Start your ${trial.days}-day trial (card required, no charge until it ends)`,
   trial.autoConverts
     ? `Continues at ${currencySymbol}${plan.price.amount.toFixed(2)}/${plan.price.period} afterwards, unless you cancel first`
     : `Choose whether to continue on ${plan.name} afterwards`,
@@ -43,8 +50,8 @@ export default function StartPage() {
                 Not open yet
               </p>
               <p className="mt-2 text-sm leading-relaxed text-vv-ink-dim">
-                Trial signup isn’t live. Account creation and billing switch on together, once
-                that’s ready.
+                Paid subscriptions aren’t switched on yet. The steps below are how the trial works
+                once they are.
               </p>
             </div>
           ) : null}
@@ -60,23 +67,28 @@ export default function StartPage() {
             ))}
           </ol>
 
+          {/* THE HANDOFF, NOT A SECOND FRONT DOOR.
+              These two used to be commerceSeams.createAccount and .signIn,
+              both null, so both rendered permanently disabled — the dead CTAs
+              at the end of the acquisition journey. The account does not
+              belong to this website and never did: the app owns account, plan
+              builder, preview and trial, and building any of them here would
+              create a second identity surface that could disagree with the
+              real one. So both now leave for the app's own front door, which
+              is written down once as appUrl in content/site.ts. */}
           <div className="flex w-full flex-col items-center gap-4">
-            <CtaButton href={commerceSeams.createAccount} className="w-full">
-              Create Account
+            <CtaButton href={appUrl} className="w-full">
+              Start Free Trial
             </CtaButton>
 
             <div className="flex flex-col items-center gap-2">
               <p className="text-xs text-vv-ink-faint">Already training with Valhalla?</p>
-              <CtaButton href={commerceSeams.signIn} variant="ghost" className="w-full">
+              <CtaButton href={appUrl} variant="ghost" className="w-full">
                 Sign In
               </CtaButton>
             </div>
           </div>
 
-          {/* HUMAN COPY PASS: the dash was bolting two independent clauses
-              into one 33-word sentence. Split in two, which is what the
-              dash was standing in for. "from having one" dropped as
-              redundant once the clauses are separate sentences. */}
           <p className="max-w-sm text-center text-xs leading-relaxed text-vv-ink-faint">
             Your account is what holds your trial and your training. Installing the app on your
             phone is a separate step, and it comes after this.
