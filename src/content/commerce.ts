@@ -88,11 +88,29 @@ export const plans = {
   pro: { id: "pro", name: "Pro", available: false },
 } as const;
 
+// THE AUTHORISED TRIAL MODEL, AS FACTS RATHER THAN PROSE.
+//
+// Card up front, period chosen up front, automatic conversion unless the
+// athlete cancels. Every public sentence about the trial is composed from these
+// four flags, so no surface can drift into a friendlier version of the deal
+// than the one that actually applies. In particular the site must never imply
+// that no card is needed, that payment details are collected only after the
+// trial, that the athlete can trial without picking a period, or that doing
+// nothing avoids the charge — the last one being the difference between clear
+// and misleading.
+//
+// These are commercial UX facts. The contractual refund and cancellation terms
+// are a separate matter and remain gated in @/content/legal until HQ supplies
+// the approved wording.
 export const trial = {
   planId: "standard" as const,
   days: 14,
+  /** A payment method is supplied BEFORE the trial begins, not after it ends. */
   cardRequired: true,
+  /** The chosen subscription starts by itself; cancelling is what stops it. */
   autoConverts: true,
+  /** Monthly or annual is chosen BEFORE the trial, and sets the eventual price. */
+  periodChosenUpfront: true,
   // Whether trial signup is actually wired to a real backend. False until
   // the commercial entitlement/payment system is approved and connected —
   // see the Phase 3 brief. This is the single flag that decides whether

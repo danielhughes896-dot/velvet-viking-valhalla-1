@@ -186,7 +186,14 @@ test('no savings, ranking or urgency framing appears in the trial journey', () =
 
 test('the copy states the trial terms without promising anything unapproved', () => {
   const choice = code(read('src/components/sections/BillingPeriodChoice.tsx'));
-  assert.match(choice, /won’t be charged during your \{trial\.days\}-day trial/);
+  // COMMERCIAL CORRECTION: this used to assert the older sentence, "You won't
+  // be charged during your 14-day trial." That was true and incomplete — it
+  // described a trial that simply expires, when in fact the chosen
+  // subscription starts by itself. The assertion now checks the same intent
+  // (the trial length and its cost are stated from config) against wording
+  // that also states the conversion. See trialModel.test.js for the full model.
+  assert.match(choice, /\{trial\.days\}-day trial is free/);
+  assert.match(choice, /Cancel before the trial ends/);
   assert.match(choice, /trial\.cardRequired/, 'the card requirement must follow the config flag');
   assert.ok(
     !/refund|cancel any time|cancel anytime|no questions/i.test(choice),

@@ -22,14 +22,34 @@ const currencySymbol = plan.price.currency === "GBP" ? "£" : "";
 // that could disagree about the same athlete. Steps 2 and 3 were missing
 // before, which made the journey read as "pay, then find out" rather than
 // "see your programme, then decide".
+// THE ORDER MATTERS, AND IT IS THE ORDER THE PRODUCT ACTUALLY USES. The
+// programme is built and shown BEFORE any payment method is asked for, which
+// is worth stating plainly because it is the reverse of what most trials do.
+// The choice of period and the card then come together, before the trial
+// starts rather than after it ends, and the subscription begins on its own
+// unless the athlete cancels. Every one of those is read from the trial flags
+// in content/commerce.ts rather than asserted here.
 const steps = [
   "Create your account",
   "Answer a few questions about your running, your race and the days you can train",
-  "Valhalla builds your programme, and you see it before anything is charged",
-  `Start your ${trial.days}-day trial (card required, no charge until it ends)`,
+  "Valhalla builds your programme, and you see it before you pay anything",
+  trial.periodChosenUpfront
+    ? "Choose monthly or annual, and add your payment method"
+    : "Add your payment method",
+  `Your ${trial.days}-day free trial starts, with everything Valhalla does`,
+  // BOTH PRICES, NOT JUST THE MONTHLY ONE. This page is static, so it cannot
+  // know which period an athlete picked; quoting only £11.99/month here would
+  // reproduce exactly the defect the earlier audit found on this same step,
+  // where a reader who had chosen annual was shown the monthly figure. Naming
+  // both is accurate whichever was chosen, and needs no per-visitor state.
   trial.autoConverts
-    ? `Continues at ${currencySymbol}${plan.price.amount.toFixed(2)}/${plan.price.period} afterwards, unless you cancel first`
-    : `Choose whether to continue on ${plan.name} afterwards`,
+    ? `At the end of the trial the subscription you chose starts automatically, ${currencySymbol}${plan.price.amount.toFixed(2)}/${plan.price.period} or ${currencySymbol}${plan.priceAnnual.amount.toFixed(2)}/${plan.priceAnnual.period}, unless you cancel before then`
+    : // The non-converting branch is not "decide later whether to buy": under
+      // any model where the subscription does NOT start by itself, what
+      // actually happens is that access stops. Saying so keeps this fallback
+      // honest instead of quietly describing a manual purchase that does not
+      // exist. Unreachable today, since autoConverts is true.
+      `Your access ends when the ${trial.days} days are up`,
 ];
 
 // This page's whole job is honesty about status: it describes the trial

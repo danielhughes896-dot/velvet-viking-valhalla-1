@@ -456,7 +456,11 @@ export const pages = {
     eyebrow: "Standard",
     heading: "Start Your Free Trial",
     sub: "14 days of the whole of Valhalla.",
-    body: "Choose how you'd like to continue when the trial ends. The trial itself is the same either way.",
+    // COMMERCIAL CORRECTION: was "Choose how you'd like to continue when the
+    // trial ends", which put the decision after the trial. It is made before
+    // it, and it is what starts charging. Said plainly here so the choice
+    // below is understood as a commitment rather than a preference.
+    body: "Pick one now. It's what your subscription starts on when the 14-day trial ends, unless you cancel before then. The trial itself is the same either way.",
   },
   start: {
     eyebrow: "Standard",
