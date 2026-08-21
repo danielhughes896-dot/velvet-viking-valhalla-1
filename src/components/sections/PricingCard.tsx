@@ -83,11 +83,15 @@ export default function PricingCard() {
       {/* ONE CTA FOR ONE PRODUCT. The card shows two billing periods but
           deliberately does NOT sprout a button per period: that would turn
           this page into a two-option checkout and make the periods read as
-          two products. The single CTA now goes to /trial, the billing
-          preference step, which is where that choice belongs. It used to
-          point straight at /start; /start is now the step after /trial, and
-          is otherwise untouched. */}
-      <CtaButton href="/trial" className="mt-8 w-full">
+          two products.
+
+          It goes to /start, which is now the commercial entry itself. It
+          used to go to /trial, a page whose whole job was asking monthly or
+          annual -- a question the app asks again at the point the answer
+          does something, so the middle page collected an answer nothing
+          could act on. /start carries both prices and the trial terms and
+          hands off to the real account surface. */}
+      <CtaButton href="/start" className="mt-8 w-full">
         Start Free Trial
       </CtaButton>
 
