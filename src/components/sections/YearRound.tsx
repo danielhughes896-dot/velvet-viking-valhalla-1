@@ -22,7 +22,11 @@ export default function YearRound() {
   if (!PRODUCT_CLAIMS.yearRoundCoaching) return null;
 
   return (
-    <section className="bg-vv-bg">
+    // The top rule is the site's standard section divider, carried on this
+    // section rather than on whatever mounts it: the divider has to disappear
+    // with the section when the gate above is false, and a wrapper element
+    // holding it on the page would leave a stray hairline behind instead.
+    <section className="border-t border-vv-line-soft bg-vv-bg">
       <div className="mx-auto max-w-4xl px-6 py-24 sm:px-8 sm:py-32">
         <SectionHeading
           eyebrow={yearRound.eyebrow}

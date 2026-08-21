@@ -504,6 +504,23 @@ export const pages = {
     // end" the Phase 2 audit flagged in the CTA graph. Now closes into the
     // commercial entry point instead of looping back to itself.
     closingCta: { label: "See Standard Pricing", href: "/pricing" },
+    // STRUCTURE PASS: the deep-dive paragraphs below used to open the page
+    // directly under the <h1>, so the intro carried them. The year-round
+    // section now sits between the two, and a block of centred prose landing
+    // after another section's heading reads as an unfinished section rather
+    // than a new one. This is the only new copy the reorder needed.
+    // Eyebrow follows the site's existing noun-phrase register ("The
+    // Flagship", "Beyond Race Day"), not a generic "How It Works"; the
+    // heading names the span the paragraphs actually cover — the plan you
+    // are given on day one, and the single session target that changes.
+    // Two noun phrases, like every other two-line heading on the site
+    // ("Valhalla Awaits / Earn Your Place"), and short enough to hold two
+    // lines at 390px: the longer "From your first plan / To your next
+    // session" wrapped to four, orphaning "PLAN" on a line of its own.
+    explanation: {
+      eyebrow: "Inside Valhalla",
+      heading: ["Your first plan", "Your next session"],
+    },
     // Real product screenshots will eventually sit alongside this copy —
     // see the device mockups below it on this page. Nothing here describes
     // functionality beyond what the app genuinely does today.
