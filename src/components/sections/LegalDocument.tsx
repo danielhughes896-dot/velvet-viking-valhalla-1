@@ -72,11 +72,34 @@ export default function LegalDocument({ doc }: { doc: LegalDocumentContent }) {
               <h2 className="font-head text-sm font-semibold uppercase tracking-[0.16em] text-vv-bronze-text">
                 {section.heading}
               </h2>
-              {section.paragraphs.map((paragraph) => (
-                <p key={paragraph} className="text-sm leading-relaxed text-vv-ink-dim">
-                  {withLinks(paragraph)}
-                </p>
-              ))}
+              {/* UNRESOLVED FACTS ARE SHOWN AS GAPS, NOT AS PROSE.
+                  A [TO BE CONFIRMED: ...] marker only reaches a screen in
+                  review mode, where a reviewer specifically needs to see what
+                  is still open. Rendering it in the same grey as the rest of
+                  the paragraph would be the worst of both worlds: visible
+                  enough to look like drafting, quiet enough to approve past.
+                  Setting it apart means an unresolved clause cannot be
+                  mistaken for a finished one, and the count of them is
+                  countable at a glance.
+
+                  The gates remain the real protection — a document containing
+                  one of these is unapproved by definition — but the person
+                  deciding whether to approve it should be able to see every
+                  hole without hunting. */}
+              {section.paragraphs.map((paragraph) =>
+                paragraph.startsWith("[TO BE CONFIRMED") ? (
+                  <p
+                    key={paragraph}
+                    className="rounded-vv border border-dashed border-vv-bronze/60 bg-vv-bg-2 px-4 py-3 font-head text-xs leading-relaxed tracking-[0.02em] text-vv-bronze-text"
+                  >
+                    {paragraph}
+                  </p>
+                ) : (
+                  <p key={paragraph} className="text-sm leading-relaxed text-vv-ink-dim">
+                    {withLinks(paragraph)}
+                  </p>
+                ),
+              )}
             </article>
           ))}
         </div>

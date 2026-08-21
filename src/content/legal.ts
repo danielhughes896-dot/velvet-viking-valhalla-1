@@ -62,6 +62,19 @@ export const LEGAL_APPROVALS = {
   terms: false,
 
   /**
+   * COMMERCIAL PRIVACY POLICY — NOT APPROVED.
+   *
+   * Separate from `privacy` above, and deliberately so. The live policy is
+   * approved and ACCURATE FOR TODAY: no payments, no Strava traffic, no
+   * Garmin. Editing it in place to describe subscriptions and payment
+   * processors would push unreviewed wording onto an approved, published
+   * document, and would describe processing that is not happening yet.
+   * privacyCommercialDraft replaces it at commercial launch, the same way
+   * termsDraft replaces betaTermsDraft.
+   */
+  privacyCommercial: false,
+
+  /**
    * Cookie policy. Its content was verified as accurate against the live site
    * and the app, but HQ's approval covered the two beta documents only, so it
    * stays gated rather than being waved through for being correct.
@@ -201,6 +214,36 @@ export const tradingDisclosure = {
   },
 } as const;
 
+// COMMERCIAL FEATURES THAT ARE APPROVED IN PRINCIPLE BUT NOT YET BUILT.
+//
+// Separate from LEGAL_APPROVALS, which asks "has this wording been approved".
+// These ask "can we promise this to a customer yet". Both default to off, and
+// both are read by the Terms so that a feature System has not finished cannot
+// become a contractual promise by the back door.
+//
+// The distinction matters more than it looks. A price-lock promise and a pause
+// entitlement are things a customer can hold us to; publishing either before
+// the billing system can honour it would be a term we would then breach.
+export const COMMERCIAL_FEATURES = {
+  /**
+   * FOUNDING PRICE LOCK — "your price stays the same for as long as you stay
+   * subscribed". System is designing the canonical implementation. Until it
+   * exists, the Terms describe the mechanism CONDITIONALLY: an offer may carry
+   * a locked price if it says so at the point of sale. That is truthful when
+   * no such offer is running, and becomes operative the moment one is, without
+   * ever making an unconditional public promise.
+   */
+  foundingPriceLock: false,
+
+  /**
+   * SUBSCRIPTION PAUSE — monthly subscribers pausing up to 3 months, once per
+   * rolling year. Approved in principle by Business; System is still
+   * implementing and provider-validating it. The Terms carry no pause
+   * entitlement while this is false.
+   */
+  subscriptionPause: false,
+} as const;
+
 export type LegalSection = {
   heading: string;
   paragraphs: string[];
@@ -309,98 +352,149 @@ export const termsDraft: LegalDocument = {
   heading: "Terms",
   sub: "The agreement between you and Velvet Viking when you use Valhalla.",
   preamble:
-    "These terms set out what you can expect from Valhalla, what we expect from you, and the limits of both. By creating an account you agree to them.",
-  lastUpdated: TBC("effective date"),
+    "These terms set out what you can expect from Valhalla, what we expect from you, and the limits of both. They are written to be read, not to be survived. If anything here is unclear, ask us before you subscribe.",
+  // Set when HQ approves publication, not by whoever last edited the file.
+  lastUpdated: TBC("effective date, set on publication"),
   sections: [
     {
-      heading: "1. Who we are, and who these terms are with",
+      heading: "1. Who we are",
       paragraphs: [
-        `Valhalla is a training product operated by ${legalEntity.name} (company number ${legalEntity.companyNumber}), registered at ${legalEntity.registeredAddress}. In these terms, "we" and "us" means that company, and "you" means the person using the product.`,
-        "You must be at least 18 years old to create an account.",
+        `Valhalla is operated by ${legalEntity.name} (company number ${legalEntity.companyNumber}), registered in ${legalEntity.placeOfRegistration} at ${legalEntity.registeredAddress}. In these terms, "we" and "us" means that company, and "you" means the person using the product.`,
+        `You can reach us at ${legalEntity.contactEmail}. That address is also where complaints go, and a person reads it.`,
       ],
     },
     {
       heading: "2. What Valhalla is",
       paragraphs: [
-        "Valhalla builds an endurance training plan from the information you give it, reviews the sessions you log against that plan, and proposes changes to your future training when the evidence supports it. You decide whether to accept any proposed change.",
-        "Valhalla is a training tool. It is not a substitute for a qualified coach, and it is not a medical service — see section 5.",
+        "Valhalla builds an endurance training plan from the information you give it, reviews the sessions you log against that plan, and proposes changes to your future training when the evidence supports it. You decide whether to accept a proposed change.",
+        "Valhalla is a training tool. It is not a qualified human coach, and it is not a medical service. Section 6 explains what that means in practice.",
       ],
     },
     {
-      heading: "3. Your account",
+      heading: "3. Your account and the information you give us",
       paragraphs: [
-        "You are responsible for the email address associated with your account and for anything done through it. Tell us promptly if you think someone else has gained access.",
-        "The information you give Valhalla about your fitness and availability shapes the plan it produces. If that information is inaccurate, the plan will be too.",
-        "You may delete your account at any time from within the product.",
+        "You must be at least 18 to create an account. One account is for one person.",
+        "You are responsible for the email address your account uses and for anything done through it. Tell us promptly if you think someone else has access.",
+        "The plan Valhalla produces is built from what you tell it about your fitness, your goal and the days you can train. If that information is wrong or out of date, the plan will be too. Keeping it accurate is your part of the arrangement.",
       ],
     },
     {
-      heading: "4. Subscription, trial, cancellation and refunds",
+      heading: "4. Subscriptions, and what they cost",
       paragraphs: [
-        "Paid access is sold as a subscription. Where a free trial is offered, the price you will be charged, and the date the first charge will be taken, are shown to you before you start the trial. You may cancel at any time before that date and you will not be charged.",
-        "If you cancel a paid subscription, your access continues until the end of the period you have already paid for, and then stops. We do not cut short a period you have paid for.",
-        "Your statutory cancellation rights as a consumer are unaffected by these terms.",
-        "When your paid access ends, you keep access to your own training history. What stops is the generation of new coaching output — see section 6.",
+        "Valhalla is sold as one subscription with one set of features. There is no cheaper tier with less in it, and no more expensive tier with more.",
+        "You choose how often you are billed. Monthly is billed every month, and annual is billed once a year. Both give you exactly the same product; the only difference is the billing period and the price.",
+        "The current prices are shown on our pricing page and again before you commit. Prices include VAT where it applies.",
+      ],
+    },
+    {
+      heading: "5. The free trial, and how it becomes a paid subscription",
+      paragraphs: [
+        "New subscribers are offered a 14-day free trial. This is not a card-free trial, and it does not simply expire.",
+        "Before the trial begins you choose monthly or annual billing and provide a valid payment method. You are shown the price you have chosen and the date the first payment would be taken before you confirm anything. Nothing is charged to start the trial.",
+        "You get the complete product for the 14 days. Nothing is held back for paying subscribers.",
+        "If you cancel before the trial ends, the subscription does not begin and you are not charged. If you do not cancel, the subscription you chose starts automatically when the trial ends and the first payment is taken at the price you selected. Cancelling is what stops it; doing nothing does not.",
+        "One trial per person. We may decline a trial to an account that has had one before.",
+      ],
+    },
+    {
+      heading: "6. Training, health and your own judgement",
+      paragraphs: [
+        "Endurance training carries risk, and only you know how you actually feel. You are responsible for deciding whether you are well enough to train on a given day, and for stopping when you should. If you have a health condition, are returning from injury, are pregnant, or are unsure whether training is safe for you, speak to a qualified medical professional before starting.",
+        "Valhalla does not diagnose, treat, monitor or prevent illness or injury, and nothing it produces is medical advice or medical clearance. When it tells you to ease off, hold a plan or recover, it is making a training judgement from the information you have given it, not a clinical one.",
+        "None of that reduces our own responsibility for the product itself. If Valhalla does not work as described, section 12 and your statutory rights apply in the ordinary way. This section is about the difference between a training tool and a doctor, not an attempt to disclaim everything Valhalla does.",
+      ],
+    },
+    {
+      heading: "7. Payment",
+      paragraphs: [
+        "By providing a payment method and starting a trial or subscription, you authorise us to take the payments described in section 5 on the schedule you chose, until you cancel.",
+        "We are the merchant: you are buying the service from us, and we are responsible to you for it. Card payments are handled by a third-party payment processor on our behalf. Your full card details are given to that processor, not to us, and we do not store them.",
+        "If a payment fails we may retry it, and we may suspend paid access until it succeeds. We will tell you if that happens.",
+      ],
+    },
+    {
+      heading: "8. Cancelling",
+      paragraphs: [
+        "You can cancel at any time through the account and billing controls in the product. Cancelling is meant to take a moment, and we will not put obstacles in the way of it.",
+        "Cancelling during the 14-day trial stops the subscription before it starts, and you are not charged.",
+        "Cancelling an active subscription stops it renewing. Your access continues to the end of the period you have already paid for, and then ends. We do not cut short a period you have paid for, and we do not take further payments after a valid cancellation.",
+        "Deleting the app from your phone does not cancel a subscription. Neither does simply not using it. Use the cancellation route in your account, and if that is not working for you, email us and we will deal with it.",
+        `If you have any difficulty cancelling, contact ${legalEntity.contactEmail}.`,
+      ],
+    },
+    {
+      heading: "9. Refunds, and your rights as a consumer",
+      paragraphs: [
+        "Nothing in these terms removes or limits the rights the law gives you as a consumer. Where the law entitles you to a refund, you will get one, and the rest of this section is subject to that.",
+        "Cancelling and being refunded are different things. Cancelling stops future payments. It does not by itself entitle you to a refund of a payment already properly taken for a period you have had access to.",
+        "You have a statutory right to change your mind about a contract bought at a distance, within 14 days. Where you have asked us to start the service immediately and acknowledged that doing so affects that right, the position is as the law provides. If you want to rely on this right, tell us and we will deal with it properly rather than argue about it.",
+        "If the service is faulty, not as described, or not fit for the purpose we described, your statutory remedies under consumer law apply, which may include a repair, a price reduction or a refund depending on the circumstances.",
+        "If you are charged twice for the same period, charged after a valid cancellation, or charged an amount you did not agree to, tell us and we will refund the incorrect charge.",
+        "Outside those situations we are not promising a refund as a matter of course, and you should not subscribe on the assumption of one. We will still look at individual circumstances and may refund where it seems right to us to do so. That is a discretion we are describing honestly, not a guarantee, and choosing not to exercise it in one case does not oblige us in another.",
+        `Billing questions and disputes: ${legalEntity.contactEmail}. Tell us what you were charged and when, and we will look into it.`,
+      ],
+    },
+    {
+      heading: "10. Price changes",
+      paragraphs: [
+        "We may change our prices. If we change the price of a subscription you already have, we will tell you in advance, the new price will only apply from your next billing period, and you may cancel before it takes effect if you do not want to continue at the new price.",
+        // FOUNDING PRICE: conditional by construction. With the flag off this
+        // sentence describes a mechanism that is only ever engaged by an offer
+        // actually saying so, which is true when no such offer exists. It is
+        // deliberately not a promise that any offer is running, because System
+        // has not finished the implementation that would honour one.
+        "Where an offer is described to you at the point of sale as holding your price for as long as your subscription continues without interruption, that offer's own terms apply and we will honour them. If an offer does not say that, no price lock applies to it.",
+        ...(COMMERCIAL_FEATURES.subscriptionPause
+          ? [
+              "Where a pause is available on your subscription, its terms are shown to you when you use it.",
+            ]
+          : []),
+      ],
+    },
+    {
+      heading: "11. Connected services",
+      paragraphs: [
+        "Valhalla can connect to Strava, so that activities you record there can be brought into your training record. Connecting is your choice, you are asked to authorise it through Strava itself, and you can disconnect at any time from your account settings or from within Strava. We only ask for the access needed to read the activities you choose to share, and disconnecting stops any further data coming across.",
+        "Strava is a separate company. It does not endorse Valhalla, and it is not responsible for it. Your use of Strava is governed by Strava's own terms.",
+        "We may add other optional connections to devices and services in future, including the ability to send workouts to a watch. Any such connection will be optional, will ask for your authorisation, will be described in our Privacy Policy before it starts operating, and will be disconnectable in the same way.",
+        "We are not responsible for a third-party service being unavailable, changing what it offers, or ending its access. If a connection stops working through no fault of ours, we will tell you.",
+      ],
+    },
+    {
+      heading: "12. Availability, changes and our responsibility to you",
+      paragraphs: [
+        "We aim to keep Valhalla available and working properly, and we owe you reasonable care and skill in providing it. We do not guarantee that it will never be unavailable: we may need to suspend it for maintenance, and things occasionally break.",
+        "We may change or remove features as the product develops. If we make a change that materially reduces what you are paying for, we will tell you and you may cancel.",
+        "We do not exclude or limit our liability where it would be unlawful to do so. That includes liability for death or personal injury caused by our negligence, for fraud or fraudulent misrepresentation, and for anything else that cannot lawfully be excluded.",
+        "Otherwise, we are responsible for loss you suffer that is a foreseeable result of our breaking these terms or failing to use reasonable care and skill. We are not responsible for loss that was not foreseeable, or for business losses, since Valhalla is supplied for personal use.",
         TBC(
-          "refund policy — whether discretionary or fixed, and how it interacts with the statutory 14-day cancellation right",
+          "liability cap, if any — a monetary cap has deliberately NOT been drafted here. Under the Consumer Rights Act 2015 an unreasonable cap in a consumer contract is unenforceable and its presence can taint the clause. If HQ wants one it should be set with legal advice; the clause is complete and enforceable without it.",
         ),
       ],
     },
     {
-      heading: "5. Valhalla is not medical advice",
+      heading: "13. Your training data, and our material",
       paragraphs: [
-        "Valhalla does not diagnose, treat or monitor illness or injury, and nothing it produces is medical advice or medical clearance. It cannot tell whether you are injured, and it does not try to.",
-        "Endurance training carries risk. You are responsible for deciding whether you are well enough to train, and for stopping when you should. If you have a health condition, are returning from injury, or are unsure whether training is safe for you, speak to a qualified medical professional.",
-        "Where Valhalla suggests easing off or recovering, it is making a training judgement from the data you have given it — not a clinical one. Treat it as one input, not as permission or prohibition.",
+        "You keep ownership of the training data you put into Valhalla. We do not claim it. Whether or not you are currently subscribed, you can view, export and delete your own training history. We do not hold your history hostage to a subscription.",
+        "The Valhalla software, interfaces, workout library, plan structures, coaching output and the methodology behind them are ours or licensed to us. You may use them to train. You may not copy, scrape or bulk-extract them, reverse engineer them, or use automated means to access the service beyond what we permit, except where the law expressly allows it.",
+        "In particular you may not use the product or its outputs to build, train, evaluate or operate a competing product, or supply them to someone else for that purpose.",
+        "You may not use Valhalla unlawfully, attempt to gain access to another person's account, or interfere with the service's operation or security.",
       ],
     },
     {
-      heading: "6. Your training data belongs to you",
+      heading: "14. Suspension, ending, and deleting your account",
       paragraphs: [
-        "You keep ownership of the training data you put into Valhalla. We do not claim ownership of it.",
-        "Whether or not you are currently paying, you can view, edit and export your own training history, and you can delete it. We do not hold your history hostage to a subscription.",
-        "We grant you a licence to use the coaching output Valhalla produces for you, for your own training. That licence does not extend to the uses described in section 7.",
+        "You can stop using Valhalla and delete your account at any time from within the product. Deleting your account is not the same as cancelling a subscription; if you have an active subscription, cancel it as well, and tell us if anything looks wrong afterwards.",
+        "We may suspend or end your access if you seriously or repeatedly break these terms, or if we are required to by law. Where it is reasonable to do so we will tell you first and give you a chance to put it right. If we end your access and you have paid for a period you cannot now use, we will refund the unused part unless the reason was your own serious breach.",
+        "What happens to your data on deletion is described in our Privacy Policy.",
       ],
     },
     {
-      heading: "7. Our material, and what you may not do with it",
+      heading: "15. Changes to these terms, complaints, and the law that applies",
       paragraphs: [
-        "The Valhalla software, interfaces, workout library, training-plan structures, coaching content and the methodology by which plans are produced and adapted are our property or licensed to us, and are protected by intellectual property rights.",
-        "You may use them to train. You may not, to the extent permitted by law: copy, scrape, harvest or bulk-extract the workout library, plan structures or coaching output; reverse engineer, decompile or attempt to derive the underlying methodology; use automated means to access the service other than as we expressly permit; or resell, sublicense or redistribute any part of it.",
-        "In particular, you may not use the product, its outputs or any data extracted from it to build, train, evaluate, benchmark, operate or support a competing or substantially similar product or service, whether directly or by supplying it to someone else for that purpose.",
-        "These restrictions do not limit anything you are entitled to do by law, and do not apply to your own training data, which is covered by section 6.",
-      ],
-    },
-    {
-      heading: "8. Availability",
-      paragraphs: [
-        "We aim to keep Valhalla available and working, but we do not guarantee uninterrupted service. We may need to suspend access for maintenance, and we may change or withdraw features.",
-        "If we make a change that materially reduces what you are paying for, we will tell you, and you may cancel.",
-      ],
-    },
-    {
-      heading: "9. Our responsibility to you",
-      paragraphs: [
-        "We do not exclude or limit our liability where it would be unlawful to do so — including for death or personal injury caused by our negligence, or for fraud.",
-        TBC(
-          "liability cap and exclusions — must be drafted and checked against the Consumer Rights Act 2015 before publication",
-        ),
-        "Nothing in these terms affects your statutory rights as a consumer.",
-      ],
-    },
-    {
-      heading: "10. Ending this agreement",
-      paragraphs: [
-        "You can stop using Valhalla and delete your account at any time.",
-        "We may suspend or end your access if you breach these terms — in particular section 7 — or if we are required to by law. Where it is reasonable to do so, we will tell you first.",
-      ],
-    },
-    {
-      heading: "11. Changes, and the law that applies",
-      paragraphs: [
-        "We may update these terms. If a change materially affects you, we will tell you before it takes effect, and you may cancel if you do not accept it.",
-        TBC("governing law and jurisdiction — expected England and Wales; to be confirmed"),
-        `Questions about these terms: ${legalEntity.contactEmail}.`,
+        "We may update these terms. If a change materially affects you we will tell you before it takes effect, and you may cancel if you do not accept it. Changes will not apply retrospectively to a period you have already paid for.",
+        `If something has gone wrong, tell us at ${legalEntity.contactEmail} and we will try to put it right. If you are not satisfied with how we have dealt with it, you may be able to use an alternative dispute resolution scheme, and you can always go to court.`,
+        "These terms are governed by the law of England and Wales. If you live in Scotland or Northern Ireland you may bring proceedings in your own courts, and you keep the benefit of any mandatory consumer protections of the country you live in.",
       ],
     },
   ],
@@ -413,34 +507,182 @@ export const termsDraft: LegalDocument = {
 export const cookiesDraft: LegalDocument = {
   eyebrow: "Velvet Viking",
   heading: "Cookies",
-  sub: "What Valhalla stores in your browser, and why there is not much of it.",
+  sub: "What this website and the Valhalla app store on your device, and why there is so little of it.",
   preamble:
-    "This page describes the cookies and similar local storage Valhalla uses. It is short because the product deliberately does not use advertising or cross-site tracking technology.",
-  lastUpdated: TBC("effective date"),
+    "This page covers cookies and the other ways a site or app can store and read information on your device — local storage, session storage and similar. It is short because the inventory is short, and everything in it is listed because it is actually there, not because policies usually mention it.",
+  lastUpdated: TBC("effective date, set on publication"),
   sections: [
     {
-      heading: "Essential cookies",
+      heading: "This website sets no cookies at all",
       paragraphs: [
-        "We use cookies that are strictly necessary to operate the service: keeping you signed in, keeping your session secure, and remembering essential preferences.",
-        "These are required for the product to function. They do not require consent under UK law, and you cannot turn them off while continuing to use the service — but you can clear them through your browser at any time, which will sign you out.",
+        "The Velvet Viking marketing website — the pages you are reading now — sets no cookies, writes nothing to local storage or session storage, and runs no analytics, advertising or tracking scripts. There is no consent banner because there is nothing to consent to.",
+        "Our typefaces are served from our own domain rather than fetched from a font provider while you browse, so viewing these pages does not disclose your visit to a third party for that purpose. There are no embedded videos, social widgets, pixels or tags.",
+        "This is a factual statement about the site as it stands, not a promise about the future. If we ever add anything that is not strictly necessary, we will ask for your consent before it is set, and refusing will be as easy as accepting.",
       ],
     },
     {
-      heading: "Local storage on your device",
+      heading: "The Valhalla app, once you have an account",
       paragraphs: [
-        "The application stores a copy of your current plan and recent training on your device so it remains usable offline. This is not used for tracking, and it is removed when you uninstall the application or clear its data.",
+        "Signing in to Valhalla is different, because an application that keeps you signed in has to remember something. What it stores falls into two groups.",
+        "Authentication and security. When you sign in, the app stores a session token on your device so you stay signed in and so each request can be recognised as yours. It is set by us and by our authentication provider, it lasts until it expires or you sign out, and it is strictly necessary: without it there is no way to be signed in. Signing out or clearing the app's data removes it.",
+        "Your plan and your preferences. The app keeps a copy of your current plan, your recent training and your settings — units, theme, whether reminders are on — on your own device, so the product still works when you are offline or on a poor connection. This is strictly necessary for the service you have asked for, is never read by anyone else, and is removed when you sign out, uninstall the app, or clear its data.",
+        "Neither group is used to build a profile of you, to follow you between apps or websites, or for advertising.",
       ],
     },
     {
-      heading: "What we do not use",
+      heading: "Strictly necessary, and what that means for consent",
       paragraphs: [
-        "We do not use advertising cookies, cross-site tracking pixels, or third-party marketing analytics.",
-        "If that ever changes, we will update this page and ask for your consent before setting any non-essential cookie — not after.",
+        "Under UK law, storing or reading information on your device generally requires your consent, with an exception for storage that is strictly necessary to provide a service you have asked for. Everything listed above falls within that exception: it exists to sign you in, keep that session secure, and let the app you asked for actually run.",
+        "That is why you are not asked to consent to it, and also why you cannot switch it off while continuing to use the product. You can always clear it through your browser or device settings, which will sign you out.",
+        "We do not currently rely on any of the newer exceptions that permit limited low-risk measurement without consent. We do not carry out that measurement at all.",
+      ],
+    },
+    {
+      heading: "What we do not do",
+      paragraphs: [
+        "No advertising cookies. No cross-site or cross-app tracking. No third-party marketing analytics. No advertising identifiers. No sale or sharing of device identifiers.",
+        "If any of that changes, this page will be updated before it happens, and any non-essential storage will be set only after you have agreed to it.",
       ],
     },
     {
       heading: "Questions",
-      paragraphs: [`Contact us at ${legalEntity.contactEmail}.`],
+      paragraphs: [
+        `If you want to know exactly what is stored for your account, or you think something here is out of date, contact ${legalEntity.contactEmail}.`,
+      ],
+    },
+  ],
+};
+
+// ---------------------------------------------------------------------------
+// COMMERCIAL PRIVACY POLICY (draft — replaces privacyDraft at paid launch)
+// ---------------------------------------------------------------------------
+//
+// Everything the live policy says that is still true is carried over unchanged.
+// What is added is the processing that only exists once money and integrations
+// do: subscription state, a payment processor, conditional device connections,
+// and the retention of financial records after deletion.
+//
+// TWO THINGS ARE STATED CONDITIONALLY ON PURPOSE. Strava and Garmin are both
+// behind environment flags in the app (VVV_STRAVA_ENABLED, VVV_GARMIN_ENABLED),
+// so neither may be described as operating. A policy that claims processing
+// which is switched off is as wrong as one that omits processing which is on.
+
+export const privacyCommercialDraft: LegalDocument = {
+  eyebrow: "Velvet Viking",
+  heading: "Privacy",
+  sub: "What Valhalla stores about your training, why, and what you can do about it.",
+  preamble:
+    "This policy explains what personal data we collect when you use Valhalla, what we use it for, who else is involved, how long we keep it, and the rights you have. It describes what the product actually does. Where something is switched off, it says so rather than describing it as if it were running.",
+  lastUpdated: TBC("effective date, set on publication"),
+  sections: [
+    {
+      heading: "Who is responsible for your data",
+      paragraphs: [
+        `Valhalla is operated by ${entityDescription()}. For data protection purposes we are the data controller for the personal data described here.`,
+        `To exercise any of the rights below, or to ask a question about your data, contact ${legalEntity.contactEmail}.`,
+      ],
+    },
+    {
+      heading: "What we collect",
+      paragraphs: [
+        "Account data: your email address and the authentication records needed to sign you in. You sign in with a link we email you, so there is no password.",
+        "Programme data: the answers you give when you set up a training block — your goal distance and date, your current weekly volume, the days you can run, your benchmark performance and your goal times — and the plan Valhalla builds from them.",
+        "Completed sessions: for each session you log, the distance, the pace, your heart rate where it is recorded or imported, your rating of perceived effort, how the session felt, any splits you enter, and any notes you write.",
+        "Daily check-in, where you record it: how you are feeling that day, how your legs feel, and how you slept. You can use Valhalla without providing this.",
+        "Injury, pain and illness information where you supply it, through the check-in or in a session note. It is stored with the day it relates to and used to decide what to recommend next, including recommending that you do not run.",
+        "Coaching output: what Valhalla produces about your training — execution reviews, athlete-state and readiness assessments, proposed plan changes, and whether you accepted or declined them. This accumulates into a longitudinal record of your training, which is what lets coaching decisions take your history into account.",
+        "Subscription data: which plan you are on, your billing period, whether you are in a trial and when it ends, and the status of your payments. We do not receive or store your full card number, expiry or security code.",
+        "Support correspondence: what you write to us and what we reply.",
+        "Operational and security information: records needed to keep the service running and to detect and prevent abuse, such as authentication events and error diagnostics.",
+        "We do not use analytics, advertising or tracking technology, and we do not collect advertising identifiers.",
+      ],
+    },
+    {
+      heading: "Information that can indicate something about your health",
+      paragraphs: [
+        "Some of what Valhalla holds is ordinary training information — distance, pace, the days you can run. Some of it is not so easily categorised. Heart rate, how you slept, how your legs feel, an entry saying you are unwell or in pain, and the readiness assessments built from them can all say something about your physical condition.",
+        "We do not treat everything as health data, because that would be inaccurate, and we do not pretend none of it is, because that would be worse. Where you tell Valhalla you are injured, in pain or ill, that is information about your health, and you are choosing to give it to us so the product can respond to it.",
+        "You are never required to provide it. The check-in is optional, notes are optional, and Valhalla works without them, with less to go on.",
+        TBC(
+          "lawful basis and Article 9 condition for the health-indicating categories above — for a solicitor. The likely position is that contract covers the core training service and that explicit consent is the appropriate condition for the optional health-indicating fields, which would require a consent mechanism in the app that does not exist today. Do not publish this policy until that is settled and, if consent is the answer, until the app actually asks for it. This draft deliberately does not assert a basis it cannot evidence.",
+        ),
+      ],
+    },
+    {
+      heading: "What we use it for",
+      paragraphs: [
+        "To build and adjust your training plan, and to produce the coaching output that is the substance of the product.",
+        "To decide what to recommend next, including holding you back or telling you not to run when what you have recorded says you should not.",
+        "To keep your plan and history available across your devices, and to restore it when you sign in again.",
+        "To take payment, manage your subscription and trial, and keep the financial records we are required to keep.",
+        "To operate the service — signing you in, keeping it secure and available, and diagnosing faults.",
+        "To answer your support requests.",
+        "That is the complete list. We do not profile you for advertising, and we do not measure your behaviour in the product for marketing purposes.",
+      ],
+    },
+    {
+      heading: "What we will not do with it",
+      paragraphs: [
+        "We do not sell your personal data, and we do not share it with third parties for their own marketing.",
+        "We do not use your individual training data to train or fine-tune machine learning models offered to anyone else, and we do not make it available to third parties for that purpose.",
+      ],
+    },
+    {
+      heading: "Who else is involved",
+      paragraphs: [
+        "We use a small number of service providers, each acting on our instructions under contract, and each with access only to what it needs.",
+        "Hosting and database: our managed database is provided by Supabase and hosted in the European Union. Vercel hosts the website, the application and the server functions that talk to the database.",
+        "Authentication and email: the sign-in links we send you are sent through our authentication and email infrastructure, which necessarily processes your email address.",
+        "Payments: card payments are handled by a third-party payment processor. Your card details go to that processor and not to us. We receive the status of your subscription and payments, not your card number.",
+        "Internal operations: we use monday.com as an internal working tool for commercial and operational tasks. It does not receive your training history, heart rate, pace, session notes, check-in entries, readiness assessments or any other coaching evidence about you.",
+        "We do not otherwise disclose your data, except where we are legally required to.",
+      ],
+    },
+    {
+      heading: "Connected services, when you choose to use them",
+      paragraphs: [
+        "Valhalla supports optional connections to services you already use. Every one of them is off until you connect it, requires your authorisation through the other service, and can be disconnected at any time from your account settings.",
+        "Strava. Where the connection is available and you choose to enable it, we store the access credentials for that connection and the activity data it returns, and we use that data as part of your training record. We ask only for the access needed to read the activities you choose to share. Disconnecting stops further data coming across. Strava is a separate company with its own privacy policy, and it does not endorse Valhalla.",
+        "Devices and watches, including Garmin. This integration is not switched on, and no device data is being collected through it. If we enable it, we will update this policy to describe exactly what is collected before any data flows, and connecting will remain your choice.",
+        "If a connection is not enabled for your account, no data passes to or from it.",
+      ],
+    },
+    {
+      heading: "Where your data is stored, and transfers",
+      paragraphs: [
+        "Your account and training data are stored in a managed database hosted in the European Union.",
+        "Some of our providers are established outside the UK or operate support functions elsewhere. Where personal data is transferred outside the UK, we rely on the safeguards UK data protection law requires, such as adequacy regulations or standard contractual clauses with the additional protections that go with them.",
+        "The Valhalla application also keeps a copy of your current plan and recent activity on your own device so it works offline. That copy is under your control and is removed when you uninstall the app or clear its data.",
+      ],
+    },
+    {
+      heading: "How long we keep it",
+      paragraphs: [
+        "While your account is open we keep your training history, so it stays available to you and so coaching decisions can take it into account. We do not delete it routinely — losing your history would make the product worse for you.",
+        "If you delete your account, we delete your account and the training data associated with it from our live systems. Copies can persist briefly in routine encrypted backups before those rotate out.",
+        "Records of payments we have taken are not deleted with your account. We are required to keep financial and tax records for a period set by law, and we keep them in the least identifying form that still satisfies that requirement. They are kept for accounting and legal compliance, not to reconstruct your training.",
+        `If you would rather we deleted your account for you, email ${legalEntity.contactEmail}.`,
+      ],
+    },
+    {
+      heading: "Cookies and storage on your device",
+      paragraphs: [
+        "The marketing website sets no cookies and stores nothing on your device. The application stores what it needs to keep you signed in and to work offline. Our Cookie Policy sets out the full inventory.",
+      ],
+    },
+    {
+      heading: "Your rights",
+      paragraphs: [
+        "Under UK data protection law you have the right to access a copy of your data, to have inaccurate data corrected, to have your data erased, to obtain it in a portable form, and to object to or restrict certain processing. Where we rely on your consent for anything, you can withdraw it at any time, and withdrawing it does not affect what was done before.",
+        "You can delete your account from within the product at any time. For anything else, contact us and we will respond within the period the law requires.",
+        "If you are unhappy with how we have handled your data, please tell us first so we can put it right. You also have the right to complain to the Information Commissioner's Office at ico.org.uk.",
+      ],
+    },
+    {
+      heading: "Changes to this policy",
+      paragraphs: [
+        "If we make a material change to how we handle your data, we will tell you before it takes effect. The date at the top of this page shows when it was last updated.",
+      ],
     },
   ],
 };
