@@ -1,5 +1,7 @@
 import CtaButton from "@/components/ui/CtaButton";
 import { plans, trial } from "@/content/commerce";
+import { buildCta } from "@/content/site";
+import { buildUrl } from "@/content/journey";
 
 const CURRENCY_SYMBOL: Record<string, string> = { GBP: "£" };
 
@@ -83,12 +85,18 @@ export default function PricingCard() {
       {/* ONE CTA FOR ONE PRODUCT. The card shows two billing periods but
           deliberately does NOT sprout a button per period: that would turn
           this page into a two-option checkout and make the periods read as
-          two products. The single CTA now goes to /trial, the billing
-          preference step, which is where that choice belongs. It used to
-          point straight at /start; /start is now the step after /trial, and
-          is otherwise untouched. */}
-      <CtaButton href="/trial" className="mt-8 w-full">
-        Start Free Trial
+          two products.
+
+          ENTRY-JOURNEY PASS: was "Start Free Trial" -> /trial, a page that
+          asked which billing period the athlete wanted BEFORE they had seen
+          a single session of their own programme. Under the approved order
+          the period is chosen after the preview, so that step has gone and
+          this leads into the build instead. The prices, the trial terms and
+          the feature list on this card are untouched: a visitor who came
+          here to check the cost still gets the answer, they are simply not
+          asked to commit to a period to proceed. */}
+      <CtaButton href={buildUrl} variant="cherry" className="mt-8 w-full">
+        {buildCta.label}
       </CtaButton>
 
       <ul className="mt-10 flex flex-col gap-4 border-t border-vv-line-soft pt-8">

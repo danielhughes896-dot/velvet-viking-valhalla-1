@@ -8,22 +8,48 @@ type CtaButtonProps = {
    * same convention as the nullable footer.social URLs. */
   href: string | null;
   children: ReactNode;
-  variant?: "primary" | "ghost";
+  /**
+   * "cherry" is the action that moves a prospective athlete into plan
+   * creation, and nothing else. See the variants table below.
+   */
+  variant?: "primary" | "ghost" | "cherry";
   className?: string;
   onClick?: () => void;
   /** Shown as a title/sr-only note when href is null. */
   pendingLabel?: string;
 };
 
+// min-h-11 is 44px, the floor the Valhalla app enforces on every control it
+// ships (".btn:not(.btn-sm){min-height:44px}"). This button's own padding came
+// to 43.5px, which cleared nothing and matched nothing; the padding is left
+// alone because it sets the optical weight, and a floor is added instead, so
+// nothing that already passed moves.
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-vv-sm px-6 py-3 font-head text-[13px] font-semibold uppercase tracking-[0.14em] transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-vv-sm px-6 py-3 font-head text-[13px] font-semibold uppercase tracking-[0.14em] transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2";
 
-// Flat single-color fill, not a gradient: under the prototype's near-black
-// palette a two-stop bronze gradient's dark end measures 3.81:1 against
-// bronze-ink text, failing WCAG AA (needs 4.5:1 for 13px bold). Flat
-// vv-bronze/vv-bronze-ink measures 7.85:1. Gradient tokens stay in
-// globals.css for decorative, non-text uses (the wordmark rule).
+// THREE JOBS, THREE FILLS.
+//
+//   cherry   THE ACTION THAT STARTS A PLAN, and only that. Cherry Lacquer is
+//            the app's accent for "the button that moves the athlete forward",
+//            so the colour pressed to begin on this site is the colour met
+//            again inside the builder. Solid, not a gradient — that was the
+//            violet this replaced in the app, and a flat fill is what makes it
+//            read as one deliberate colour rather than a surface with a sheen.
+//            The 1px rim is what gives a dark fill an edge in the dark
+//            sections without lightening its face back into rose.
+//   primary  EXPLORATION AND BRAND ACTIONS — the gold the site has always
+//            used, now on the app's own bronze. Flat, not a gradient: under a
+//            near-black ground a two-stop bronze gradient's dark end measures
+//            3.81:1 against bronze-ink text, failing AA for 13px semibold.
+//            Flat vv-bronze on vv-bronze-ink measures 6.6:1. Gradient tokens
+//            stay in globals.css for decorative, non-text uses (the wordmark).
+//   ghost    QUIET SECONDARY ACTIONS, unchanged.
+//
+// Gold is still the brand. Cherry is a closed set of one job — see the test
+// that fails if it spreads.
 const variants = {
+  cherry:
+    "bg-vv-cherry-fill text-vv-cherry-ink shadow-[inset_0_0_0_1px_var(--vv-cherry)] hover:brightness-110",
   primary: "bg-vv-bronze text-vv-bronze-ink hover:brightness-110",
   ghost: "border border-vv-line text-vv-ink hover:border-vv-bronze",
 };

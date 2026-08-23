@@ -32,7 +32,43 @@ export const siteUrl = "https://velvetviking.co.uk";
 // own door on the app's /get, still used by the existing invited testers, and
 // it is NOT retired here — retiring it is HQ's call, not a side effect of
 // pointing the public CTAs at the front door.
-export const appUrl = "https://app.velvetviking.co.uk/start";
+//
+// TWO DOORS, ONE ORIGIN. A first-time athlete and a returning one want
+// different rooms: the builder, and their own account. Sending both to the
+// same URL — which is what this site did until now — meant "Sign In" and
+// "Start Free Trial" were the same click with two different promises. The
+// origin is still declared exactly once, for the reason above; the two paths
+// hang off it so neither can drift from the other.
+const appOrigin = "https://app.velvetviking.co.uk";
+
+/** First-time entry: the app's plan builder. */
+export const appUrl = `${appOrigin}/start`;
+
+/** Returning athlete: their own account, not the first-time builder. */
+export const appSignInUrl = `${appOrigin}/account`;
+
+// THE TWO PUBLIC ACTIONS, NAMED ONCE.
+//
+// One label for a first-time athlete and one for a returning athlete, used
+// verbatim in the header, the menu, the hero, the product showcase, /valhalla,
+// /pricing and /start. Written down here rather than typed into seven
+// components so the site cannot end up offering four different words for the
+// same door — which is exactly what it did before this pass ("Explore
+// Valhalla", "See Standard Pricing", "Start Free Trial" and "Continue to
+// Account" all led, eventually, to the same place).
+//
+// "BUILD MY PLAN", first person, is the app's own button. Its /start says
+// "Build your plan" as the heading and "Build my plan" on the control, so an
+// athlete who presses this label here meets the same words again inside the
+// builder. It replaces "Create Account" as the primary public action
+// deliberately: the product direction is value-first, and an account is
+// something the athlete gives us AFTER seeing their programme, not a toll
+// gate in front of it.
+export const buildCta = { label: "Build My Plan" } as const;
+export const signInCta = { label: "Sign In" } as const;
+
+/** Quiet secondary route, kept so the editorial deep dive is never orphaned. */
+export const exploreCta = { label: "Explore Valhalla", href: "/valhalla" } as const;
 
 export const brand = {
   name: "Velvet Viking",
@@ -54,13 +90,18 @@ export const nav = {
     { label: "Philosophy", href: "/philosophy" },
     { label: "About", href: "/about" },
   ],
-  cta: { label: "Explore Valhalla", href: "/valhalla" },
+  // WAS DEAD CONTENT: `cta` used to hold "Explore Valhalla" and was rendered
+  // by nothing at all — the header carried no CTA and the menu never read it.
+  // Both actions are now real, and both come from the shared labels above so
+  // the chrome cannot drift from the page CTAs.
+  cta: buildCta,
   // Secondary utility action, not a brand destination — kept out of `links`
-  // so MobileNav can render it visually distinct (quiet, not display type).
-  // href is filled in once commerceSeams.signIn (content/commerce.ts) is
-  // live; MobileNav renders this exact label as the CtaButton pending
-  // state until then.
-  signIn: { label: "Sign In" },
+  // so the menu can render it visually distinct (quiet, not display type).
+  // WAS GATED ON commerceSeams.signIn AND RENDERED "Sign In — Coming soon"
+  // while /start offered a working Sign In two clicks away. The account has
+  // existed in the app throughout; the seam was never the thing that was
+  // missing, so the gate is gone and this now routes to appSignInUrl.
+  signIn: signInCta,
 } as const;
 
 export const hero = {
@@ -103,7 +144,18 @@ export const hero = {
   // removed: a programme that learns is a description of behaviour, which is
   // what we can substantiate, where a coach is a claim about a profession.
   sub: "Training that learns how you train. The longer you run with Valhalla, the better it understands how you respond.",
-  cta: { label: "Explore Valhalla", href: "/valhalla" },
+  // ENTRY-JOURNEY PASS: the hero's primary action was "Explore Valhalla",
+  // which sent the most motivated visitor on the site sideways into more
+  // reading. It is now the action that starts a plan, and the exploratory
+  // route survives underneath it as a quiet secondary rather than being
+  // deleted — some visitors genuinely do want to read first.
+  cta: buildCta,
+  secondaryCta: exploreCta,
+  // One honest line under the button, naming what actually happens next.
+  // Deliberately short: the route architecture is what demonstrates the
+  // build-first model, and this sentence only has to stop the button
+  // reading as a signup form.
+  ctaNote: "Answer a few questions. See the programme before you pay anything.",
   media: {
     placeholder: "[HERO PHOTOGRAPH]",
     alt: "[HERO PHOTOGRAPH — athlete in training, environment to be confirmed]",
@@ -184,7 +236,11 @@ export const valhallaProduct = {
       body: "Pace, heart rate, effort and execution are read together, as one picture of how a session went rather than four separate charts.",
     },
   ],
-  cta: { label: "Explore Valhalla", href: "/valhalla" },
+  // The showcase closes on the same two actions as the hero: the athlete has
+  // just seen the product's real screens, which is the strongest point on the
+  // homepage to offer the build. Cherry on a dark section — see CtaButton.
+  cta: buildCta,
+  secondaryCta: exploreCta,
   // PROTOTYPE: both slots are now portrait/phone-first — Valhalla has no
   // desktop app to screenshot. `primary` is Next Move/Plan Evolution (the
   // dominant, foregrounded frame); `secondary` is Execution Review (the
@@ -405,7 +461,11 @@ export const finalCta = {
   // scroll moment, this is the "ready to commit" beat — the one CTA graph
   // dead end the Phase 2 audit flagged now resolves forward into the
   // commercial entry point instead of back to a page already reached.
-  cta: { label: "See Standard Pricing", href: "/pricing" },
+  // ENTRY-JOURNEY PASS: was "See Standard Pricing". The page's closing
+  // moment now offers the plan rather than the price — pricing stays one
+  // click away in the menu and from /valhalla, so nothing is buried, but
+  // the last thing a visitor is asked to do is no longer "look at a bill".
+  cta: buildCta,
 } as const;
 
 export const footer = {
@@ -467,27 +527,27 @@ export const pages = {
   // Deliberately says nothing comparative about the two periods. No savings
   // figure, no effective monthly rate, no recommendation — the same rule the
   // pricing card follows, for the same reason.
-  trial: {
-    eyebrow: "Standard",
-    heading: "Start Your Free Trial",
-    sub: "14 days of the whole of Valhalla.",
-    // COMMERCIAL CORRECTION: was "Choose how you'd like to continue when the
-    // trial ends", which put the decision after the trial. It is made before
-    // it, and it is what starts charging. Said plainly here so the choice
-    // below is understood as a commitment rather than a preference.
-    body: "Pick one now. It's what your subscription starts on when the 14-day trial ends, unless you cancel before then. The trial itself is the same either way.",
-  },
+  // pages.trial IS DELIBERATELY GONE. It held the heading, sub and body for
+  // /trial, the billing-preference step. That step asked which period an
+  // athlete wanted before they had seen a single session of their own
+  // programme, and the approved journey moves that choice behind the preview,
+  // inside the app. The route, its component and this copy went together
+  // rather than leaving an unreachable page and orphan strings behind.
+  //
+  // NOTHING ABOUT THE TRIAL ITSELF CHANGED. Its duration, the card-up-front
+  // requirement, the period choice and the automatic conversion all still
+  // live in content/commerce.ts and are still stated on /pricing and /start.
   start: {
     eyebrow: "Standard",
-    // HEADING ONLY. Was "Start Your Trial", which stopped being accurate the
-    // moment /trial went in front of this page: the trial is started there,
-    // and what happens here is the account. It also collided with /trial's
-    // own "Start Your Free Trial" one click earlier, so arriving via a button
-    // labelled "Continue to Account" landed on a heading that read like the
-    // previous step repeated. Everything else on this page — the eyebrow,
-    // sub, body, the four journey steps, the not-live notice, the CTAs and
-    // the private beta entry below them — is deliberately untouched.
-    heading: "Create Your Account",
+    // SUPERSEDES "CREATE YOUR ACCOUNT", which was itself an approved change
+    // from "Start Your Trial". Both were accurate descriptions of a journey
+    // that no longer exists. Under the approved value-first order the account
+    // is not the first thing that happens here and not what this page is
+    // for — the programme is built and shown first, and the account arrives
+    // when the athlete wants to keep it. A page headed "Create Your Account"
+    // sitting behind a button labelled "Build My Plan" would restate exactly
+    // the contradiction this pass was asked to remove.
+    heading: "Build Your Plan",
     sub: "Here’s exactly what happens next.",
     // HUMAN COPY PASS: "the journey as it's designed to work" — "journey"
     // was the one piece of soft marketing jargon on the site, and it meant
@@ -503,7 +563,13 @@ export const pages = {
     // the screenshots, the scroll just ended. That's the literal "dead
     // end" the Phase 2 audit flagged in the CTA graph. Now closes into the
     // commercial entry point instead of looping back to itself.
-    closingCta: { label: "See Standard Pricing", href: "/pricing" },
+    // ENTRY-JOURNEY PASS: both occurrences of this page's primary CTA were
+    // "See Standard Pricing". The page is the editorial deep dive, so its
+    // conversion route is now the build; the price is kept reachable from
+    // the same spot as a quiet secondary link rather than being the headline
+    // action. Still ONE cta object read twice, so the two cannot drift.
+    closingCta: buildCta,
+    secondaryCta: { label: "See Standard Pricing", href: "/pricing" },
     // STRUCTURE PASS: the deep-dive paragraphs below used to open the page
     // directly under the <h1>, so the intro carried them. The year-round
     // section now sits between the two, and a block of centred prose landing

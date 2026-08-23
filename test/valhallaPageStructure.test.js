@@ -60,19 +60,28 @@ test('the same primary CTA appears exactly twice, from one source of truth', () 
   const ctas = (src.match(/<CtaButton/g) || []).length;
   assert.equal(ctas, 2, 'two occurrences of one CTA: one after the explanation, one at the close');
 
-  // Both read their label and href from the same object, so they can never
-  // drift into two different offers.
-  assert.equal((src.match(/pages\.valhalla\.closingCta\.href/g) || []).length, 2);
+  // Both read their label from the same object and their destination from the
+  // one gated build route, so they can never drift into two different offers.
   assert.equal((src.match(/pages\.valhalla\.closingCta\.label/g) || []).length, 2);
+  assert.equal((src.match(/href=\{buildUrl\}/g) || []).length, 2);
   assert.ok(
     !/href="\/pricing"|See Standard Pricing/.test(src),
     'neither CTA may hard-code its label or destination'
   );
 });
 
-test('the CTA still points at pricing, with its approved label', () => {
+test('the page converts into the build, and keeps pricing as a quiet secondary', () => {
+  // ENTRY-JOURNEY PASS: this used to assert closingCta was
+  // { label: "See Standard Pricing", href: "/pricing" }. The deep dive's
+  // conversion route is now the build — asking a reader who has just
+  // understood the product to go and look at a bill was the value-last order
+  // the approved journey removes. Pricing is not buried: it survives as the
+  // secondary link under the closing button, and in the menu.
   const site = code(read('src/content/site.ts'));
-  assert.match(site, /closingCta: \{ label: "See Standard Pricing", href: "\/pricing" \}/);
+  assert.match(site, /closingCta: buildCta,/);
+  assert.match(site, /secondaryCta: \{ label: "See Standard Pricing", href: "\/pricing" \}/);
+  const src = page();
+  assert.match(src, /pages\.valhalla\.secondaryCta\.href/, 'the pricing route must still render');
 });
 
 test('the second CTA follows the visuals and no second pricing block was added', () => {
@@ -110,8 +119,11 @@ test('the move introduced no new colour, type or spacing language', () => {
     assert.ok(!/#[0-9a-fA-F]{3,8}\b/.test(s), `${name} introduces a raw hex colour`);
     assert.ok(!/(bg|text|border)-\[/.test(s), `${name} introduces an arbitrary colour value`);
   }
-  // The CTA keeps the shared gold button, unstyled by the page.
-  assert.ok(!/<CtaButton[^>]*variant=/.test(src), 'both CTAs use the primary gold variant');
+  // The CTAs keep the shared component, unstyled by the page: the only thing
+  // this page says about them is which JOB they are, and Cherry Lacquer is
+  // the accent that job carries site-wide.
+  assert.equal((src.match(/variant="cherry"/g) || []).length, 2);
+  assert.ok(!/<CtaButton[^>]*className="[^"]*bg-/.test(src), 'no page-local fill may override the variant');
   assert.match(src, /border-t border-vv-line-soft bg-vv-bg/, 'the existing section divider stays');
 });
 

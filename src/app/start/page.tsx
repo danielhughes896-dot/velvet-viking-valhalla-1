@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PageIntro from "@/components/sections/PageIntro";
 import CtaButton from "@/components/ui/CtaButton";
-import { pages, betaAccess, appUrl } from "@/content/site";
+import { pages, betaAccess, appUrl, appSignInUrl, buildCta, signInCta } from "@/content/site";
 import { plans, trial } from "@/content/commerce";
 
 export const metadata: Metadata = {
@@ -29,10 +29,19 @@ const currencySymbol = plan.price.currency === "GBP" ? "£" : "";
 // starts rather than after it ends, and the subscription begins on its own
 // unless the athlete cancels. Every one of those is read from the trial flags
 // in content/commerce.ts rather than asserted here.
+// THE ORDER IS THE POINT, AND IT HAS BEEN INVERTED.
+//
+// This list used to open with "Create your account". Under the approved
+// value-first journey the account is not the first thing that happens, it is
+// the thing an athlete does once they have a programme worth keeping — so
+// building and seeing the plan are steps one and two, saving it is step
+// three, and the card arrives at four. Nothing about the trial itself has
+// changed: same duration, same period choice, same automatic conversion,
+// all still read from the trial flags in content/commerce.ts.
 const steps = [
-  "Create your account",
   "Answer a few questions about your running, your race and the days you can train",
-  "Valhalla builds your programme, and you see it before you pay anything",
+  "Valhalla builds your full programme and shows it to you",
+  "Save it to your account when you want to keep it",
   trial.periodChosenUpfront
     ? "Choose monthly or annual, and add your payment method"
     : "Add your payment method",
@@ -88,23 +97,26 @@ export default function StartPage() {
           </ol>
 
           {/* THE HANDOFF, NOT A SECOND FRONT DOOR.
-              These two used to be commerceSeams.createAccount and .signIn,
-              both null, so both rendered permanently disabled — the dead CTAs
-              at the end of the acquisition journey. The account does not
-              belong to this website and never did: the app owns account, plan
-              builder, preview and trial, and building any of them here would
-              create a second identity surface that could disagree with the
-              real one. So both now leave for the app's own front door, which
-              is written down once as appUrl in content/site.ts. */}
+              The account does not belong to this website and never did: the
+              app owns account, plan builder, preview and trial, and building
+              any of them here would create a second identity surface that
+              could disagree with the real one.
+
+              TWO DOORS NOW, NOT ONE URL TWICE. Until this pass both of these
+              buttons pointed at the same app URL — "Start Free Trial" and
+              "Sign In", two different promises resolving to one screen. A
+              returning athlete now goes to their own account; a new one goes
+              to the builder. Both paths hang off the single app origin
+              declared in content/site.ts. */}
           <div className="flex w-full flex-col items-center gap-4">
-            <CtaButton href={appUrl} className="w-full">
-              Start Free Trial
+            <CtaButton href={appUrl} variant="cherry" className="w-full">
+              {buildCta.label}
             </CtaButton>
 
             <div className="flex flex-col items-center gap-2">
-              <p className="text-xs text-vv-ink-faint">Already training with Valhalla?</p>
-              <CtaButton href={appUrl} variant="ghost" className="w-full">
-                Sign In
+              <p className="text-xs text-vv-ink-faint">Already have a Valhalla plan?</p>
+              <CtaButton href={appSignInUrl} variant="ghost" className="w-full">
+                {signInCta.label}
               </CtaButton>
             </div>
           </div>

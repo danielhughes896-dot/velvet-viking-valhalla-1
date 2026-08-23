@@ -1,5 +1,6 @@
 import CtaButton from "@/components/ui/CtaButton";
 import { finalCta } from "@/content/site";
+import { buildUrl } from "@/content/journey";
 
 // No crest here by design — the full crest appears once, ceremonially, in
 // the hero (plus the small wayfinding mark in the header). This closing
@@ -22,7 +23,8 @@ export default function FinalCta() {
           {finalCta.heading}
         </h2>
         <p className="mt-5 max-w-md text-base leading-relaxed text-vv-ink-dim">{finalCta.sub}</p>
-        <CtaButton href={finalCta.cta.href} className="mt-10">
+        {/* The page's closing action is the plan, not the price. */}
+        <CtaButton href={buildUrl} variant="cherry" className="mt-10">
           {finalCta.cta.label}
         </CtaButton>
       </div>

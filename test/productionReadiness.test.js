@@ -24,8 +24,14 @@ const srcFiles = () => {
 // ---------------------------------------------------------------------------
 test('the canonical app entry is declared once and is the .co.uk subdomain', () => {
   const site = code(read('src/content/site.ts'));
-  assert.match(site, /export const appUrl = "https:\/\/app\.velvetviking\.co\.uk\/start"/);
-  // One copy, for the same reason siteUrl is one copy.
+  // TWO PATHS, ONE ORIGIN. The entry-journey pass split the single appUrl into
+  // a first-time route (the builder) and a returning route (the account),
+  // because sending both to one URL meant "Sign In" and "Start Free Trial"
+  // were the same click with two different promises. The origin is still
+  // written down exactly once, which is what this test has always protected.
+  assert.match(site, /const appOrigin = "https:\/\/app\.velvetviking\.co\.uk"/);
+  assert.match(site, /export const appUrl = `\$\{appOrigin\}\/start`/);
+  assert.match(site, /export const appSignInUrl = `\$\{appOrigin\}\/account`/);
   const declarations = (site.match(/= "https:\/\/app\.velvetviking\.co\.uk/g) || []).length;
   assert.equal(declarations, 1, 'a second copy of the app origin is how the first goes stale');
 });
@@ -34,8 +40,13 @@ test('no customer-facing CTA renders as permanently disabled', () => {
   const start = code(read('src/app/start/page.tsx'));
   assert.ok(!/commerceSeams\.(createAccount|signIn)/.test(start),
     'the account CTAs must hand off to the app, not render as dead null-href buttons');
-  assert.match(start, /href=\{appUrl\}/);
-  assert.match(start, /Start Free Trial/);
+  assert.match(start, /href=\{appUrl\}/, 'the first-time CTA hands off to the builder');
+  assert.match(start, /href=\{appSignInUrl\}/, 'the returning CTA hands off to the account');
+  // WAS /Start Free Trial/. The primary action on this page is now the build,
+  // not the trial: an athlete is asked for a card after they have seen their
+  // programme, not before. The label lives in site.ts so it cannot drift.
+  assert.match(start, /\{buildCta\.label\}/);
+  assert.match(start, /\{signInCta\.label\}/);
 });
 
 test('the website does not duplicate account creation or the plan builder', () => {

@@ -1,12 +1,24 @@
 import Link from "next/link";
 import HeaderBrand from "@/components/layout/HeaderBrand";
 import MobileNav from "@/components/layout/MobileNav";
-import { nav } from "@/content/site";
+import CtaButton from "@/components/ui/CtaButton";
+import { nav, appSignInUrl } from "@/content/site";
+import { buildUrl } from "@/content/journey";
 
-// Prototype header: wordmark + a single universal menu control, at every
-// breakpoint. No inline nav links, no permanent CTA — both now live inside
-// the full-screen menu (see MobileNav, active on desktop too despite the
-// filename).
+// Wordmark, the two public actions, and one universal menu control.
+//
+// THE ACTIONS WERE MISSING ENTIRELY. Until this pass the masthead carried no
+// CTA and no sign-in at any breakpoint, so every acquisition action on the
+// site required opening the menu first and every returning athlete found a
+// "Sign In — Coming soon" label when they got there. The nav links themselves
+// stay in the menu: they are five editorial destinations and putting them
+// inline would turn this into an ordinary product toolbar.
+//
+// DESKTOP ONLY, and deliberately. At 390px the wordmark, two buttons and the
+// menu control do not fit without shrinking the wordmark to a logo-ish chip,
+// which is a worse trade than one extra tap. On mobile the same two actions
+// are the first things inside the menu, and the hero's own primary button is
+// visible without scrolling.
 //
 // bg-vv-bg here always resolves to the ivory :root tokens — Header isn't a
 // descendant of any .theme-dark section, so the custom property itself
@@ -20,7 +32,24 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-vv-line/70 bg-vv-bg/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-5 sm:px-8">
         <HeaderBrand />
-        <MobileNav />
+        <div className="flex items-center gap-3">
+          <div className="hidden items-center gap-2 sm:flex">
+            <CtaButton
+              href={buildUrl}
+              variant="cherry"
+              className="px-4 py-2 text-[11px] tracking-[0.12em]"
+            >
+              {nav.cta.label}
+            </CtaButton>
+            <Link
+              href={appSignInUrl}
+              className="font-head text-[11px] font-semibold uppercase tracking-[0.14em] text-vv-ink-dim transition-colors hover:text-vv-bronze-text"
+            >
+              {nav.signIn.label}
+            </Link>
+          </div>
+          <MobileNav />
+        </div>
       </div>
       {/* PHASE 4: MobileNav's link list only ever exists in the DOM via a
           client portal gated on hydration (useIsClient) — without JS, the

@@ -3,8 +3,10 @@ import PageIntro from "@/components/sections/PageIntro";
 import YearRound from "@/components/sections/YearRound";
 import SectionHeading from "@/components/ui/SectionHeading";
 import DeviceFrame from "@/components/ui/DeviceFrame";
+import Link from "next/link";
 import CtaButton from "@/components/ui/CtaButton";
 import { pages, valhallaProduct } from "@/content/site";
+import { buildUrl } from "@/content/journey";
 
 export const metadata: Metadata = {
   title: pages.valhalla.heading,
@@ -49,9 +51,14 @@ export default function ValhallaPage() {
         {/* CTA 1 OF 2 — same label, same destination as the closing one
             below. A visitor who is convinced by the explanation should not
             have to scroll past the screenshots to act on it, and a second
-            pricing section would turn one decision into two. */}
+            pricing section would turn one decision into two.
+
+            ENTRY-JOURNEY PASS: both occurrences were "See Standard Pricing".
+            This page is the editorial deep dive, so its conversion route is
+            now the build; the price stays one quiet link away below the
+            closing button rather than being the headline action. */}
         <div className="flex justify-center pt-14 sm:pt-16">
-          <CtaButton href={pages.valhalla.closingCta.href}>
+          <CtaButton href={buildUrl} variant="cherry">
             {pages.valhalla.closingCta.label}
           </CtaButton>
         </div>
@@ -81,11 +88,20 @@ export default function ValhallaPage() {
           </div>
         </div>
 
-        {/* CTA 2 OF 2 — the existing closing position, unchanged. */}
-        <div className="flex justify-center pb-24 sm:pb-32">
-          <CtaButton href={pages.valhalla.closingCta.href}>
+        {/* CTA 2 OF 2 — the existing closing position. The pricing link the
+            page used to lead with now sits under it, so a visitor who came
+            to compare cost still has the route without it being the thing
+            the page pushes. */}
+        <div className="flex flex-col items-center gap-5 pb-24 sm:pb-32">
+          <CtaButton href={buildUrl} variant="cherry">
             {pages.valhalla.closingCta.label}
           </CtaButton>
+          <Link
+            href={pages.valhalla.secondaryCta.href}
+            className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text transition-opacity hover:opacity-70"
+          >
+            {pages.valhalla.secondaryCta.label}
+          </Link>
         </div>
       </section>
     </>

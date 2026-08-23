@@ -10,12 +10,15 @@ const code = (src) => src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\
 // Every surface that talks to an athlete about the trial. Comments are stripped
 // before matching, because several of these files legitimately quote the older,
 // weaker wording while explaining why it changed.
+// ENTRY-JOURNEY PASS: /trial and BillingPeriodChoice are gone — the billing
+// period is chosen after the preview, inside the app, so the website no longer
+// has a page that asks for it. The surfaces that still talk to an athlete
+// about the trial are the three below, and they carry the same burden the
+// removed pair did: every claim about the model must survive here.
 const TRIAL_SURFACES = [
   'src/content/site.ts',
   'src/content/commerce.ts',
   'src/app/start/page.tsx',
-  'src/app/trial/page.tsx',
-  'src/components/sections/BillingPeriodChoice.tsx',
   'src/components/sections/PricingCard.tsx',
 ];
 
@@ -68,7 +71,7 @@ test('no surface implies cancellation is unnecessary to avoid being charged', ()
   // trial" and never says what happens next. Wherever the site says the trial
   // is free, the same surface must also say the subscription starts unless it
   // is cancelled.
-  for (const f of ['src/components/sections/PricingCard.tsx', 'src/components/sections/BillingPeriodChoice.tsx']) {
+  for (const f of ['src/components/sections/PricingCard.tsx', 'src/app/start/page.tsx']) {
     const src = code(read(f));
     if (!/free trial|trial is free/i.test(src)) continue;
     assert.match(src, /unless you cancel|Cancel before/i,
@@ -82,10 +85,24 @@ test('no surface implies the trial can be taken without choosing a period', () =
   const start = code(read('src/app/start/page.tsx'));
   const steps = start.slice(start.indexOf('const steps'), start.indexOf('];', start.indexOf('const steps')));
   assert.match(steps, /Choose monthly or annual/i, 'the period choice must be an explicit step');
-  // ...and it must come before the trial begins.
+  // ...and it must come before the trial begins. Reordering the list so the
+  // programme is built and seen first did not move these two relative to each
+  // other, and it must not: the period is what the subscription starts on.
   assert.ok(
     steps.indexOf('Choose monthly or annual') < steps.indexOf('free trial starts'),
     'the period is chosen BEFORE the trial starts, so it must be the earlier step'
+  );
+  // THE VALUE-FIRST ORDER ITSELF. The account and the card must both come
+  // after the programme has been built and shown — that is the whole point of
+  // the approved journey, and a later edit that quietly promotes either one
+  // back to the front should fail here rather than ship.
+  assert.ok(
+    steps.indexOf('builds your full programme') < steps.indexOf('Save it to your account'),
+    'the programme is built and shown before the athlete is asked to save it'
+  );
+  assert.ok(
+    steps.indexOf('Save it to your account') < steps.indexOf('Choose monthly or annual'),
+    'the account comes before the card, and both come after the plan'
   );
 });
 
@@ -95,7 +112,9 @@ test('no surface implies the trial can be taken without choosing a period', () =
 test('the programme is shown before any payment method is asked for', () => {
   const start = code(read('src/app/start/page.tsx'));
   const steps = start.slice(start.indexOf('const steps'), start.indexOf('];', start.indexOf('const steps')));
-  const programme = steps.indexOf('builds your programme');
+  // Wording moved with the reorder: "builds your programme" became
+  // "builds your full programme and shows it to you".
+  const programme = steps.indexOf('builds your full programme');
   const payment = steps.indexOf('payment method');
   assert.ok(programme > -1 && payment > -1, 'both steps must exist');
   assert.ok(programme < payment,

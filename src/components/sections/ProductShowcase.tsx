@@ -1,7 +1,9 @@
+import Link from "next/link";
 import SectionHeading from "@/components/ui/SectionHeading";
 import CtaButton from "@/components/ui/CtaButton";
 import DeviceFrame from "@/components/ui/DeviceFrame";
 import { valhallaProduct } from "@/content/site";
+import { buildUrl } from "@/content/journey";
 
 export default function ProductShowcase() {
   return (
@@ -59,8 +61,22 @@ export default function ProductShowcase() {
             ))}
           </ul>
 
-          <div className="mt-12 flex justify-center">
-            <CtaButton href={valhallaProduct.cta.href}>{valhallaProduct.cta.label}</CtaButton>
+          {/* CHERRY ON THE DARK GROUND. This is the strongest conversion
+              point on the homepage — the athlete has just seen the product's
+              real screens — so it carries the build action, in the same
+              accent the app's own builder uses. The dark section is exactly
+              why the accent splits by job: the fill stays deep and the 1px
+              rim supplies the boundary. See CtaButton and globals.css. */}
+          <div className="mt-12 flex flex-col items-center gap-5">
+            <CtaButton href={buildUrl} variant="cherry">
+              {valhallaProduct.cta.label}
+            </CtaButton>
+            <Link
+              href={valhallaProduct.secondaryCta.href}
+              className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text transition-opacity hover:opacity-70"
+            >
+              {valhallaProduct.secondaryCta.label}
+            </Link>
           </div>
         </div>
       </div>

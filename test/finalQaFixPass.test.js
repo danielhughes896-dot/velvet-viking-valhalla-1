@@ -79,16 +79,24 @@ test('LegalDocument section headings stay h2', () => {
 // ---------------------------------------------------------------------------
 // 3. MOBILE NAV — DISABLED "SIGN IN" CONTRAST
 // ---------------------------------------------------------------------------
-test('the disabled Sign In label no longer stacks opacity onto an already-muted token', () => {
+test('the Sign In label is a real link at a readable contrast, not a muted stub', () => {
+  // WAS: an assertion that the DISABLED Sign In label used the plain
+  // ink-faint token rather than ink-faint/50, because stacking 50% opacity on
+  // an already-muted token dropped it below AA. The label is no longer
+  // disabled — the entry-journey pass made it a live route to the app's
+  // account page — so the original defect cannot recur in that form. What is
+  // still worth holding is the contrast floor it was protecting: whatever
+  // this label is, it must not be an opacity-thinned token.
   const src = code(read('src/components/layout/MobileNav.tsx'));
   assert.ok(
     !/text-vv-ink-faint\/50/.test(src),
-    'the low-contrast opacity-50 variant must not be used for the disabled Sign In label'
+    'the low-contrast opacity-50 variant must not be used for the Sign In label'
   );
+  assert.match(src, /href=\{appSignInUrl\}/, 'Sign In must be a real link');
   assert.match(
     src,
-    /className="font-head text-xs font-semibold uppercase tracking-\[0\.2em\] text-vv-ink-faint"\s*>\s*\{nav\.signIn\.label\}/,
-    'the disabled Sign In label should use the plain (non-opacity-modified) ink-faint token'
+    /text-vv-ink-dim[^"]*"\s*>\s*\{nav\.signIn\.label\}/,
+    'an active link belongs on ink-dim, a full token step above the muted ink-faint'
   );
 });
 

@@ -1,6 +1,8 @@
+import Link from "next/link";
 import Crest from "@/components/ui/Crest";
 import CtaButton from "@/components/ui/CtaButton";
 import { hero } from "@/content/site";
+import { buildUrl } from "@/content/journey";
 
 // Two-tier composition:
 //   1. MASTER-BRAND MOMENT — crest, a thin gold rule, and the category
@@ -77,9 +79,21 @@ export default function Hero() {
           <p className="mt-6 max-w-lg text-balance text-base leading-relaxed text-vv-ink-dim sm:text-lg">
             {hero.sub}
           </p>
-          <CtaButton href={hero.cta.href} className="mt-8">
+          {/* BUILD FIRST. The primary action starts a plan; the editorial
+              deep dive stays reachable underneath it as a quiet link rather
+              than competing for the same visual weight. */}
+          <CtaButton href={buildUrl} variant="cherry" className="mt-8">
             {hero.cta.label}
           </CtaButton>
+          <p className="mt-4 max-w-xs text-center text-xs leading-relaxed text-vv-ink-faint">
+            {hero.ctaNote}
+          </p>
+          <Link
+            href={hero.secondaryCta.href}
+            className="mt-5 font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text transition-opacity hover:opacity-70"
+          >
+            {hero.secondaryCta.label}
+          </Link>
         </div>
       </div>
     </section>

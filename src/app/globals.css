@@ -1,51 +1,95 @@
 @import "tailwindcss";
 
 /*
-  PROTOTYPE PALETTE — v2, "warm ivory first". Refinement round 2 flips the
-  site's dominant identity: :root is now the warm-ivory/near-black system
-  (previously the override class, .theme-light); a small number of
-  sections stay deliberately dark via the new `.theme-dark` override,
-  where a dark section genuinely serves the scroll narrative (the pinned
-  campaign photo) or preserves the master-brand/product visual-language
-  split (ProductShowcase and the /valhalla screenshot block, which echo
-  Valhalla's own dark product UI rather than the editorial ivory world).
-  Gold is a restrained accent only — rules, small tracked labels, and the
-  CTA fill — never a dominant atmosphere. Every value below is
-  contrast-checked (WCAG AA); see report for the computed ratios. Not yet
-  reconciled with the live Valhalla app's own token set; that
-  reconciliation is a decision for the approval step, not this prototype.
+  RECONCILED PALETTE — "warm ivory first", now sharing one token layer with
+  the Valhalla app (repo velvet-viking-valhalla-2, main 7831de0).
 
-  The website has no user-facing theme toggle. Ivory (:root) is the
-  default, page-wide identity; .theme-dark is applied per <section> for
-  the few deliberately dark moments; .theme-light is kept (identical to
+  WHAT THIS SUPERSEDES. The block that used to head this file called itself
+  "PROTOTYPE PALETTE — v2" and closed by saying it was "not yet reconciled
+  with the live Valhalla app's own token set; that reconciliation is a
+  decision for the approval step, not this prototype." This is that approval
+  step. The audit that preceded it found the two products already shared
+  their FOUNDATION exactly — page #F4F1EA, ink #171717, the Cinzel/Oswald/
+  Inter families, and the 10/16/22 radius set — and had drifted on every
+  layer the athlete actually touches: two golds, two line colours, two sets
+  of muted inks, two dark ramps. Every value below that had drifted now
+  carries the app's own number, so the athlete crosses from the website into
+  the product without the ground changing under them.
+
+  WHAT IS DELIBERATELY NOT RECONCILED. This is a public brand surface, not
+  the application. The uppercase Oswald CTA register, the Cinzel display
+  scale, the editorial whitespace rhythm and the ivory-first identity are
+  the website's own and stay exactly as they were. Sharing a palette is not
+  the same as sharing an interface.
+
+  Ivory (:root) is the default, page-wide identity; .theme-dark is applied
+  per <section> for the few deliberately dark moments (ProductShowcase and
+  the /valhalla screenshot block, which echo Valhalla's own dark product UI
+  rather than the editorial ivory world); .theme-light is kept (identical to
   :root) purely so existing theme="light" call sites don't need to change.
+  The website still has no user-facing theme toggle.
 */
 :root {
   --vv-bg: #f4f1ea;
-  --vv-bg-2: #fbfaf7;
-  --vv-bg-3: #ebe7dc;
-  --vv-bg-4: #e2ddcd;
+  /* bg-2/3/4, the muted inks and both line tokens now carry the app's
+     [data-theme="light"] values character for character. The differences
+     were small enough to look like rounding and large enough to read as a
+     different system when the two surfaces sit a click apart. */
+  --vv-bg-2: #fcfbfb;
+  --vv-bg-3: #ebe5d8;
+  --vv-bg-4: #e2dac9;
   --vv-ink: #171717;
-  --vv-ink-dim: #55524c;
-  --vv-ink-faint: #6b655c;
-  --vv-line: #ddd7c8;
-  --vv-line-soft: #e8e3d5;
-  --vv-bronze: #c9a35a;
-  --vv-bronze-2: #ad8a4c;
-  --vv-gold: #c9a35a;
-  --vv-bronze-ink: #191204;
+  --vv-ink-dim: #514d45;
+  --vv-ink-faint: #5d574c;
+  --vv-line: #dad1bb;
+  --vv-line-soft: #e5decd;
+  /* THE APP'S BRONZE AND GOLD, exactly. The website ran a lighter, flatter
+     #c9a35a for both; the app's own values are a deeper bronze for fills
+     and a brighter gold for the metallic finish. Kept as two distinct
+     tokens here for the same reason the app keeps them: one is a surface
+     you press, the other is a highlight. #c0923f carries #1a1204 at 6.6:1,
+     comfortably past AA for the 13px semibold CTA label. */
+  --vv-bronze: #c0923f;
+  --vv-bronze-2: #9c7433;
+  --vv-gold: #e3b15a;
+  --vv-bronze-ink: #1a1204;
   --vv-gold-text: #7a5c1e;
   --vv-bronze-text: #7a5c1e;
-  --vv-gold-bright: #e9c878;
-  --vv-gold-mid: #c9a35a;
+  --vv-gold-bright: #f5d061;
+  --vv-gold-mid: #c0923f;
   --vv-gold-deep: #8a6d2b;
   --vv-gold-shadow-1: #7a5c1e;
   --vv-gold-shadow-2: #543e12;
+  /* ---------- CHERRY LACQUER ----------
+     THE APP'S INTERACTIVE ACCENT, imported unchanged and kept to a closed
+     set. In the product it means exactly three things — primary
+     interaction, progression, and a selected brand state — and the first of
+     those is defined there as "the button that moves the athlete forward".
+     On this site there is exactly one such button: the one that starts a
+     plan. It carries this accent so that the colour an athlete presses to
+     begin is the same colour they meet again inside the builder.
+
+     GOLD REMAINS THE BRAND. Every eyebrow, rule, crest, wordmark and
+     exploratory CTA is untouched and still gold. A scattered hex is how an
+     accent becomes a second brand, so these are tokens and the set stays
+     closed — see the test that enforces it.
+
+     LIGHT USES THE CANONICAL VALUE UNMODIFIED: #532d3a is 10.32:1 on the
+     ivory ground and carries white at 11.64:1 as a filled button. The app's
+     indicator/fill split exists only to solve a dark-mode contrast problem,
+     so here both jobs are the one value and the split is invisible. */
+  --vv-cherry: #532d3a;
+  --vv-cherry-fill: #532d3a;
+  --vv-cherry-line: rgba(83, 45, 58, 0.32);
+  --vv-cherry-soft: #efe4e8;
+  --vv-cherry-ink: #ffffff;
   --vv-radius-sm: 10px;
   --vv-radius: 16px;
   --vv-radius-lg: 22px;
-  --vv-shadow-sm: 0 4px 12px rgba(30, 26, 15, 0.08);
-  --vv-shadow: 0 10px 30px rgba(30, 26, 15, 0.12);
+  /* Warm shadow tint, matching the app's light theme. The old rgba(30,26,15)
+     read grey-green against the ivory it sits on. */
+  --vv-shadow-sm: 0 4px 12px rgba(90, 70, 30, 0.1);
+  --vv-shadow: 0 10px 30px rgba(90, 70, 30, 0.14);
   --vv-placeholder-bg: rgba(23, 23, 23, 0.05);
   --vv-placeholder-border: rgba(23, 23, 23, 0.14);
   color-scheme: light;
@@ -57,17 +101,22 @@
      change. Mirrors :root exactly. */
   --vv-bg: #f4f1ea;
   --vv-bg-2: #fbfaf7;
-  --vv-bg-3: #ebe7dc;
-  --vv-bg-4: #e2ddcd;
+  --vv-bg-3: #ebe5d8;
+  --vv-bg-4: #e2dac9;
   --vv-ink: #171717;
-  --vv-ink-dim: #55524c;
-  --vv-ink-faint: #6b655c;
-  --vv-line: #ddd7c8;
-  --vv-line-soft: #e8e3d5;
+  --vv-ink-dim: #514d45;
+  --vv-ink-faint: #5d574c;
+  --vv-line: #dad1bb;
+  --vv-line-soft: #e5decd;
   --vv-gold-text: #7a5c1e;
   --vv-bronze-text: #7a5c1e;
-  --vv-shadow-sm: 0 4px 12px rgba(30, 26, 15, 0.08);
-  --vv-shadow: 0 10px 30px rgba(30, 26, 15, 0.12);
+  --vv-cherry: #532d3a;
+  --vv-cherry-fill: #532d3a;
+  --vv-cherry-line: rgba(83, 45, 58, 0.32);
+  --vv-cherry-soft: #efe4e8;
+  --vv-cherry-ink: #ffffff;
+  --vv-shadow-sm: 0 4px 12px rgba(90, 70, 30, 0.1);
+  --vv-shadow: 0 10px 30px rgba(90, 70, 30, 0.14);
   --vv-placeholder-bg: rgba(23, 23, 23, 0.05);
   --vv-placeholder-border: rgba(23, 23, 23, 0.14);
   color-scheme: light;
@@ -75,18 +124,33 @@
 
 .theme-dark {
   /* Opt-in override for the handful of deliberately dark sections — see
-     the file-level note above for which and why. */
+     the file-level note above for which and why. Every value here is now
+     the app's own dark ramp, which is the ground its product screenshots
+     were taken on: these sections sit directly behind those screenshots,
+     so any drift showed up as a seam around the device frames. */
   --vv-bg: #151417;
-  --vv-bg-2: #1c1b1f;
-  --vv-bg-3: #242327;
-  --vv-bg-4: #2c2b30;
-  --vv-ink: #ece9e4;
-  --vv-ink-dim: #aca8a3;
-  --vv-ink-faint: #87837f;
-  --vv-line: #333136;
-  --vv-line-soft: #242327;
+  --vv-bg-2: #1b1a1e;
+  --vv-bg-3: #201f23;
+  --vv-bg-4: #26252a;
+  --vv-ink: #f4f1ea;
+  --vv-ink-dim: #bbb4a4;
+  --vv-ink-faint: #9d9787;
+  --vv-line: #302e36;
+  --vv-line-soft: #232126;
   --vv-gold-text: var(--vv-gold);
   --vv-bronze-text: var(--vv-bronze);
+  /* CHERRY LACQUER, DARK. The canonical #532d3a is 1.58:1 on #151417 — the
+     label would be legible but the CONTROL would have no boundary, which is
+     WCAG 1.4.11's 3:1 for non-text contrast and the difference between a
+     button and a smudge. The app solves this by splitting the accent by job
+     rather than lightening it: the fill stays genuinely dark (#7a2e42,
+     white at 9.14:1) and a 1px rim in the lifted #9a546c supplies the edge.
+     Both values are the app's, unmodified. */
+  --vv-cherry: #9a546c;
+  --vv-cherry-fill: #7a2e42;
+  --vv-cherry-line: rgba(154, 84, 108, 0.45);
+  --vv-cherry-soft: #9a546c;
+  --vv-cherry-ink: #ffffff;
   --vv-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
   --vv-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   --vv-placeholder-bg: rgba(255, 255, 255, 0.045);
@@ -112,6 +176,11 @@
   --color-vv-bronze-text: var(--vv-bronze-text);
   --color-vv-gold-bright: var(--vv-gold-bright);
   --color-vv-gold-deep: var(--vv-gold-deep);
+  --color-vv-cherry: var(--vv-cherry);
+  --color-vv-cherry-fill: var(--vv-cherry-fill);
+  --color-vv-cherry-line: var(--vv-cherry-line);
+  --color-vv-cherry-soft: var(--vv-cherry-soft);
+  --color-vv-cherry-ink: var(--vv-cherry-ink);
 
   --radius-vv-sm: var(--vv-radius-sm);
   --radius-vv: var(--vv-radius);

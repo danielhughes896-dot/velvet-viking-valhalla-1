@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Crest from "@/components/ui/Crest";
-import { brand, nav } from "@/content/site";
-import { commerceSeams } from "@/content/commerce";
+import CtaButton from "@/components/ui/CtaButton";
+import { brand, nav, appSignInUrl } from "@/content/site";
+import { buildUrl } from "@/content/journey";
 
 const subscribeNoop = () => () => {};
 
@@ -152,38 +153,30 @@ export default function MobileNav() {
                 </nav>
               </div>
               <div className="flex flex-col items-center gap-5 border-t border-vv-line-soft px-8 py-8">
-                {/* Returning-athlete entry, deliberately quiet (small tracked
-                    text, not a display link) so it reads as a secondary
-                    utility action rather than a fifth brand destination.
-                    Nullable seam: commerceSeams.signIn is null until the
-                    account/entitlement system lands, so this renders
-                    inactive rather than a fake sign-in link — same pattern
-                    as SocialLinks. */}
-                {commerceSeams.signIn ? (
-                  <Link
-                    href={commerceSeams.signIn}
-                    onClick={() => setOpen(false)}
-                    className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink-dim transition-colors hover:text-vv-bronze-text"
-                  >
-                    {nav.signIn.label}
-                  </Link>
-                ) : (
-                  <span
-                    aria-disabled="true"
-                    title="Coming soon"
-                    // FINAL QA FIX PASS: was text-vv-ink-faint/50 — stacking
-                    // 50% opacity on an already-muted token dropped this
-                    // below AA contrast for small text. The unmodified
-                    // token alone still reads as visually quieter than the
-                    // active links above (it's a full color-token step
-                    // down), so dropping the opacity modifier keeps the
-                    // "disabled" feel while meeting a real contrast floor.
-                    className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink-faint"
-                  >
-                    {nav.signIn.label}
-                    <span className="sr-only"> — Coming soon</span>
-                  </span>
-                )}
+                {/* THE TWO PUBLIC ACTIONS, both real.
+                    Build first, prominent; sign in clearly available under
+                    it. What used to sit here was a single inert "Sign In —
+                    Coming soon" label, gated on commerceSeams.signIn, while
+                    /start offered a working Sign In two clicks away — the
+                    site contradicted itself about whether accounts existed.
+                    They always did: the app has owned them throughout, so
+                    the gate is gone rather than the label. */}
+                <CtaButton
+                  href={buildUrl}
+                  variant="cherry"
+                  onClick={() => setOpen(false)}
+                  className="w-full max-w-xs"
+                >
+                  {nav.cta.label}
+                </CtaButton>
+
+                <Link
+                  href={appSignInUrl}
+                  onClick={() => setOpen(false)}
+                  className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink-dim transition-colors hover:text-vv-bronze-text"
+                >
+                  {nav.signIn.label}
+                </Link>
 
                 <Crest size={40} />
                 <p className="font-head text-[11px] uppercase tracking-[0.24em] text-vv-ink-faint">
