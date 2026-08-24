@@ -9,7 +9,13 @@ export default function HeaderBrand() {
     <Link
       href="/"
       aria-label="Velvet Viking — home"
-      className="font-display text-metallic text-[30px] font-bold uppercase tracking-[0.08em] whitespace-nowrap sm:text-[32px]"
+      // LAUNCH AUDIT: the wordmark rendered 274px wide at 30px, and a 360px
+      // phone leaves 312px between the header's own 24px gutters — 274 plus the
+      // 40px menu control is 314, so every page overflowed by 2px and could be
+      // dragged sideways. 360px is a real Android width, not a theoretical one.
+      // Dropped one step at the smallest sizes only; 390px and up are
+      // untouched, and whitespace-nowrap still stops it wrapping.
+      className="font-display text-metallic text-[26px] font-bold uppercase tracking-[0.08em] whitespace-nowrap min-[380px]:text-[30px] sm:text-[32px]"
     >
       Velvet Viking
     </Link>

@@ -73,7 +73,7 @@ export default function ProductShowcase() {
             </CtaButton>
             <Link
               href={valhallaProduct.secondaryCta.href}
-              className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text transition-opacity hover:opacity-70"
+              className="inline-flex min-h-11 items-center font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text transition-opacity hover:opacity-70"
             >
               {valhallaProduct.secondaryCta.label}
             </Link>

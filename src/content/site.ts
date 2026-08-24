@@ -162,6 +162,30 @@ export const hero = {
   },
 } as const;
 
+// THE MARK, AND WHAT IT MEANS.
+//
+// Placed on /philosophy rather than the homepage on purpose: this is the page
+// an athlete opens when they want to know what the brand actually believes,
+// and it is where "Earn Your Place" is already stated as a standard rather
+// than a slogan. Explaining the mark anywhere else would have made the site
+// read as its own brand-guidelines document.
+//
+// The meaning is HQ's and is preserved exactly — triangle, ascent, progress,
+// earning your place. The wording is set in this site's voice: short lines,
+// no adjectives doing work the shape already does.
+export const theMark = {
+  eyebrow: "The Mark",
+  heading: ["Built around", "The climb"],
+  body: "The Velvet Viking mark is built around ascent. At its centre, the triangle is progress: the continual climb toward something stronger.",
+  // Three lines, deliberately fragmentary. They are the argument the whole
+  // brand rests on, and they land harder unpunctuated by explanation.
+  lines: [
+    "Not where you started.",
+    "Not where you think you belong.",
+    "Where you earn your place.",
+  ],
+} as const;
+
 export const brandStory = {
   eyebrow: "Velvet Viking",
   // FINAL TYPOGRAPHY CONSISTENCY CHANGE: no full stop anywhere in this

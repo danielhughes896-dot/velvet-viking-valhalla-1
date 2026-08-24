@@ -56,7 +56,12 @@ export default function SupportPage() {
               <p className="mt-3">
                 <a
                   href={`mailto:${email}`}
-                  className="font-display text-xl font-semibold text-vv-ink underline decoration-vv-bronze underline-offset-4 hover:text-vv-bronze-text sm:text-2xl"
+                  // LAUNCH AUDIT: at 360px this address rendered 311px wide inside a
+                  // 278px card, pushing the page 8px sideways. It is the one
+                  // thing on the page somebody has to be able to read and copy,
+                  // so it keeps its weight and its rule and simply starts a step
+                  // smaller. break-all is the safety net, not the mechanism.
+                  className="font-display text-base font-semibold break-all text-vv-ink underline decoration-vv-bronze underline-offset-4 hover:text-vv-bronze-text min-[380px]:text-xl sm:text-2xl"
                 >
                   {email}
                 </a>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import Crest from "@/components/ui/Crest";
+import Mark from "@/components/ui/Mark";
 import CtaButton from "@/components/ui/CtaButton";
 import { brand, nav, appSignInUrl } from "@/content/site";
 import { buildUrl } from "@/content/journey";
@@ -178,7 +178,14 @@ export default function MobileNav() {
                   {nav.signIn.label}
                 </Link>
 
-                <Crest size={40} />
+                {/* THE MARK, NOT THE CREST, AT THIS SIZE. The circular crest
+                    carries a wordmark, "Valhalla Awaits" and "Earn Your Place"
+                    inside a 40px disc, where all three collapse into an
+                    illegible smudge. The mark is one shape and reads cleanly
+                    at any size, and this is a wayfinding slot — exactly where
+                    the primary Velvet Viking mark is intended. The crest keeps
+                    the hero, which is the size it was drawn for. */}
+                <Mark size={52} alt="" />
                 <p className="font-head text-[11px] uppercase tracking-[0.24em] text-vv-ink-faint">
                   {brand.name}
                 </p>
