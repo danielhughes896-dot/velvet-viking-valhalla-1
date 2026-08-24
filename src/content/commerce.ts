@@ -115,18 +115,31 @@ export const trial = {
   // the commercial entitlement/payment system is approved and connected —
   // see the Phase 3 brief. This is the single flag that decides whether
   // the site's trial copy can ever claim to be live.
-  // LAUNCH: flipped to true on HQ's explicit approval. The prerequisite this
-  // flag has always stood for is real: the trial exists in the commercial
-  // system rather than only in this site's copy — api/_products.js carries
-  // TRIAL_DAYS = 14 for both offers and api/_stripe.js sets
-  // trial_period_days from it with payment_method_collection 'always', which
-  // is the card-up-front, auto-converting model this site describes.
+  // BACK TO FALSE, and the reason is that the flag was answering the wrong
+  // question. It was flipped true because the trial is real in the app's
+  // commercial system — api/_products.js carries TRIAL_DAYS = 14 for both
+  // offers and api/_stripe.js sets trial_period_days from it with
+  // payment_method_collection 'always'. All of that is still true, and none of
+  // it is what a visitor reads this flag as.
   //
-  // WHAT THIS SWITCHES OFF is the "Not open yet" notice on /start. It does NOT
-  // switch on charging: that is VVV_COMMERCE_ENABLED in the app's environment,
-  // which belongs to Stripe commissioning and is deliberately not represented
-  // here. Until that flag is on, the app refuses checkout with commerce_disabled.
-  live: true,
+  // WHAT A VISITOR READS IT AS is "I can start a trial". They cannot. Public
+  // signup is CLOSED: an address that is not on the beta allowlist cannot become
+  // an account at all, and the refusal is a trigger on auth.users rather than a
+  // UI check, so there is no route through. A site that implies otherwise sends
+  // somebody to a door that will not open and calls it an invitation.
+  //
+  // The flag therefore tracks WHETHER SOMEBODY CAN ACTUALLY BUY, not whether the
+  // machinery behind the purchase exists. Two things must both be true before it
+  // goes back: public signup opens, and charging is switched on by
+  // VVV_COMMERCE_ENABLED in the app's environment. That variable belongs to
+  // Stripe commissioning and is deliberately not represented here; until it is
+  // on, the app refuses checkout with commerce_disabled.
+  //
+  // Do not open signup to make this sentence true. The direction of the fix is
+  // the copy following the product, never the other way round.
+  //
+  // WHAT THIS SWITCHES BACK ON is the "Not open yet" notice on /start.
+  live: false,
 } as const;
 
 // Handoff seams to the account/entitlement system System 3A1 is building.

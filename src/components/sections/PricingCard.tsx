@@ -23,10 +23,18 @@ const CURRENCY_SYMBOL: Record<string, string> = { GBP: "£" };
 // this component entirely.
 //
 // NOTHING HERE IS PURCHASABLE. Adding a second price does not add checkout
-// behaviour: the CTA still links to /start, which renders its own
-// not-open-yet state off `trial.live`, and the account/billing seams are
-// still the null URLs in commerceSeams. There is no billing-period choice
-// to submit anywhere, so none is offered.
+// behaviour: the account/billing seams are still the null URLs in
+// commerceSeams, and there is no billing-period choice to submit anywhere, so
+// none is offered.
+//
+// THIS CARD NOW STATES THAT ITSELF, and it did not used to. It delegated the
+// not-open-yet state to /start on the grounds that the CTA led there — true
+// when that comment was written, and no longer true: the entry-journey pass
+// pointed this button at the app builder instead. So the delegation quietly
+// stopped happening, and the page most likely to be read by somebody deciding
+// whether to buy was the one page showing two prices and a purchase CTA with
+// nothing saying they cannot yet act on either. A stale comment is how a page
+// keeps a promise it stopped keeping.
 export default function PricingCard() {
   const plan = plans.standard;
   // TWO BILLING PERIODS, ONE PLAN. Rendered from a list so both options go
@@ -97,6 +105,23 @@ export default function PricingCard() {
           the feature list on this card are untouched: a visitor who came
           here to check the cost still gets the answer, they are simply not
           asked to commit to a period to proceed. */}
+      {/* ABOVE THE BUTTON, NOT BELOW IT. Somebody reading a price card reads
+          downward and stops at the action; a caveat underneath is a caveat
+          they meet after deciding. Same wording and same flag as the notice on
+          /start, so the two pages cannot end up describing different states of
+          the same product. */}
+      {!trial.live ? (
+        <div className="mt-8 rounded-vv border border-vv-line bg-vv-bg px-5 py-4 text-center">
+          <p className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text">
+            Not open yet
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-vv-ink-dim">
+            Paid subscriptions aren’t switched on yet. Nothing here charges you or starts a
+            trial.
+          </p>
+        </div>
+      ) : null}
+
       <CtaButton href={buildUrl} variant="cherry" className="mt-8 w-full">
         {buildCta.label}
       </CtaButton>

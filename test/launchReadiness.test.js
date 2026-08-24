@@ -215,15 +215,20 @@ test('every secondary text CTA clears a 44px hit area', () => {
 // 5. NOTHING COMMERCIAL SWITCHED ON BY THIS PASS
 // ---------------------------------------------------------------------------
 test('the launch flags are exactly the two HQ approved, and no others moved', () => {
-  // OPENED, each with its prerequisite verified rather than assumed:
-  //   trial.live        the trial exists in the app's commercial system —
-  //                     TRIAL_DAYS = 14 in api/_products.js, applied by
-  //                     api/_stripe.js with payment_method_collection 'always'.
+  // OPENED, with its prerequisite verified rather than assumed:
   //   valueFirstLive    app main 58b5fb0 runs builder -> preview -> Save My
   //                     Plan -> auth, and pane-build mounts the nine-stage
   //                     BLD_STAGES builder, not a second questionnaire.
-  assert.match(code(read('src/content/commerce.ts')), /live:\s*true/);
   assert.match(code(read('src/content/journey.ts')), /valueFirstLive:\s*true/);
+
+  // CLOSED AGAIN, and this one was opened for the wrong reason rather than in
+  // error. The backend prerequisite it named is real and still true —
+  // TRIAL_DAYS = 14 in api/_products.js, applied by api/_stripe.js with
+  // payment_method_collection 'always'. What it did not check is whether a
+  // visitor can reach any of it, and they cannot: public signup is closed by a
+  // trigger on auth.users. A trial the site offers and the product refuses is
+  // the one launch flag that costs trust rather than time.
+  assert.match(code(read('src/content/commerce.ts')), /live:\s*false/);
 
   // STILL CLOSED. Legal publication is not this repository's to grant, and
   // each of these three still carries an unresolved decision inside its own

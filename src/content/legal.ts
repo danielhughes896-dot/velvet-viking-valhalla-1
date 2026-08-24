@@ -107,6 +107,140 @@ export const publicLegalLinks = [
   { label: "Cookies", href: "/cookies", approved: LEGAL_APPROVALS.cookies },
 ].filter((link) => link.approved);
 
+/**
+ * Effective date of the two documents published for the private beta.
+ *
+ * A real date rather than a placeholder, because these documents are actually
+ * live now: HQ gave publication approval for the five-person beta, and a policy
+ * with no effective date is not much of a policy. The commercial documents keep
+ * their placeholder — they have no effective date because they are not in force.
+ */
+export const BETA_LEGAL_EFFECTIVE_DATE = "17 August 2026";
+
+/**
+ * THE CANONICAL LEGAL DOCUMENT SET — the contract the app integrates against.
+ *
+ * WHY THIS EXISTS. Commissioning found that checkout asks the athlete to accept
+ * the app's own /terms and /privacy, and those describe the private beta. The
+ * athlete could therefore agree to evidence pointing at documents that do not
+ * describe the paid product they are buying. The fix has two halves, and this is
+ * the website's half: one address per document, and one identifier naming which
+ * document is actually in force there, so the app has one true address to point
+ * at instead of a copy of its own.
+ *
+ * WHAT `version` IS FOR. The app records `agreement_version` against an accepted
+ * Terms and carries `privacy_version` as context on that row. Today it records
+ * `terms_v1`, which names no document: it would mean the beta Terms on a row
+ * written yesterday and the commercial Terms on a row written after publication,
+ * and no reader of the table could tell the two apart. Every identifier below
+ * therefore says WHICH document it is. `beta_` and `commercial_` are different
+ * agreements, not two versions of one.
+ *
+ * WHY `version` GOES NULL RATHER THAN OPTIMISTIC. An unpublished document has no
+ * version in force, so this reports null and `published: false`. That is what
+ * stops the integration being wired to a document that does not exist yet: there
+ * is nothing to record, and the absence is readable rather than inferred. The
+ * identifier the commercial document WILL carry is stated separately, so the app
+ * can be built against it now and switched on by publication rather than by a
+ * second round of integration work.
+ *
+ * THE FLAGS ARE STILL THE GATE. Nothing here approves anything. These values are
+ * derived from LEGAL_APPROVALS, so publication remains the single edit it has
+ * always been, and this block cannot drift away from what the routes serve.
+ */
+export const CANONICAL_LEGAL_ORIGIN = "https://velvetviking.co.uk";
+
+export type CanonicalLegalDocument = {
+  /** The one public address for this document, for every surface that links it. */
+  url: string;
+  /** Identifier of the document in force at that URL, or null if none is. */
+  version: string | null;
+  /** Whether a real document — not a placeholder — is served there today. */
+  published: boolean;
+  /** Effective date of the document in force, or null if none is. */
+  effectiveDate: string | null;
+  /** The identifier the commercial document carries once it is published. */
+  commercialVersion: string;
+};
+
+export const CANONICAL_LEGAL: Record<"terms" | "privacy" | "cookies", CanonicalLegalDocument> = {
+  /*
+   * TERMS. Nothing is in force. The commercial Terms are unapproved, and the
+   * beta Terms are NOT a fallback here: they govern five invited testers and
+   * live at /beta-terms, so pointing a paying customer's checkout at them would
+   * be the same defect commissioning found, moved rather than fixed.
+   */
+  terms: {
+    url: `${CANONICAL_LEGAL_ORIGIN}/terms`,
+    version: LEGAL_APPROVALS.terms ? "commercial_terms_v1" : null,
+    published: LEGAL_APPROVALS.terms,
+    effectiveDate: null,
+    commercialVersion: "commercial_terms_v1",
+  },
+  /*
+   * PRIVACY. The one document with something real in force: the beta policy is
+   * approved and published, and it is accurate for today rather than for the
+   * commercial product. It is named `beta_privacy_v1` so a row recorded now
+   * cannot later be mistaken for the commercial notice that replaces it.
+   *
+   * Privacy is NOTICE, never consent. This identifier is presentation evidence —
+   * what the athlete was shown — and it must not become a checkbox. Article 9
+   * health consent is a separate mechanism in the app and stays separate.
+   */
+  privacy: {
+    url: `${CANONICAL_LEGAL_ORIGIN}/privacy`,
+    version: LEGAL_APPROVALS.privacyCommercial
+      ? "commercial_privacy_v1"
+      : LEGAL_APPROVALS.privacy
+        ? "beta_privacy_v1"
+        : null,
+    published: LEGAL_APPROVALS.privacyCommercial || LEGAL_APPROVALS.privacy,
+    effectiveDate: LEGAL_APPROVALS.privacyCommercial ? null : BETA_LEGAL_EFFECTIVE_DATE,
+    commercialVersion: "commercial_privacy_v1",
+  },
+  cookies: {
+    url: `${CANONICAL_LEGAL_ORIGIN}/cookies`,
+    version: LEGAL_APPROVALS.cookies ? "commercial_cookies_v1" : null,
+    published: LEGAL_APPROVALS.cookies,
+    effectiveDate: null,
+    commercialVersion: "commercial_cookies_v1",
+  },
+};
+
+/**
+ * WHAT STANDS BETWEEN THE COMMERCIAL DOCUMENTS AND PUBLICATION.
+ *
+ * Written down rather than reported, because a report is read once and a
+ * repository is read every time somebody asks whether these can be flipped yet.
+ *
+ * Solicitor review HAS happened, and its scope is the point. The reviewed item
+ * is the app's immediate-start acknowledgement, approved unchanged and shipping
+ * byte-identical as `immediate_start_v1`. That is one string inside checkout. It
+ * is not review of either document below, and neither document may be approved
+ * on the strength of it — which is the precise error this list exists to stop.
+ *
+ * Each blocker names a decision that is a solicitor's to make and nobody else's.
+ * Neither is a drafting gap: both documents are otherwise complete and match the
+ * verified commercial model. Resolve the decision, replace the TBC it sits in,
+ * set the effective date to the real publication date, then flip the flag.
+ */
+export const COMMERCIAL_LEGAL_BLOCKERS = [
+  {
+    document: "terms" as const,
+    flag: "LEGAL_APPROVALS.terms",
+    section: "12. Availability, changes and our responsibility to you",
+    decision:
+      "Whether a monetary liability cap belongs in a consumer contract of this kind. None is drafted: under the Consumer Rights Act 2015 an unreasonable cap is unenforceable and its presence can taint the surrounding clause, so the section is complete and enforceable as it stands. The decision is whether to add one, not to fill a gap.",
+  },
+  {
+    document: "privacy" as const,
+    flag: "LEGAL_APPROVALS.privacyCommercial",
+    section: "Information that can indicate something about your health",
+    decision:
+      "Which Article 9 condition applies to the health-indicating inputs, and whether the app's separate health-and-readiness consent discharges it. The app has since implemented that consent as its own versioned mechanism (health_data_consent_v1) — so the policy's premise that no consent step exists is now out of date and the paragraph needs rewriting to describe it — but whether it is sufficient is a legal question the implementation cannot answer.",
+  },
+];
+
 /** Placeholder token, so unresolved business facts are greppable before launch. */
 const TBC = (what: string) => `[TO BE CONFIRMED: ${what}]`;
 
@@ -163,16 +297,6 @@ export const entityDescription = (): string => {
   }
   return parts.length ? `${legalEntity.name} (${parts.join(", ")})` : legalEntity.name;
 };
-
-/**
- * Effective date of the two documents published for the private beta.
- *
- * A real date rather than a placeholder, because these documents are actually
- * live now: HQ gave publication approval for the five-person beta, and a policy
- * with no effective date is not much of a policy. The commercial documents keep
- * their placeholder — they have no effective date because they are not in force.
- */
-export const BETA_LEGAL_EFFECTIVE_DATE = "17 August 2026";
 
 /**
  * The statutory trading disclosure, assembled from whatever is actually known.

@@ -386,3 +386,113 @@ test('the renderer linkifies the support address and internal legal paths', () =
   // Narrow on purpose: a general autolinker in legal copy creates surprises.
   assert.match(doc, /privacy\|beta-terms\|terms\|cookies/);
 });
+
+// ---------------------------------------------------------------------------
+// THE CANONICAL DOCUMENT CONTRACT
+// ---------------------------------------------------------------------------
+//
+// Commissioning found that app checkout asks the athlete to accept the app's
+// own /terms and /privacy, and that those describe the private beta. So a
+// paying customer could accept evidence pointing at documents that do not
+// describe the paid product. CANONICAL_LEGAL is the website's half of the fix:
+// one address per document, and one identifier naming which document is in
+// force there. These tests hold the two properties that make it safe to
+// integrate against — it cannot name a version for an unpublished document,
+// and it cannot drift away from the approval flags.
+
+// `docBody` anchors on "export const <name>", which would match
+// CANONICAL_LEGAL_ORIGIN before CANONICAL_LEGAL. Anchor on the type annotation
+// so the slice is the record itself.
+const canonicalBody = () => {
+  const at = LEGAL.indexOf('export const CANONICAL_LEGAL: Record');
+  assert.ok(at !== -1, 'the canonical document set must exist');
+  return LEGAL.slice(at, LEGAL.indexOf('\n};', at));
+};
+
+test('the canonical set names one origin and one URL per document', () => {
+  const body = canonicalBody();
+  assert.match(LEGAL, /export const CANONICAL_LEGAL_ORIGIN = "https:\/\/velvetviking\.co\.uk"/);
+  for (const route of ['/terms', '/privacy', '/cookies']) {
+    assert.ok(
+      body.includes('${CANONICAL_LEGAL_ORIGIN}' + route),
+      `${route} must derive from the shared origin rather than repeat the host`
+    );
+  }
+  // The host is written once. A second literal is how the app and the website
+  // end up pointing at two different places that look like one.
+  assert.equal(
+    (LEGAL.match(/https:\/\/velvetviking\.co\.uk/g) || []).length, 1,
+    'exactly one origin literal'
+  );
+});
+
+test('an unpublished document reports no version, so nothing can record one', () => {
+  const body = canonicalBody();
+  // Every `version` is a conditional on a LEGAL_APPROVALS flag with null on the
+  // unapproved branch. An unconditional string here would hand the app an
+  // identifier for a document that is not published, which is the exact defect
+  // this contract exists to prevent.
+  for (const doc of ['terms', 'privacy', 'cookies']) {
+    const at = body.indexOf(doc + ': {');
+    assert.ok(at > -1, `${doc} must be in the canonical set`);
+    const entry = body.slice(at, body.indexOf('},', at));
+    assert.match(entry, /version:[\s\S]*LEGAL_APPROVALS/,
+      `${doc}.version must follow its approval flag`);
+    assert.match(entry, /published: /);
+  }
+  assert.match(body, /version: LEGAL_APPROVALS\.terms \? "commercial_terms_v1" : null/);
+  assert.match(body, /published: LEGAL_APPROVALS\.terms,/);
+});
+
+test('the commercial identifiers name their document, not just a number', () => {
+  const body = canonicalBody();
+  // `terms_v1` is what the app records today and it names no document: it would
+  // mean the beta Terms on one row and the commercial Terms on another, with
+  // nothing in the table to tell them apart. Every identifier is prefixed.
+  for (const id of ['commercial_terms_v1', 'commercial_privacy_v1', 'commercial_cookies_v1']) {
+    assert.ok(body.includes(id), `${id} must be declared`);
+  }
+  assert.ok(body.includes('beta_privacy_v1'), 'the in-force beta policy is named as beta');
+  assert.ok(!/"terms_v1"|"privacy_v1"/.test(body),
+    'a bare terms_v1/privacy_v1 would be ambiguous about which document it means');
+});
+
+test('the beta Terms are never offered as the canonical Terms', () => {
+  const body = canonicalBody();
+  const at = body.indexOf('terms: {');
+  const entry = body.slice(at, body.indexOf('},', at));
+  // /beta-terms governs five invited testers. Falling back to it when the
+  // commercial Terms are unpublished would move the defect rather than fix it.
+  assert.ok(!/beta/i.test(entry), 'no beta fallback on the commercial Terms entry');
+  // Comments stripped: the block explains WHY /beta-terms is excluded, and that
+  // sentence is not itself a route the contract offers.
+  const declarations = body
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/(^|[^:])\/\/[^\n]*/g, '$1');
+  assert.ok(!declarations.includes('/beta-terms'),
+    'the beta document must not be a canonical entry');
+});
+
+test('the publication blockers are recorded, and both remain open', () => {
+  const at = LEGAL.indexOf('export const COMMERCIAL_LEGAL_BLOCKERS');
+  assert.ok(at > -1, 'what stands between the drafts and publication must be written down');
+  const body = LEGAL.slice(at, LEGAL.indexOf('\n];', at));
+  // One per gated commercial document, each naming the flag it blocks.
+  assert.match(body, /flag: "LEGAL_APPROVALS\.terms"/);
+  assert.match(body, /flag: "LEGAL_APPROVALS\.privacyCommercial"/);
+  // And the flags they name are in fact still false — a blocker list that
+  // outlived its flags would be worse than none.
+  assert.match(LEGAL, /terms: false/);
+  assert.match(LEGAL, /privacyCommercial: false/);
+});
+
+test('solicitor approval of the immediate-start wording is not treated as approval of the documents', () => {
+  // The reviewed item is one string inside the app's checkout, shipping as
+  // immediate_start_v1. It is not review of either document here, and the
+  // repository must not imply that it is.
+  const at = LEGAL.indexOf('export const COMMERCIAL_LEGAL_BLOCKERS');
+  const preamble = LEGAL.slice(LEGAL.lastIndexOf('/**', at), at);
+  assert.match(preamble, /immediate.start/i,
+    'the scope of the review that HAS happened must be stated where it could be misread');
+  assert.match(preamble, /immediate_start_v1/);
+});

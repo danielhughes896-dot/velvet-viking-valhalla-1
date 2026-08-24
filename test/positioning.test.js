@@ -147,11 +147,12 @@ test('both prices render through the same markup, so neither can be styled as su
 
 test('adding a second price added no purchase behaviour', () => {
   const commerce = code(read('src/content/commerce.ts'));
-  // trial.live is TRUE at launch, by explicit HQ approval and with the trial
-  // verified real in the app's own commercial system. Charging is still gated
-  // outside this repository (VVV_COMMERCE_ENABLED), which is why "fail-closed"
-  // now means "no billing code and no seams here", not "the flag is false".
-  assert.match(commerce, /live:\s*true/);
+  // trial.live is FALSE. It tracks whether somebody can actually buy, not
+  // whether the machinery exists: public signup is closed by a trigger on
+  // auth.users, so no visitor can start a trial however real the backend is.
+  // Fail-closed therefore means both things at once here — the flag is false
+  // AND there is no billing code or seam on this side.
+  assert.match(commerce, /live:\s*false/);
   assert.match(commerce, /createAccount:\s*null/);
   assert.match(commerce, /signIn:\s*null/);
 
@@ -234,6 +235,6 @@ test('the gated claims that remain gated', () => {
   assert.match(legal, /terms:\s*false/);
   assert.match(legal, /cookies:\s*false/);
   assert.match(legal, /privacyCommercial:\s*false/);
-  assert.match(code(read('src/content/commerce.ts')), /live:\s*true/,
-    'trial.live opened at launch; the gates below are the ones that stayed shut');
+  assert.match(code(read('src/content/commerce.ts')), /live:\s*false/,
+    'trial.live closed again: signup is shut, so the trial cannot be offered');
 });

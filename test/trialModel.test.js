@@ -160,7 +160,8 @@ test('the legal gates are untouched and commerce stays fail-closed', () => {
   const legal = code(read('src/content/legal.ts'));
   assert.match(legal, /terms:\s*false/, 'Terms must remain unapproved');
   assert.match(legal, /cookies:\s*false/, 'Cookies must remain unapproved');
-  // trial.live opened at launch on HQ's approval; the legal gates above did
-  // not, and they are the ones this test exists to hold.
-  assert.match(code(read('src/content/commerce.ts')), /live:\s*true/);
+  // trial.live is closed again too: it briefly opened on the strength of the
+  // backend being ready, which is not the same fact as a visitor being able to
+  // sign up, and signup is shut. So all four gates below are now false together.
+  assert.match(code(read('src/content/commerce.ts')), /live:\s*false/);
 });

@@ -141,12 +141,13 @@ test('the statutory company details are real, not placeholders', () => {
 // 4. NOTHING COMMERCIAL SWITCHED ON, AND THE BETA DOOR IS INTACT
 // ---------------------------------------------------------------------------
 test('commerce remains fail-closed and no payment code exists on the website', () => {
-  // trial.live is TRUE at launch, by explicit HQ approval and with the trial
-  // verified real in the app's own commercial system. Charging is still gated
-  // outside this repository (VVV_COMMERCE_ENABLED), which is why "fail-closed"
-  // now means "no billing code and no seams here", not "the flag is false".
+  // Fail-closed on both counts again. trial.live is FALSE because public signup
+  // is closed by a trigger on auth.users, so no visitor can start the trial
+  // however complete the app's commercial system is; and charging remains gated
+  // outside this repository by VVV_COMMERCE_ENABLED. Neither is a claim this
+  // site is entitled to make on its own.
   const commerce = code(read('src/content/commerce.ts'));
-  assert.match(commerce, /live:\s*true/);
+  assert.match(commerce, /live:\s*false/);
   for (const f of srcFiles()) {
     const src = code(read(f));
     for (const rx of [/\bstripe\b/i, /sk_(live|test)_/, /price_[A-Za-z0-9]{6,}/, /entitlement/i]) {

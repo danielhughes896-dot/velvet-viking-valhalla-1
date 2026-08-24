@@ -166,13 +166,13 @@ test('no payment provider, checkout or card-collection code exists anywhere in t
 });
 
 test('the website still owns no account or billing seam of its own', () => {
-  // LAUNCH: trial.live is TRUE. HQ approved it and the prerequisite is real —
-  // api/_products.js carries TRIAL_DAYS = 14 for both offers and api/_stripe.js
-  // sets trial_period_days from it with payment_method_collection 'always'.
-  // What stays closed is what this site never controlled: charging is
-  // VVV_COMMERCE_ENABLED in the app's environment.
+  // trial.live is FALSE again. The backend prerequisite is real and unchanged —
+  // TRIAL_DAYS = 14 in api/_products.js, applied by api/_stripe.js with
+  // payment_method_collection 'always' — but public signup is closed by a
+  // trigger on auth.users, so no visitor can reach any of it. The flag follows
+  // whether a trial can be started, not whether one could be honoured.
   const commerce = code(read('src/content/commerce.ts'));
-  assert.match(commerce, /live:\s*true/);
+  assert.match(commerce, /live:\s*false/);
   assert.match(commerce, /createAccount:\s*null/, 'the account seam is still null — the app owns accounts');
   assert.match(commerce, /signIn:\s*null/, 'the sign-in seam is still null');
 });

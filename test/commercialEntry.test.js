@@ -195,13 +195,16 @@ test('no password journey is invented for an auth model that has none', () => {
 
 test('nothing here activates commerce, and the flag still says so', () => {
   const commerce = code(read('src/content/commerce.ts'));
-  /* trial.live is TRUE, flipped on HQ's explicit launch approval and verified
-     against the backend: api/_products.js carries TRIAL_DAYS = 14 for both
-     offers and api/_stripe.js applies it with payment_method_collection
-     'always'. What this test still holds is the part that was never this
-     site's to switch: no payment provider, no checkout call, no entitlement.
-     Charging is VVV_COMMERCE_ENABLED in the app's environment. */
-  assert.match(commerce, /live:\s*true/);
+  /* BACK TO FALSE. The flag was flipped true because the trial is real in the
+     app's commercial system, which it is — api/_products.js carries
+     TRIAL_DAYS = 14 and api/_stripe.js applies it with
+     payment_method_collection 'always'. But that is not the question a visitor
+     asks it. Public signup is closed by a trigger on auth.users, so nobody
+     outside the beta allowlist can start anything, and a site that says
+     otherwise points at a door that will not open.
+     Two things must both be true before it goes back: signup opens, and
+     charging is switched on by VVV_COMMERCE_ENABLED in the app's environment. */
+  assert.match(commerce, /live:\s*false/);
   const start = code(read('src/app/start/page.tsx'));
   const terms = code(read('src/components/sections/TrialTerms.tsx'));
   for (const src of [start, terms]) {
