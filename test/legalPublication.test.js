@@ -6,19 +6,22 @@ const path = require('path');
 
 // LEGAL PUBLICATION TESTS.
 //
-// Four documents sit in @/content/legal at TWO different approval states, and
-// nearly every test here exists to stop that boundary collapsing:
+// Five documents sit in @/content/legal at two approval states, and nearly
+// every test here exists to stop that boundary collapsing:
 //
-//   PUBLISHED  privacyDraft   -> /privacy       HQ-approved for the private beta
-//              betaTermsDraft -> /beta-terms    HQ-approved for the private beta
-//   GATED      termsDraft     -> /terms         future commercial ToS, unapproved
-//              cookiesDraft   -> /cookies       accurate, outside the approval
+//   PUBLISHED  termsDraft             -> /terms    commercial, 24 Aug 2026
+//              privacyCommercialDraft -> /privacy  commercial, 24 Aug 2026
+//              betaTermsDraft         -> /beta-terms   private beta
+//              privacyDraft           -> superseded at /privacy, kept as record
+//   GATED      cookiesDraft           -> /cookies  accurate, approved by nobody
 //
-// The failure guarded against is a future "publish the legal pages" change
-// flipping one shared flag and putting an unreviewed commercial terms of service
-// live — representing as approved a document nobody has approved. That is worse
-// than the beta shipping with no commercial terms at all, which is why the gates
-// are per-document and why these tests are specific about which is which.
+// The failure guarded against has not changed, only which document it would
+// hit. It was a "publish the legal pages" change flipping one shared flag and
+// taking an unreviewed commercial contract live with the beta set. The
+// commercial set has since been reviewed in full and published on the
+// founder's approval; the cookie policy has not, is just as finished, and is
+// exactly the document a careless "publish everything" would sweep along. Its
+// gate is why these tests stay specific about which document is which.
 const ROOT = path.join(__dirname, '..');
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const LEGAL = read('src/content/legal.ts');
@@ -28,25 +31,29 @@ const docBody = (name) => {
   return LEGAL.slice(at, LEGAL.indexOf('\n};', at));
 };
 
+// Grouped by what the route actually serves today. /terms moved across on
+// 24 August 2026; /cookies is what "gated" now means, on its own.
 const PUBLISHED = [
   ['src/app/privacy/page.tsx', 'privacyDraft', 'privacy'],
   ['src/app/beta-terms/page.tsx', 'betaTermsDraft', 'betaTerms'],
+  ['src/app/terms/page.tsx', 'termsDraft', 'terms'],
 ];
 const GATED = [
-  ['src/app/terms/page.tsx', 'termsDraft', 'terms'],
   ['src/app/cookies/page.tsx', 'cookiesDraft', 'cookies'],
 ];
 
 // ---------------------------------------------------------------------------
 // THE GATE BOUNDARY
 // ---------------------------------------------------------------------------
-test('the two beta documents are approved and the two commercial ones are not', () => {
+test('the commercial set is approved, and the cookie policy still is not', () => {
   const at = LEGAL.indexOf('export const LEGAL_APPROVALS');
   const block = LEGAL.slice(at, LEGAL.indexOf('} as const;', at));
   assert.match(block, /privacy: true/);
   assert.match(block, /betaTerms: true/);
-  assert.match(block, /terms: false/, 'the commercial terms of service must stay gated');
-  assert.match(block, /cookies: false/, 'the cookie policy is outside the beta approval');
+  assert.match(block, /terms: true/, 'the commercial terms published on 24 August 2026');
+  assert.match(block, /privacyCommercial: true/, 'and so did the commercial privacy policy');
+  assert.match(block, /cookies: false/,
+    'the cookie policy was in no approval given and must not follow the others through');
 });
 
 test('the future commercial gate is preserved as its own named thing', () => {
@@ -92,15 +99,27 @@ test('each page reads its own gate, and only its own', () => {
 // ---------------------------------------------------------------------------
 test('the published documents carry a real effective date, not a placeholder', () => {
   assert.match(LEGAL, /export const BETA_LEGAL_EFFECTIVE_DATE = "\d{1,2} \w+ \d{4}"/);
+  assert.match(LEGAL, /export const COMMERCIAL_LEGAL_EFFECTIVE_DATE = "\d{1,2} \w+ \d{4}"/);
+  // TWO DATES, NOT ONE. The beta set and the commercial set went live on
+  // different days under different approvals, and each document carries the
+  // date of its own publication. Sharing a constant would lose the distinction
+  // exactly where somebody needs it: working out which document a given
+  // athlete was shown, and when.
   for (const name of ['privacyDraft', 'betaTermsDraft']) {
-    const body = docBody(name);
-    assert.match(body, /lastUpdated: BETA_LEGAL_EFFECTIVE_DATE/, name);
-    assert.ok(!/lastUpdated: TBC\(/.test(body), name + ' must not ship a placeholder date');
+    assert.match(docBody(name), /lastUpdated: BETA_LEGAL_EFFECTIVE_DATE/, name);
   }
-  // A document not in force has no effective date, so the gated pair keep theirs.
-  for (const name of ['termsDraft', 'cookiesDraft']) {
-    assert.match(docBody(name), /lastUpdated: TBC\(/, name + ' is not in force');
+  for (const name of ['termsDraft', 'privacyCommercialDraft']) {
+    assert.match(docBody(name), /lastUpdated: COMMERCIAL_LEGAL_EFFECTIVE_DATE/, name);
   }
+  for (const name of ['privacyDraft', 'betaTermsDraft', 'termsDraft', 'privacyCommercialDraft']) {
+    assert.ok(!/lastUpdated: TBC\(/.test(docBody(name)), name + ' must not ship a placeholder date');
+  }
+  // NOT BACKDATED. The commercial documents were unpublished until the day
+  // they carry; asserting an earlier one would claim somebody was bound by
+  // wording they could not have read.
+  assert.match(LEGAL, /export const COMMERCIAL_LEGAL_EFFECTIVE_DATE = "24 August 2026"/);
+  // A document not in force has no effective date, so the gated one keeps its.
+  assert.match(docBody('cookiesDraft'), /lastUpdated: TBC\(/, 'cookiesDraft is not in force');
 });
 
 test('no placeholder token can appear in either published document', () => {
@@ -285,11 +304,21 @@ test('the support address is the only contact address anywhere', () => {
 // ---------------------------------------------------------------------------
 test('beta terms are kept out of the public sitemap, privacy stays in', () => {
   const sitemap = read('src/app/sitemap.ts');
+  // Comments stripped: the file explains WHY /beta-terms is excluded, and that
+  // sentence is not a route it offers.
+  const declarations = sitemap
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/(^|[^:])\/\/[^\n]*/g, '$1');
   assert.ok(
-    !/beta-terms/.test(sitemap),
+    !/beta-terms/.test(declarations),
     'an invited-testers document does not belong in a public sitemap'
   );
-  assert.match(sitemap, /"\/privacy"/, 'the Privacy Policy is public and stays in the sitemap');
+  // Privacy reaches the sitemap through publicLegalLinks, the same gate-driven
+  // list the footer uses, rather than through a literal somebody must maintain.
+  assert.match(sitemap, /publicLegalLinks/,
+    'the published legal documents reach the sitemap through their gates');
+  assert.ok(!/"\/privacy"/.test(sitemap),
+    'a hard-coded copy alongside the derived list is how the two drift apart');
 });
 
 test('beta terms stay noindex, and privacy no longer does', () => {
@@ -344,15 +373,14 @@ test('the public footer link list is derived from LEGAL_APPROVALS, not a static 
 });
 
 test('only approved legal documents currently reach the public footer', () => {
-  // Cross-checks the gate-boundary test above (privacy: true, terms/cookies:
-  // false) against how publicLegalLinks actually filters, without executing
-  // TypeScript: with today's gate state, Privacy's `approved` is `true` and
-  // Terms/Cookies' are `false`, so the .filter(link => link.approved) call
-  // keeps Privacy alone.
+  // Cross-checks the gate-boundary test above against how publicLegalLinks
+  // actually filters, without executing TypeScript: with today's gate state
+  // Privacy and Terms are `true` and Cookies is `false`, so the
+  // .filter(link => link.approved) call keeps those two and drops the third.
   const at = LEGAL.indexOf('export const LEGAL_APPROVALS');
   const gates = LEGAL.slice(at, LEGAL.indexOf('} as const;', at));
   assert.match(gates, /privacy: true/);
-  assert.match(gates, /terms: false/);
+  assert.match(gates, /terms: true/);
   assert.match(gates, /cookies: false/);
 });
 
@@ -473,17 +501,16 @@ test('the beta Terms are never offered as the canonical Terms', () => {
     'the beta document must not be a canonical entry');
 });
 
-test('the publication blockers are recorded, and both remain open', () => {
+test('the blocker list survives as a mechanism, and is empty because both closed', () => {
   const at = LEGAL.indexOf('export const COMMERCIAL_LEGAL_BLOCKERS');
-  assert.ok(at > -1, 'what stands between the drafts and publication must be written down');
-  const body = LEGAL.slice(at, LEGAL.indexOf('\n];', at));
-  // One per gated commercial document, each naming the flag it blocks.
-  assert.match(body, /flag: "LEGAL_APPROVALS\.terms"/);
-  assert.match(body, /flag: "LEGAL_APPROVALS\.privacyCommercial"/);
-  // And the flags they name are in fact still false — a blocker list that
-  // outlived its flags would be worse than none.
-  assert.match(LEGAL, /terms: false/);
-  assert.match(LEGAL, /privacyCommercial: false/);
+  assert.ok(at > -1, 'the mechanism that holds an unapproved document shut must not be deleted');
+  const body = LEGAL.slice(at, LEGAL.indexOf('\n', LEGAL.indexOf('= [];', at)));
+  assert.match(body, /= \[\]/, 'both entries closed on the 24 August 2026 full-document approval');
+  // Empty because resolved, not because the list was thrown away: the entries
+  // are gone only now that the decisions they named are written INTO the
+  // documents. legalPack and launchReadiness hold that wording.
+  assert.match(LEGAL, /terms: true/);
+  assert.match(LEGAL, /privacyCommercial: true/);
 });
 
 test('solicitor approval of the immediate-start wording is not treated as approval of the documents', () => {

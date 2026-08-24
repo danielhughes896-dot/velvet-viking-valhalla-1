@@ -101,19 +101,41 @@ test('the Sign In label is a real link at a readable contrast, not a muted stub'
 });
 
 // ---------------------------------------------------------------------------
-// 4. SITEMAP — UNPUBLISHED TERMS / COOKIES
+// 4. SITEMAP — LEGAL ROUTES FOLLOW THEIR GATES
 // ---------------------------------------------------------------------------
-test('the sitemap excludes gated, noindexed routes and keeps published ones', () => {
+test('the sitemap derives its legal routes from the approval gates', () => {
   const sitemap = code(read('src/app/sitemap.ts'));
-  assert.ok(!/"\/terms"/.test(sitemap), '/terms is still gated and must not appear in the sitemap');
-  assert.ok(!/"\/cookies"/.test(sitemap), '/cookies is still gated and must not appear in the sitemap');
+  /* WAS a hand-maintained "/privacy" literal in the routes array, with a
+     comment telling whoever flipped a LEGAL_APPROVALS gate to remember to come
+     back and add the route. That instruction was missed the first time it
+     mattered: the commercial Terms published and the sitemap still advertised
+     only /privacy. The failure is silent in both directions — a live contract
+     hidden from crawlers, or a gated placeholder offered to them — so the list
+     is now derived from publicLegalLinks, which is the same gate-driven list
+     the footer renders. A document is offered for indexing exactly when it is
+     offered to a reader. */
+  assert.match(sitemap, /import \{ publicLegalLinks \} from "@\/content\/legal"/);
+  assert.match(sitemap, /publicLegalLinks\.map\(\(link\) => link\.href\)/);
+  assert.ok(
+    !/"\/(terms|cookies|privacy)"/.test(sitemap),
+    'no legal route may be hard-coded alongside the derived list — that is how the two drift apart'
+  );
   assert.ok(!/beta-terms/.test(sitemap), '/beta-terms stays out of the public sitemap');
-  assert.match(sitemap, /"\/privacy"/, 'the Privacy Policy is public and must stay in the sitemap');
-  assert.match(sitemap, /"\/valhalla"/);
-  assert.match(sitemap, /"\/pricing"/);
-  assert.match(sitemap, /"\/start"/);
-  assert.match(sitemap, /"\/philosophy"/);
-  assert.match(sitemap, /"\/about"/);
+  // The non-legal routes are still a plain list, because nothing gates them.
+  for (const r of ['/valhalla', '/pricing', '/start', '/philosophy', '/about', '/support']) {
+    assert.ok(sitemap.includes(`"${r}"`), `${r} must be listed`);
+  }
+});
+
+test('the gates the sitemap follows are the published ones, and cookies is not', () => {
+  // The other half of the chain above: derivation is only correct if what it
+  // derives from is correct. publicLegalLinks filters on these three.
+  const legal = code(read('src/content/legal.ts'));
+  const at = legal.indexOf('export const LEGAL_APPROVALS');
+  const block = legal.slice(at, legal.indexOf('} as const;', at));
+  assert.match(block, /privacy: true/, 'the Privacy Policy is published and belongs in the sitemap');
+  assert.match(block, /terms: true/, 'the commercial Terms published on 24 August 2026');
+  assert.match(block, /cookies: false/, 'the cookie policy is approved by nobody and stays out');
 });
 
 test('the gated routes still exist as real pages, only excluded from the sitemap', () => {

@@ -1,40 +1,47 @@
 // ---------------------------------------------------------------------------
-// LEGAL CONTENT — TWO DOCUMENTS PUBLISHED, TWO STILL GATED
+// LEGAL CONTENT — THE COMMERCIAL SET IS PUBLISHED; COOKIES IS NOT
 // ---------------------------------------------------------------------------
 //
-// This file holds four documents at two different approval states, and the
-// difference between them is the most important thing in it.
+// This file holds five documents at two different approval states, and the
+// difference between them is still the most important thing in it.
 //
-// PUBLISHED, for the five-person invited private beta, on HQ's explicit
-// publication approval:
-//     privacyDraft    -> /privacy
+// PUBLISHED COMMERCIALLY on 24 August 2026, on the founder's full-document
+// approval following solicitor review of the complete documents:
+//     termsDraft              -> /terms      commercial_terms_v1
+//     privacyCommercialDraft  -> /privacy    commercial_privacy_v1
+//
+// PUBLISHED EARLIER, for the five-person invited private beta, and kept rather
+// than edited so the record of what those testers were shown stays intact:
+//     privacyDraft    -> superseded at /privacy by the commercial policy
 //     betaTermsDraft  -> /beta-terms
 //
-// NOT PUBLISHED, and not approved by anybody:
-//     termsDraft      -> /terms      the FUTURE COMMERCIAL terms of service
-//     cookiesDraft    -> /cookies    accurate, but outside the beta approval
+// STILL GATED, and approved by nobody:
+//     cookiesDraft    -> /cookies    accurate, but outside every approval given
 //
-// WHY THIS IS NOT ONE FLAG ANY MORE. It used to be: a single
-// LEGAL_CONTENT_APPROVED gated all four. HQ has approved two documents, so
-// flipping that flag would also have published an unreviewed commercial terms of
-// service — representing as approved a document nobody has approved, which is a
-// worse outcome than the beta shipping without terms at all. Per-document gates
-// make each state explicit, independently auditable, and impossible to change by
-// accident: publishing the commercial terms now requires editing the line that
-// says commercial terms, and says false.
+// WHY THIS IS NOT ONE FLAG. It used to be: a single LEGAL_CONTENT_APPROVED
+// gated everything. Per-document gates are what let the beta publish without
+// dragging an unreviewed commercial contract along with it, and they are what
+// now let the commercial set publish while the cookie policy — correct, but
+// never approved — stays where it is. Publishing any one of them requires
+// editing the line that names that document.
 //
 // Bracketed [TO BE CONFIRMED: ...] strings are business facts genuinely unknown
 // to this repository. They are deliberately NOT invented, and nothing renders
-// them to a visitor — see isConfirmed() and tradingDisclosure below.
+// them to a visitor — see isConfirmed() and tradingDisclosure below. None
+// remains in a published document; the cookie policy keeps its effective-date
+// placeholder because it has no effective date until it is published.
 //
-// STILL FOR A SOLICITOR, and parked by HQ until after this private trial:
-//   - lawful basis wording for each processing purpose under UK GDPR
-//   - whether the training data collected is "data concerning health" under
-//     Art 9, and what condition would then apply
+// RESOLVED BY THE FULL-DOCUMENT REVIEW, and written into the documents:
+//   - lawful basis: Article 6(1)(b) for providing the service, with Article
+//     9(2)(a) explicit consent for the health-indicating inputs only
+//   - the liability cap: the greater of twelve months' subscription fees or
+//     £100, over the exclusions that cannot lawfully be limited and over the
+//     defective-digital-content remedy
+//   - the refund and cancellation regime
+//
+// STILL OPEN, and outside the scope of what was approved:
 //   - whether ICO registration/fee is required for this processing
-//   - enforceability/scope of the IP and anti-scraping provisions in Terms §7
-//   - liability caps and consumer-law carve-outs (Terms §9)
-//   - the refund/cancellation regime, before any paid access exists
+//   - approval of the cookie policy
 // ---------------------------------------------------------------------------
 
 /**
@@ -51,28 +58,37 @@ export const LEGAL_APPROVALS = {
   betaTerms: true,
 
   /**
-   * FUTURE COMMERCIAL TERMS OF SERVICE — NOT APPROVED, NOT REVIEWED.
+   * COMMERCIAL TERMS OF SERVICE — APPROVED AND PUBLISHED, 24 August 2026.
    *
-   * This is the gate the previous audit was told to preserve, and it is
-   * separate from the beta approval on purpose. It describes subscriptions,
-   * trials, cancellation and refunds, none of which exist yet. It must not be
-   * published on the strength of a beta approval, and must not be published at
-   * all until a solicitor has reviewed it and paid access actually exists.
+   * This gate stayed false through several passes that were entitled to flip
+   * it and did not, because approval of the beta documents was never approval
+   * of this one and the liability section still carried an open question. Both
+   * conditions are now met: the founder has given full-document approval, and
+   * the liability cap it was waiting on is decided and written into section 12
+   * — the greater of twelve months' subscription fees or £100, over the
+   * exclusions that cannot lawfully be limited.
+   *
+   * It publishes the commercial contract, not a description of one. Do not
+   * flip it back to stage a draft; unpublishing a live consumer contract is a
+   * different act from never having published it.
    */
-  terms: false,
+  terms: true,
 
   /**
-   * COMMERCIAL PRIVACY POLICY — NOT APPROVED.
+   * COMMERCIAL PRIVACY POLICY — APPROVED AND PUBLISHED, 24 August 2026.
    *
-   * Separate from `privacy` above, and deliberately so. The live policy is
-   * approved and ACCURATE FOR TODAY: no payments, no Strava traffic, no
-   * Garmin. Editing it in place to describe subscriptions and payment
-   * processors would push unreviewed wording onto an approved, published
-   * document, and would describe processing that is not happening yet.
-   * privacyCommercialDraft replaces it at commercial launch, the same way
-   * termsDraft replaces betaTermsDraft.
+   * Separate from `privacy` above, and still separate for a reason: this one
+   * replaces that one at /privacy rather than editing it, so the beta policy
+   * remains intact as the record of what was published to the five testers
+   * before today.
+   *
+   * The Article 9 question that held it is resolved. The health section now
+   * states Article 6(1)(b) for providing the service and Article 9(2)(a)
+   * explicit consent for the health-indicating inputs, and describes the
+   * consent mechanism the app actually ships rather than the absence the draft
+   * used to record.
    */
-  privacyCommercial: false,
+  privacyCommercial: true,
 
   /**
    * Cookie policy. Its content was verified as accurate against the live site
@@ -85,6 +101,12 @@ export const LEGAL_APPROVALS = {
 /**
  * The commercial legal set, preserved as a single named gate so "have the
  * commercial documents been approved" stays answerable in one place.
+ *
+ * CURRENTLY FALSE, and correctly so. Terms and the commercial Privacy Policy
+ * published on 24 August 2026; the cookie policy did not, because it was in
+ * neither approval. So the SET is not complete even though two thirds of it is
+ * live, and this flag reports the set rather than the majority. It flips when
+ * the cookie policy is approved, and not before.
  */
 export const COMMERCIAL_LEGAL_APPROVED =
   LEGAL_APPROVALS.terms && LEGAL_APPROVALS.cookies;
@@ -112,10 +134,26 @@ export const publicLegalLinks = [
  *
  * A real date rather than a placeholder, because these documents are actually
  * live now: HQ gave publication approval for the five-person beta, and a policy
- * with no effective date is not much of a policy. The commercial documents keep
- * their placeholder — they have no effective date because they are not in force.
+ * with no effective date is not much of a policy.
  */
 export const BETA_LEGAL_EFFECTIVE_DATE = "17 August 2026";
+
+/**
+ * Effective date of the commercial Terms and commercial Privacy Policy.
+ *
+ * THE DAY THEY WERE PUBLISHED, not the day they were drafted and not the day
+ * the review concluded. Backdating a consumer contract would assert that
+ * somebody was bound by wording they could not have read, which is the one
+ * thing an effective date exists to prevent. These documents were unpublished
+ * until this date and say so by carrying it.
+ *
+ * Separate constant from the beta date above rather than a shared one: the two
+ * sets went live on different days, for different audiences, under different
+ * approvals, and collapsing them would lose the distinction at exactly the
+ * point somebody needs it — working out which document a given athlete agreed
+ * to, and when.
+ */
+export const COMMERCIAL_LEGAL_EFFECTIVE_DATE = "24 August 2026";
 
 /**
  * THE CANONICAL LEGAL DOCUMENT SET — the contract the app integrates against.
@@ -165,23 +203,24 @@ export type CanonicalLegalDocument = {
 
 export const CANONICAL_LEGAL: Record<"terms" | "privacy" | "cookies", CanonicalLegalDocument> = {
   /*
-   * TERMS. Nothing is in force. The commercial Terms are unapproved, and the
-   * beta Terms are NOT a fallback here: they govern five invited testers and
-   * live at /beta-terms, so pointing a paying customer's checkout at them would
-   * be the same defect commissioning found, moved rather than fixed.
+   * TERMS. commercial_terms_v1, in force since 24 August 2026. The beta Terms
+   * are still NOT a fallback here in any state: they govern five invited
+   * testers and live at /beta-terms, so pointing a paying customer's checkout
+   * at them would be the same defect commissioning found, moved rather than
+   * fixed. If this flag ever goes false again, the answer is null, not beta.
    */
   terms: {
     url: `${CANONICAL_LEGAL_ORIGIN}/terms`,
     version: LEGAL_APPROVALS.terms ? "commercial_terms_v1" : null,
     published: LEGAL_APPROVALS.terms,
-    effectiveDate: null,
+    effectiveDate: LEGAL_APPROVALS.terms ? COMMERCIAL_LEGAL_EFFECTIVE_DATE : null,
     commercialVersion: "commercial_terms_v1",
   },
   /*
-   * PRIVACY. The one document with something real in force: the beta policy is
-   * approved and published, and it is accurate for today rather than for the
-   * commercial product. It is named `beta_privacy_v1` so a row recorded now
-   * cannot later be mistaken for the commercial notice that replaces it.
+   * PRIVACY. commercial_privacy_v1 replaced beta_privacy_v1 at this address on
+   * 24 August 2026. Both identifiers stay in the code because both are real:
+   * rows recorded before today name the beta policy, rows recorded after name
+   * the commercial one, and neither should be readable as the other.
    *
    * Privacy is NOTICE, never consent. This identifier is presentation evidence —
    * what the athlete was shown — and it must not become a checkbox. Article 9
@@ -195,51 +234,59 @@ export const CANONICAL_LEGAL: Record<"terms" | "privacy" | "cookies", CanonicalL
         ? "beta_privacy_v1"
         : null,
     published: LEGAL_APPROVALS.privacyCommercial || LEGAL_APPROVALS.privacy,
-    effectiveDate: LEGAL_APPROVALS.privacyCommercial ? null : BETA_LEGAL_EFFECTIVE_DATE,
+    effectiveDate: LEGAL_APPROVALS.privacyCommercial
+      ? COMMERCIAL_LEGAL_EFFECTIVE_DATE
+      : LEGAL_APPROVALS.privacy
+        ? BETA_LEGAL_EFFECTIVE_DATE
+        : null,
     commercialVersion: "commercial_privacy_v1",
   },
+  /* COOKIES. Still unpublished, so still no version and no effective date. */
   cookies: {
     url: `${CANONICAL_LEGAL_ORIGIN}/cookies`,
     version: LEGAL_APPROVALS.cookies ? "commercial_cookies_v1" : null,
     published: LEGAL_APPROVALS.cookies,
-    effectiveDate: null,
+    effectiveDate: LEGAL_APPROVALS.cookies ? COMMERCIAL_LEGAL_EFFECTIVE_DATE : null,
     commercialVersion: "commercial_cookies_v1",
   },
 };
-
 /**
- * WHAT STANDS BETWEEN THE COMMERCIAL DOCUMENTS AND PUBLICATION.
+ * WHAT STOOD BETWEEN THE COMMERCIAL DOCUMENTS AND PUBLICATION, AND HOW IT WENT.
  *
- * Written down rather than reported, because a report is read once and a
- * repository is read every time somebody asks whether these can be flipped yet.
+ * Kept as an empty list rather than deleted. The list is the mechanism: a
+ * future commercial document that is drafted but not approved gets an entry
+ * here, and the entry is what stops somebody flipping its flag because the
+ * implementation looks finished. Deleting it would take the mechanism away
+ * along with the two resolved items.
  *
- * Solicitor review HAS happened, and its scope is the point. The reviewed item
- * is the app's immediate-start acknowledgement, approved unchanged and shipping
- * byte-identical as `immediate_start_v1`. That is one string inside checkout. It
- * is not review of either document below, and neither document may be approved
- * on the strength of it — which is the precise error this list exists to stop.
+ * Both original entries are closed by the founder's full-document approval of
+ * 24 August 2026, which followed solicitor review of the complete documents
+ * rather than of one clause:
  *
- * Each blocker names a decision that is a solicitor's to make and nobody else's.
- * Neither is a drafting gap: both documents are otherwise complete and match the
- * verified commercial model. Resolve the decision, replace the TBC it sits in,
- * set the effective date to the real publication date, then flip the flag.
+ *   TERMS section 12 — the liability cap. Decided: the greater of the
+ *   subscription fees paid in the preceding twelve months, or £100, sitting
+ *   under the exclusions that cannot lawfully be limited and not touching the
+ *   defective-digital-content remedy. Written into the section.
+ *
+ *   PRIVACY, the health section — the Article 9 condition. Decided:
+ *   Article 6(1)(b) remains the basis for providing the service, and Article
+ *   9(2)(a) explicit consent covers the health-indicating inputs only. The
+ *   section now describes the consent the app actually ships rather than the
+ *   absence the draft recorded, and two factual corrections were made with it:
+ *   withdrawal renders retained covered data INERT rather than purging or
+ *   anonymising it, and consent under Article 9 does not drag the service's
+ *   Article 6 basis over to consent.
+ *
+ * The immediate-start acknowledgement remains what it always was — separately
+ * reviewed, separately approved, and shipping byte-identical as
+ * `immediate_start_v1` in the app. It is not part of either document here.
  */
-export const COMMERCIAL_LEGAL_BLOCKERS = [
-  {
-    document: "terms" as const,
-    flag: "LEGAL_APPROVALS.terms",
-    section: "12. Availability, changes and our responsibility to you",
-    decision:
-      "Whether a monetary liability cap belongs in a consumer contract of this kind. None is drafted: under the Consumer Rights Act 2015 an unreasonable cap is unenforceable and its presence can taint the surrounding clause, so the section is complete and enforceable as it stands. The decision is whether to add one, not to fill a gap.",
-  },
-  {
-    document: "privacy" as const,
-    flag: "LEGAL_APPROVALS.privacyCommercial",
-    section: "Information that can indicate something about your health",
-    decision:
-      "Which Article 9 condition applies to the health-indicating inputs, and whether the app's separate health-and-readiness consent discharges it. The app has since implemented that consent as its own versioned mechanism (health_data_consent_v1) — so the policy's premise that no consent step exists is now out of date and the paragraph needs rewriting to describe it — but whether it is sufficient is a legal question the implementation cannot answer.",
-  },
-];
+export const COMMERCIAL_LEGAL_BLOCKERS: {
+  document: "terms" | "privacy" | "cookies";
+  flag: string;
+  section: string;
+  decision: string;
+}[] = [];
 
 /** Placeholder token, so unresolved business facts are greppable before launch. */
 const TBC = (what: string) => `[TO BE CONFIRMED: ${what}]`;
@@ -485,8 +532,8 @@ export const termsDraft: LegalDocument = {
   sub: "The agreement between you and Velvet Viking when you use Valhalla.",
   preamble:
     "These terms set out what you can expect from Valhalla, what we expect from you, and the limits of both. They are written to be read, not to be survived. If anything here is unclear, ask us before you subscribe.",
-  // Set when HQ approves publication, not by whoever last edited the file.
-  lastUpdated: TBC("effective date, set on publication"),
+  // The real publication date, set on publication and not backdated.
+  lastUpdated: COMMERCIAL_LEGAL_EFFECTIVE_DATE,
   sections: [
     {
       heading: "1. Who we are",
@@ -601,9 +648,8 @@ export const termsDraft: LegalDocument = {
         "We may change or remove features as the product develops. If we make a change that materially reduces what you are paying for, we will tell you and you may cancel.",
         "We do not exclude or limit our liability where it would be unlawful to do so. That includes liability for death or personal injury caused by our negligence, for fraud or fraudulent misrepresentation, and for anything else that cannot lawfully be excluded.",
         "Otherwise, we are responsible for loss you suffer that is a foreseeable result of our breaking these terms or failing to use reasonable care and skill. We are not responsible for loss that was not foreseeable, or for business losses, since Valhalla is supplied for personal use.",
-        TBC(
-          "liability cap, if any — for the solicitor, not for System. No monetary cap has been drafted: under the Consumer Rights Act 2015 an unreasonable cap in a consumer contract is unenforceable and its presence can taint the surrounding clause. This section is complete and enforceable as it stands. Decide whether to add one, rather than assuming one is missing.",
-        ),
+        "Subject to the two paragraphs above, our total liability to you for everything connected with Valhalla is limited to the greater of two amounts: the subscription fees you paid us in the twelve months before the claim arose, or £100.",
+        "That limit does not reach the liabilities we have just said we do not exclude, and it does not apply to defective digital content: if something we supply damages your device or your other digital content because we failed to use reasonable care and skill, we will repair the damage or compensate you, and the limit does not cut that short.",
       ],
     },
     {
@@ -707,7 +753,7 @@ export const privacyCommercialDraft: LegalDocument = {
   sub: "What Valhalla stores about your training, why, and what you can do about it.",
   preamble:
     "This policy explains what personal data we collect when you use Valhalla, what we use it for, who else is involved, how long we keep it, and the rights you have. It describes what the product actually does. Where something is switched off, it says so rather than describing it as if it were running.",
-  lastUpdated: TBC("effective date, set on publication"),
+  lastUpdated: COMMERCIAL_LEGAL_EFFECTIVE_DATE,
   sections: [
     {
       heading: "Who is responsible for your data",
@@ -737,9 +783,15 @@ export const privacyCommercialDraft: LegalDocument = {
         "Some of what Valhalla holds is ordinary training information — distance, pace, the days you can run. Some of it is not so easily categorised. Heart rate, how you slept, how your legs feel, an entry saying you are unwell or in pain, and the readiness assessments built from them can all say something about your physical condition.",
         "We do not treat everything as health data, because that would be inaccurate, and we do not pretend none of it is, because that would be worse. Where you tell Valhalla you are injured, in pain or ill, that is information about your health, and you are choosing to give it to us so the product can respond to it.",
         "You are never required to provide it. The check-in is optional, notes are optional, and Valhalla works without them, with less to go on.",
-        TBC(
-          "Article 9 condition for the health-indicating categories above — THE ONE SUBSTANTIVE LEGAL DECISION LEFT, and a solicitor's, not System's. The ordinary account, subscription and training processing rests on the contract between us. That does not by itself resolve Article 9, and this draft does not pretend it does. The likely answer for the optional inputs that can reveal health — heart rate, sleep, injury or pain, how you feel — is explicit consent, which would require the app to ask for it, and today the app does not. Decide the condition, then decide whether a consent step must ship before this policy is published. Confirmed by System: none of this information is sent to monday.com or to Stripe, none of it is used for advertising, and none of it feeds a secondary analytics warehouse.",
-        ),
+        "The lawful basis for running Valhalla is our contract with you — Article 6(1)(b) of the UK GDPR. That covers your account, your subscription and the ordinary training processing that produces your plan. Providing the service has never rested on your consent, and it does not now.",
+        "The health-indicating information above needs something more, because special-category data does. For that, and only that, we rely on your explicit consent under Article 9(2)(a). The two sit together: the contract is why we can run the service, and your explicit consent is why we can use heart rate, sleep, readiness answers, how a session felt, and what your notes say about pain, illness or how you slept.",
+        "We ask for that consent separately, and it looks like what it is. It is a single opt-in that starts unticked, on the same panel as the heart-rate fields it governs, recorded against the version identifier health_data_consent_v1. Consent is never inferred from something else you did: not from accepting these terms, not from creating an account, not from paying, not from entering a heart rate, and not from reaching the end of setup. Leaving it unticked is recorded as a decision not to consent, which is why we do not keep asking.",
+        "Declining costs you the readings, not the product. Valhalla still builds and adapts your plan, still scores your sessions, and still tells you what to do next. The controls that collect the covered information are simply not shown, with one line saying why. A session scored without heart rate gets exactly the score an athlete who never owned a chest strap would get; a missing reading is never read as poor readiness.",
+        "You can withdraw at any time from Settings, using the same switch in both directions. From that moment we stop collecting the covered information and stop using it: typed, imported and device-supplied heart rate are refused, and your stored heart-rate profile values are cleared. Where a connected service such as Strava sends us an activity, the covered fields are removed before the activity is written down, so without valid consent they are never stored rather than stored and ignored.",
+        "What withdrawal does not do is erase your past. Covered information you logged while consent was in place is retained and becomes inert: it is excluded from every coaching decision, target and longitudinal reading for as long as consent is absent, and it is not processed at all rather than kept under some other justification. We say this plainly because the opposite claim is the tempting one — withdrawal is not a purge, and we are not going to describe it as one. Erasure is a separate right, it is handled separately, and you can ask us for it.",
+        "Your consent record is kept as its own append-only history — each decision, its version and when it was made, and no later edit to what an earlier decision said. If the purpose ever materially changes, the version changes with it and every consent to the old version stops counting until you are asked again. The record holds nothing about your body, so it survives an erasure of the health information itself: it is the evidence that what we already did was lawful when we did it.",
+        "Distance, pace, time, splits, completion, rating of perceived effort, benchmarks, race results, pace zones and your own note text are ordinary training data and are not inside this boundary. They are processed for every athlete under the contract, consented or not, and withdrawing consent leaves them untouched.",
+        "None of this information is sent to monday.com or to Stripe, none of it is used for advertising, and none of it feeds a secondary analytics warehouse.",
       ],
     },
     {

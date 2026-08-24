@@ -10,12 +10,21 @@ const code = (src) => src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\
 // ---------------------------------------------------------------------------
 // 1. NOTHING BECAME APPROVED BY BEING FINISHED
 // ---------------------------------------------------------------------------
-test('completing the drafts did not publish any of them', () => {
+test('publication followed approval, and only where approval was given', () => {
+  /* WAS "completing the drafts did not publish any of them", and it was the
+     right test for two years of passes in which the documents were finished
+     and nobody had approved them. What published them is not that they were
+     finished: it is the founder's full-document approval of 24 August 2026,
+     following solicitor review of the complete Terms and Privacy rather than
+     of a single clause. The distinction this test now holds is that the
+     approval was specific — the cookie policy is just as finished, was not
+     part of it, and did not travel along with the other two. */
   const legal = code(read('src/content/legal.ts'));
-  assert.match(legal, /terms:\s*false/, 'Terms must stay unapproved');
-  assert.match(legal, /cookies:\s*false/, 'Cookies must stay unapproved');
-  assert.match(legal, /privacyCommercial:\s*false/, 'the commercial privacy draft must stay unapproved');
-  // The live beta policy keeps its existing approval, untouched.
+  assert.match(legal, /terms:\s*true/, 'the commercial Terms are published');
+  assert.match(legal, /privacyCommercial:\s*true/, 'the commercial Privacy Policy is published');
+  assert.match(legal, /cookies:\s*false/,
+    'the cookie policy was in neither approval and must not ride along with them');
+  // The beta documents keep their existing approvals, untouched.
   assert.match(legal, /privacy:\s*true/);
   assert.match(legal, /betaTerms:\s*true/);
 });

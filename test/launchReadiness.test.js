@@ -236,9 +236,12 @@ test('the launch flags are exactly the two HQ approved, and no others moved', ()
   // commercial privacy policy, the Article 9 condition. A flag flipped here
   // would assert an approval nobody has given.
   const legal = code(read('src/content/legal.ts'));
-  assert.match(legal, /terms:\s*false/);
+  // Terms and privacyCommercial opened on 24 August 2026, on the founder's
+  // full-document approval after solicitor review of the complete documents —
+  // not on the strength of the one clause that had been reviewed before.
+  assert.match(legal, /terms:\s*true/);
+  assert.match(legal, /privacyCommercial:\s*true/);
   assert.match(legal, /cookies:\s*false/);
-  assert.match(legal, /privacyCommercial:\s*false/);
   // Public commercial claims nobody has approved.
   assert.match(legal, /foundingPriceLock:\s*false/);
   assert.match(legal, /subscriptionPause:\s*false/);
@@ -250,21 +253,31 @@ test('the launch flags are exactly the two HQ approved, and no others moved', ()
   assert.match(commerce, /signIn:\s*null/);
 });
 
-test('the legal drafts that stay unpublished still carry their open decisions', () => {
-  // The reason terms/cookies/privacyCommercial are false is not that the
-  // documents are missing — they are written. It is that each still contains
-  // an unresolved [TO BE CONFIRMED] that a person, not this repository, must
-  // settle. If those disappear, the flags become a real decision to make.
+test('no published document carries a placeholder, and the unpublished one still does', () => {
+  /* WAS "the legal drafts that stay unpublished still carry their open
+     decisions", which held the flags shut by pointing at the [TO BE CONFIRMED]
+     inside each. Two of those three are now resolved and published, so the
+     test inverts: what matters is that resolution came BEFORE publication and
+     that nothing shipped with a placeholder still in it.
+     The cookie policy keeps its own, and keeps its gate with it. */
   const legal = read('src/content/legal.ts');
   const between = (a, b) => legal.slice(legal.indexOf(a), legal.indexOf(b));
-  assert.match(between('const termsDraft', 'const cookiesDraft'), /TBC\(/,
-    'Terms still has an open item; publishing it would assert an approval nobody gave');
-  assert.match(between('const cookiesDraft', 'const privacyCommercialDraft'), /TBC\(/);
-  assert.match(between('const privacyCommercialDraft', 'const betaTermsDraft'), /Article 9/,
-    'the Article 9 condition is the one substantive legal decision left');
-  // The two that ARE published contain none.
-  assert.ok(!/TBC\(/.test(between('const privacyDraft', 'const termsDraft')),
-    'the published privacy policy must contain no placeholders');
+  for (const [name, from, to] of [
+    ['privacyDraft', 'const privacyDraft', 'const termsDraft'],
+    ['termsDraft', 'const termsDraft', 'const cookiesDraft'],
+    ['privacyCommercialDraft', 'const privacyCommercialDraft', 'const betaTermsDraft'],
+  ]) {
+    assert.ok(!/TBC\(/.test(between(from, to)), name + ' is published and must carry no placeholder');
+  }
+  assert.match(between('const cookiesDraft', 'const privacyCommercialDraft'), /TBC\(/,
+    'the cookie policy is unpublished and still has no effective date');
+  // The two resolved decisions are decided IN the documents, not merely removed.
+  assert.match(between('const termsDraft', 'const cookiesDraft'), /the greater of two amounts/,
+    'the liability cap must be stated, not deleted');
+  assert.match(between('const privacyCommercialDraft', 'const betaTermsDraft'), /Article 9\(2\)\(a\)/,
+    'the Article 9 condition must be named, not dropped');
+  assert.match(between('const privacyCommercialDraft', 'const betaTermsDraft'), /Article 6\(1\)\(b\)/,
+    'and the service basis stays contract, not consent');
 });
 
 // ---------------------------------------------------------------------------

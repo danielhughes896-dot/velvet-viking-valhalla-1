@@ -64,7 +64,10 @@ test('/gallery is listed in the sitemap, and /beta-terms is still excluded', () 
   const sitemap = code(read('src/app/sitemap.ts'));
   assert.match(sitemap, /"\/gallery"/);
   assert.ok(!/beta-terms/.test(sitemap), '/beta-terms must stay out of the public sitemap');
-  assert.match(sitemap, /"\/privacy"/, 'the Privacy Policy must stay in the sitemap');
+  // The legal routes are no longer literals here — they are derived from
+  // publicLegalLinks, so they follow their approval gates rather than somebody
+  // remembering to edit this array. finalQaFixPass.test.js holds that chain.
+  assert.match(sitemap, /publicLegalLinks/, 'legal routes come from the gated list');
 });
 
 test('the gallery route has no robots noindex override — it is meant to be indexable', () => {

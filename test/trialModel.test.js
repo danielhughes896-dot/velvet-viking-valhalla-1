@@ -158,7 +158,10 @@ test('no refund, notice-period or guarantee wording is fabricated', () => {
 
 test('the legal gates are untouched and commerce stays fail-closed', () => {
   const legal = code(read('src/content/legal.ts'));
-  assert.match(legal, /terms:\s*false/, 'Terms must remain unapproved');
+  // Terms and the commercial privacy policy published on 24 August 2026, on
+  // full-document approval. Cookies did not: it was in no approval given.
+  assert.match(legal, /terms:\s*true/);
+  assert.match(legal, /privacyCommercial:\s*true/);
   assert.match(legal, /cookies:\s*false/, 'Cookies must remain unapproved');
   // trial.live is closed again too: it briefly opened on the strength of the
   // backend being ready, which is not the same fact as a visitor being able to

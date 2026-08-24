@@ -232,9 +232,9 @@ test('the gated claims that remain gated', () => {
   const legal = code(read('src/content/legal.ts'));
   assert.match(legal, /foundingPriceLock:\s*false/, 'the public founding-price claim is not approved');
   assert.match(legal, /subscriptionPause:\s*false/, 'there is no athlete-facing pause trigger yet');
-  assert.match(legal, /terms:\s*false/);
+  // The commercial Terms and Privacy are published; the cookie policy is not,
+  // and that is the gate this test still guards.
   assert.match(legal, /cookies:\s*false/);
-  assert.match(legal, /privacyCommercial:\s*false/);
   assert.match(code(read('src/content/commerce.ts')), /live:\s*false/,
     'trial.live closed again: signup is shut, so the trial cannot be offered');
 });
