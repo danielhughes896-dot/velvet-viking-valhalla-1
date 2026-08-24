@@ -44,7 +44,17 @@ const appOrigin = "https://app.velvetviking.co.uk";
 /** First-time entry: the app's plan builder. */
 export const appUrl = `${appOrigin}/start`;
 
-/** Returning athlete: their own account, not the first-time builder. */
+/**
+ * Returning athlete: their own account, not the first-time builder.
+ *
+ * Two passes added this independently, which is a fair sign it was needed. The
+ * other declared it as a second absolute literal; this one hangs off appOrigin
+ * so the host is still written down exactly once. The reasoning is the same in
+ * both: the app serves a separate sign-in surface at /account, so "build a
+ * plan" and "sign in" are two real destinations rather than one URL behind two
+ * labels — which is what they were, and which meant somebody who already had
+ * an account was sent to the page that starts one.
+ */
 export const appSignInUrl = `${appOrigin}/account`;
 
 // THE TWO PUBLIC ACTIONS, NAMED ONCE.
@@ -541,42 +551,39 @@ export const pages = {
     sub: "One plan. Everything Valhalla does.",
     body: "No tiers to compare, nothing held back for later. Standard is Valhalla, in full.",
   },
-  // BILLING PREFERENCE STEP — the page the pricing CTA now lands on, sitting
-  // between /pricing and /start. Its whole job is one choice: how Standard
-  // continues once the free trial ends. Eyebrow is "Standard" rather than
-  // "Velvet Viking" to match /pricing and /start, the two pages either side
-  // of it in this journey, so the eyebrow keeps reading as "which plan am I
-  // in" all the way down the funnel.
-  //
-  // Deliberately says nothing comparative about the two periods. No savings
-  // figure, no effective monthly rate, no recommendation — the same rule the
-  // pricing card follows, for the same reason.
-  // pages.trial IS DELIBERATELY GONE. It held the heading, sub and body for
-  // /trial, the billing-preference step. That step asked which period an
-  // athlete wanted before they had seen a single session of their own
-  // programme, and the approved journey moves that choice behind the preview,
-  // inside the app. The route, its component and this copy went together
-  // rather than leaving an unreachable page and orphan strings behind.
-  //
-  // NOTHING ABOUT THE TRIAL ITSELF CHANGED. Its duration, the card-up-front
-  // requirement, the period choice and the automatic conversion all still
-  // live in content/commerce.ts and are still stated on /pricing and /start.
+  // THE BILLING PREFERENCE STEP IS GONE, and so is its copy. It sat between
+  // /pricing and /start and asked one question — monthly or annual — that the
+  // app asks again, properly, at the point the answer actually does something.
+  // Two pages asking the same question is not a funnel, it is a queue, and the
+  // one in the middle collected an answer nothing could act on. /trial now
+  // redirects to /start; see next.config.ts for why a redirect rather than a
+  // deletion. What was worth keeping from it — both prices, and the sentence
+  // about what happens when the trial ends — moved into /start, where the
+  // athlete is about to do something with it.
   start: {
     eyebrow: "Standard",
-    // SUPERSEDES "CREATE YOUR ACCOUNT", which was itself an approved change
-    // from "Start Your Trial". Both were accurate descriptions of a journey
-    // that no longer exists. Under the approved value-first order the account
-    // is not the first thing that happens here and not what this page is
-    // for — the programme is built and shown first, and the account arrives
-    // when the athlete wants to keep it. A page headed "Create Your Account"
-    // sitting behind a button labelled "Build My Plan" would restate exactly
-    // the contradiction this pass was asked to remove.
+    // THE PLACEHOLDER IS GONE. This page used to be a numbered explanation of
+    // what account creation would eventually do — first headed "Create Your
+    // Account", then a six-step description of a journey the athlete could not
+    // take. A page that describes a button instead of being one is a
+    // placeholder however carefully it is written, and this was the last one
+    // in the journey.
+    //
+    // HEADED FOR THE BUILD, NOT THE TRIAL. Two passes reached this page from
+    // different directions and disagreed about its title: "Start Your Free
+    // Trial" is what the athlete eventually gets, but under the approved
+    // value-first journey it is not what happens next. What happens next is
+    // that they answer a few questions and see a real programme; the trial is
+    // the fourth thing, after they have decided the plan is worth keeping.
+    // Naming the page for the trial would put the commercial step back in
+    // front of the value it is supposed to follow.
     heading: "Build Your Plan",
-    sub: "Here’s exactly what happens next.",
-    // HUMAN COPY PASS: "the journey as it's designed to work" — "journey"
-    // was the one piece of soft marketing jargon on the site, and it meant
-    // nothing more than "the signup steps".
-    body: "Trial signup isn’t open yet. This is how it will work, and it’ll go live here the moment it’s real.",
+    // The app's own builder says "You will see it before you decide anything."
+    // Same promise, same words, so the sentence does not change under them.
+    sub: "See your programme before you decide anything.",
+    // Kept verbatim from the parallel commercial-entry work: nobody should
+    // reach the app without knowing what the fourteen days turn into.
+    body: "Your first 14 days are free. After your trial, your chosen subscription starts automatically unless you cancel beforehand.",
   },
   valhalla: {
     eyebrow: valhallaProduct.eyebrow,
@@ -593,7 +600,12 @@ export const pages = {
     // the same spot as a quiet secondary link rather than being the headline
     // action. Still ONE cta object read twice, so the two cannot drift.
     closingCta: buildCta,
-    secondaryCta: { label: "See Standard Pricing", href: "/pricing" },
+    // "See Prices", not "See Standard Pricing" — adopted from the parallel
+    // commercial-entry work, which is right for a reason that survives the
+    // demotion to a secondary link: there is one plan, so naming it "Standard"
+    // told a visitor nothing they could act on and implied a tier they could
+    // not see.
+    secondaryCta: { label: "See Prices", href: "/pricing" },
     // STRUCTURE PASS: the deep-dive paragraphs below used to open the page
     // directly under the <h1>, so the intro carried them. The year-round
     // section now sits between the two, and a block of centred prose landing

@@ -65,7 +65,7 @@ test('the same primary CTA appears exactly twice, from one source of truth', () 
   assert.equal((src.match(/pages\.valhalla\.closingCta\.label/g) || []).length, 2);
   assert.equal((src.match(/href=\{buildUrl\}/g) || []).length, 2);
   assert.ok(
-    !/href="\/pricing"|See Standard Pricing/.test(src),
+    !/href="\/pricing"|See Prices/.test(src),
     'neither CTA may hard-code its label or destination'
   );
 });
@@ -79,7 +79,12 @@ test('the page converts into the build, and keeps pricing as a quiet secondary',
   // secondary link under the closing button, and in the menu.
   const site = code(read('src/content/site.ts'));
   assert.match(site, /closingCta: buildCta,/);
-  assert.match(site, /secondaryCta: \{ label: "See Standard Pricing", href: "\/pricing" \}/);
+  /* "See Prices", not "See Standard Pricing" — the shorter label is right for
+     a reason that survives its demotion to a secondary link: there is one
+     plan, so naming it "Standard" told a visitor nothing they could act on and
+     implied a tier they could not see. */
+  assert.match(site, /secondaryCta: \{ label: "See Prices", href: "\/pricing" \}/);
+  assert.ok(!/See Standard Pricing/.test(site), 'the old label must not survive anywhere');
   const src = page();
   assert.match(src, /pages\.valhalla\.secondaryCta\.href/, 'the pricing route must still render');
 });

@@ -10,12 +10,10 @@ import { siteUrl } from "@/content/site";
 // from navigation. Same treatment the private beta's own terms page already
 // gets below. Add each one back here once its own LEGAL_APPROVALS flag flips
 // to true.
-// /trial IS GONE, not gated. It existed for one job — asking which billing
-// period an athlete wanted — and under the approved value-first journey that
-// choice happens after the programme has been built and previewed, inside the
-// app. A route whose only purpose was a step that no longer exists should not
-// keep a public, indexable URL describing a decision the site no longer asks
-// for, so the page and its component were removed rather than orphaned here.
+//
+// /trial is not here because /trial no longer exists. It redirects permanently
+// to /start (next.config.ts); a removed page must not still be advertised for
+// indexing, and the redirect is what carries the indexed URL across.
 const routes = [
   "",
   "/valhalla",

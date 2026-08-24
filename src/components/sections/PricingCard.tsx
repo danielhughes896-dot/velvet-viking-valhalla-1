@@ -89,9 +89,11 @@ export default function PricingCard() {
 
           ENTRY-JOURNEY PASS: was "Start Free Trial" -> /trial, a page that
           asked which billing period the athlete wanted BEFORE they had seen
-          a single session of their own programme. Under the approved order
-          the period is chosen after the preview, so that step has gone and
-          this leads into the build instead. The prices, the trial terms and
+          a single session of their own programme. The parallel commercial
+          work removed that page for the same reason and pointed this button
+          at /start; under the approved value-first order it goes one step
+          further and leads into the build itself, through the same buildUrl
+          every other first-time CTA uses. The prices, the trial terms and
           the feature list on this card are untouched: a visitor who came
           here to check the cost still gets the answer, they are simply not
           asked to commit to a period to proceed. */}

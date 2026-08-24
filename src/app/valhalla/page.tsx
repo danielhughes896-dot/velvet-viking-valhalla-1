@@ -57,13 +57,19 @@ export default function ValhallaPage() {
             This page is the editorial deep dive, so its conversion route is
             now the build; the price stays one quiet link away below the
             closing button rather than being the headline action. */}
-        <div className="flex justify-center pt-14 sm:pt-16">
+        {/* SPACING, ADOPTED FROM THE PARALLEL COMMERCIAL-ENTRY WORK and kept
+            because it is right regardless of which label the button carries:
+            with pt-14/16 above and the device block's py-24 below, this CTA
+            floated in ~150px of nothing and read as belonging to neither the
+            explanation it acts on nor the screenshots it precedes. Pulled up
+            against the paragraphs, gap beneath halved. */}
+        <div className="flex justify-center pt-10 sm:pt-12">
           <CtaButton href={buildUrl} variant="cherry">
             {pages.valhalla.closingCta.label}
           </CtaButton>
         </div>
 
-        <div className="theme-dark mx-auto max-w-6xl px-6 py-24 sm:px-8">
+        <div className="theme-dark mx-auto max-w-6xl px-6 pb-24 pt-12 sm:px-8 sm:pt-14">
           {/* PROTOTYPE: two portrait frames, no desktop mockup — see
               ProductShowcase.tsx for the same primary/secondary rationale.
               theme-dark here too, matching the homepage's ProductShowcase:

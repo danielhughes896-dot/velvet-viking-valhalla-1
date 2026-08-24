@@ -24,27 +24,34 @@ const srcFiles = () => {
 // ---------------------------------------------------------------------------
 test('the canonical app entry is declared once and is the .co.uk subdomain', () => {
   const site = code(read('src/content/site.ts'));
-  // TWO PATHS, ONE ORIGIN. The entry-journey pass split the single appUrl into
-  // a first-time route (the builder) and a returning route (the account),
-  // because sending both to one URL meant "Sign In" and "Start Free Trial"
-  // were the same click with two different promises. The origin is still
-  // written down exactly once, which is what this test has always protected.
+  /* TWO DOORS, ONE ORIGIN. Both passes split the single appUrl into a
+     first-time route and a returning one, because one URL behind two labels
+     sent somebody who already had an account to the page that starts one.
+     They differed on the mechanism: a second absolute literal, or a shared
+     appOrigin. The shared origin survived, so the host is still written down
+     exactly once -- which is what this test has always protected. */
   assert.match(site, /const appOrigin = "https:\/\/app\.velvetviking\.co\.uk"/);
   assert.match(site, /export const appUrl = `\$\{appOrigin\}\/start`/);
   assert.match(site, /export const appSignInUrl = `\$\{appOrigin\}\/account`/);
   const declarations = (site.match(/= "https:\/\/app\.velvetviking\.co\.uk/g) || []).length;
-  assert.equal(declarations, 1, 'a second copy of the app origin is how the first goes stale');
+  assert.equal(declarations, 1, 'one origin declaration; both doors derive from it');
+  for (const f of ['src/app/start/page.tsx']) {
+    const src = code(read(f));
+    assert.ok(!/https:\/\/app\.velvetviking/.test(src),
+      `${f} hard-codes the app origin instead of importing it`);
+  }
 });
 
 test('no customer-facing CTA renders as permanently disabled', () => {
   const start = code(read('src/app/start/page.tsx'));
   assert.ok(!/commerceSeams\.(createAccount|signIn)/.test(start),
     'the account CTAs must hand off to the app, not render as dead null-href buttons');
-  assert.match(start, /href=\{appUrl\}/, 'the first-time CTA hands off to the builder');
+  assert.match(start, /href=\{buildUrl\}/, 'the first-time CTA enters the app builder');
   assert.match(start, /href=\{appSignInUrl\}/, 'the returning CTA hands off to the account');
-  // WAS /Start Free Trial/. The primary action on this page is now the build,
-  // not the trial: an athlete is asked for a card after they have seen their
-  // programme, not before. The label lives in site.ts so it cannot drift.
+  /* WAS /Continue to Create Account/, which was accurate about an app whose
+     /start opened on account creation. App main now opens on the nine-stage
+     builder and asks for an account at step three, so the label reads from
+     buildCta and cannot drift from every other first-time CTA. */
   assert.match(start, /\{buildCta\.label\}/);
   assert.match(start, /\{signInCta\.label\}/);
 });
