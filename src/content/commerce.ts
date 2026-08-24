@@ -115,7 +115,18 @@ export const trial = {
   // the commercial entitlement/payment system is approved and connected —
   // see the Phase 3 brief. This is the single flag that decides whether
   // the site's trial copy can ever claim to be live.
-  live: false,
+  // LAUNCH: flipped to true on HQ's explicit approval. The prerequisite this
+  // flag has always stood for is real: the trial exists in the commercial
+  // system rather than only in this site's copy — api/_products.js carries
+  // TRIAL_DAYS = 14 for both offers and api/_stripe.js sets
+  // trial_period_days from it with payment_method_collection 'always', which
+  // is the card-up-front, auto-converting model this site describes.
+  //
+  // WHAT THIS SWITCHES OFF is the "Not open yet" notice on /start. It does NOT
+  // switch on charging: that is VVV_COMMERCE_ENABLED in the app's environment,
+  // which belongs to Stripe commissioning and is deliberately not represented
+  // here. Until that flag is on, the app refuses checkout with commerce_disabled.
+  live: true,
 } as const;
 
 // Handoff seams to the account/entitlement system System 3A1 is building.

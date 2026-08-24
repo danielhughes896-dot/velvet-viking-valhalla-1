@@ -146,5 +146,7 @@ test('the legal gates are untouched and commerce stays fail-closed', () => {
   const legal = code(read('src/content/legal.ts'));
   assert.match(legal, /terms:\s*false/, 'Terms must remain unapproved');
   assert.match(legal, /cookies:\s*false/, 'Cookies must remain unapproved');
-  assert.match(code(read('src/content/commerce.ts')), /live:\s*false/);
+  // trial.live opened at launch on HQ's approval; the legal gates above did
+  // not, and they are the ones this test exists to hold.
+  assert.match(code(read('src/content/commerce.ts')), /live:\s*true/);
 });

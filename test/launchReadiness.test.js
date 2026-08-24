@@ -182,12 +182,19 @@ test('the support address cannot push the page sideways', () => {
   assert.match(support, /text-base[^"]*min-\[380px\]:text-xl/, 'and a smaller first step at 360px');
 });
 
-test('the primary CTA has a focus ring that is visible on ivory', () => {
-  const btn = code(read('src/components/ui/CtaButton.tsx'));
-  assert.match(btn, /focus-visible:outline-vv-gold-deep/,
-    'Tailwind leaves outline-color at currentColor, which drew a white ring on a white label');
-  assert.ok(!/focus-visible:outline-2 focus-visible:outline-offset-2"/.test(btn),
-    'the colour must be named, not inherited');
+test('there is exactly one focus ring on the site, defined once', () => {
+  // WAS an assertion that this button carried its own outline-colour utility,
+  // added to fix a "white focus ring" that a screenshot later proved never
+  // existed — getComputedStyle reports outline-color's initial currentColor,
+  // not what :focus-visible paints. What is worth holding is the invariant the
+  // false fix accidentally arrived at: the ring lives in globals.css and no
+  // component redefines it.
+  const css = code(read('src/app/globals.css'));
+  assert.match(css, /:focus-visible \{\s*outline: 2px solid var\(--vv-gold\);/);
+  for (const f of srcFiles()) {
+    assert.ok(!/focus-visible:outline-/.test(code(read(f))),
+      `${f} defines its own focus ring — there should be one, in globals.css`);
+  }
 });
 
 test('every secondary text CTA clears a 44px hit area', () => {
@@ -207,15 +214,94 @@ test('every secondary text CTA clears a 44px hit area', () => {
 // ---------------------------------------------------------------------------
 // 5. NOTHING COMMERCIAL SWITCHED ON BY THIS PASS
 // ---------------------------------------------------------------------------
-test('every gate this pass was told not to touch is still closed', () => {
-  const commerce = code(read('src/content/commerce.ts'));
-  assert.match(commerce, /live:\s*false/);
+test('the launch flags are exactly the two HQ approved, and no others moved', () => {
+  // OPENED, each with its prerequisite verified rather than assumed:
+  //   trial.live        the trial exists in the app's commercial system —
+  //                     TRIAL_DAYS = 14 in api/_products.js, applied by
+  //                     api/_stripe.js with payment_method_collection 'always'.
+  //   valueFirstLive    app main 58b5fb0 runs builder -> preview -> Save My
+  //                     Plan -> auth, and pane-build mounts the nine-stage
+  //                     BLD_STAGES builder, not a second questionnaire.
+  assert.match(code(read('src/content/commerce.ts')), /live:\s*true/);
+  assert.match(code(read('src/content/journey.ts')), /valueFirstLive:\s*true/);
+
+  // STILL CLOSED. Legal publication is not this repository's to grant, and
+  // each of these three still carries an unresolved decision inside its own
+  // draft — the effective dates, the liability-cap question and, for the
+  // commercial privacy policy, the Article 9 condition. A flag flipped here
+  // would assert an approval nobody has given.
   const legal = code(read('src/content/legal.ts'));
-  assert.match(legal, /terms:\s*false/, 'Terms are still unpublished — a launch blocker, not this pass’s call');
+  assert.match(legal, /terms:\s*false/);
   assert.match(legal, /cookies:\s*false/);
   assert.match(legal, /privacyCommercial:\s*false/);
+  // Public commercial claims nobody has approved.
   assert.match(legal, /foundingPriceLock:\s*false/);
   assert.match(legal, /subscriptionPause:\s*false/);
+  // Still gated in the app itself.
   assert.match(code(read('src/content/productClaims.ts')), /garminIntegration:\s*false/);
-  assert.match(code(read('src/content/journey.ts')), /valueFirstLive:\s*false/);
+  // And the seams the app owns stay null on this side.
+  const commerce = code(read('src/content/commerce.ts'));
+  assert.match(commerce, /createAccount:\s*null/);
+  assert.match(commerce, /signIn:\s*null/);
+});
+
+test('the legal drafts that stay unpublished still carry their open decisions', () => {
+  // The reason terms/cookies/privacyCommercial are false is not that the
+  // documents are missing — they are written. It is that each still contains
+  // an unresolved [TO BE CONFIRMED] that a person, not this repository, must
+  // settle. If those disappear, the flags become a real decision to make.
+  const legal = read('src/content/legal.ts');
+  const between = (a, b) => legal.slice(legal.indexOf(a), legal.indexOf(b));
+  assert.match(between('const termsDraft', 'const cookiesDraft'), /TBC\(/,
+    'Terms still has an open item; publishing it would assert an approval nobody gave');
+  assert.match(between('const cookiesDraft', 'const privacyCommercialDraft'), /TBC\(/);
+  assert.match(between('const privacyCommercialDraft', 'const betaTermsDraft'), /Article 9/,
+    'the Article 9 condition is the one substantive legal decision left');
+  // The two that ARE published contain none.
+  assert.ok(!/TBC\(/.test(between('const privacyDraft', 'const termsDraft')),
+    'the published privacy policy must contain no placeholders');
+});
+
+// ---------------------------------------------------------------------------
+// 6. LAUNCH POLISH
+// ---------------------------------------------------------------------------
+test('no dead social control ships: only platforms with a real URL render', () => {
+  const social = code(read('src/components/layout/SocialLinks.tsx'));
+  assert.match(social, /PLATFORMS\.filter\(\(p\) => footer\.social\[p\.key\]\)/);
+  assert.match(social, /if \(live\.length === 0\) return null;/);
+  assert.ok(!/coming soon/i.test(social), 'a greyed-out placeholder is still a dead control');
+  assert.ok(!/href="#"/.test(social), 'and a "#" href is worse');
+  // No URL may be invented: every destination comes from content.
+  assert.ok(!/https?:\/\//.test(social), 'SocialLinks must hard-code no destination');
+});
+
+test('the favicon is served by the App Router convention, from the VV mark', () => {
+  for (const f of ['src/app/favicon.ico', 'src/app/icon.png', 'src/app/apple-icon.png']) {
+    assert.ok(fs.existsSync(path.join(ROOT, f)), `${f} must exist for /favicon.ico to resolve`);
+  }
+  // A metadata `icons` block would override the convention and reopen the 404.
+  const layout = code(read('src/app/layout.tsx'));
+  assert.ok(!/icons:\s*\{/.test(layout), 'layout must not re-declare icons');
+  assert.ok(!/velvet-viking-icon-19[0-9]|velvet-viking-icon-180/.test(layout),
+    'the old crest-derived tab icons must not be referenced');
+  // Square canvases, so no browser letterboxes or stretches the mark.
+  for (const [f, px] of [['src/app/icon.png', 512], ['src/app/apple-icon.png', 180]]) {
+    const buf = fs.readFileSync(path.join(ROOT, f));
+    assert.equal(buf.readUInt32BE(16), px, `${f} width`);
+    assert.equal(buf.readUInt32BE(20), px, `${f} height`);
+  }
+});
+
+test('the crest assets are optimised, at unchanged dimensions', () => {
+  const crest = fs.readFileSync(path.join(ROOT, 'public/brand/velvet-viking-crest.png'));
+  const og = fs.readFileSync(path.join(ROOT, 'public/brand/velvet-viking-crest-og.png'));
+  // Dimensions are the artwork's and must not have moved.
+  assert.equal(crest.readUInt32BE(16), 1223);
+  assert.equal(crest.readUInt32BE(20), 1286);
+  assert.equal(og.readUInt32BE(16), 1141);
+  assert.equal(og.readUInt32BE(20), 1200);
+  // Weight: both were over 1.8MB. The OG image is the one served raw to every
+  // social crawler, so its size is a real cost rather than a repo tidy-up.
+  assert.ok(crest.length < 700000, `crest is ${(crest.length/1e6).toFixed(2)}MB — the optimisation was lost`);
+  assert.ok(og.length < 700000, `og image is ${(og.length/1e6).toFixed(2)}MB — the optimisation was lost`);
 });

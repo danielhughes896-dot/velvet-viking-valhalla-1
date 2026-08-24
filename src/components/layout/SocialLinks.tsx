@@ -9,38 +9,40 @@ const PLATFORMS = [
   { key: "tiktok", label: "TikTok" },
 ] as const;
 
-// Always renders all four platforms — the row's design can be finished
-// ahead of the real accounts existing, rather than disappearing until they
-// do. A null URL in content/site.ts renders a visible but inactive mark:
-// not a link, not focusable, never a fake "#" href. Add a real URL there
-// later and that one platform becomes an ordinary external link with no
-// component change — nothing here hard-codes a destination.
+// ONLY PLATFORMS WITH A REAL DESTINATION.
+//
+// WAS: all four rendered unconditionally, and a null URL in content/site.ts
+// produced a greyed-out, unclickable mark labelled "— coming soon". That was
+// the right call for a site nobody could buy from — the row's design could be
+// finished ahead of the accounts existing. It is the wrong call for a
+// commercial launch: four dead controls in the footer of a page asking for a
+// card read as an unfinished site, which is precisely the doubt a first
+// customer cannot afford to have.
+//
+// So the row now renders what exists and nothing else. All four URLs are null
+// today, so it renders nothing at all and the footer closes on the legal
+// links. NO URL IS INVENTED HERE: add a genuine account to footer.social and
+// that platform reappears as an ordinary external link with no change to this
+// component.
 export default function SocialLinks() {
+  const live = PLATFORMS.filter((p) => footer.social[p.key]);
+  if (live.length === 0) return null;
+
   return (
     <ul className="flex items-center justify-center gap-5">
-      {PLATFORMS.map((p) => {
-        const href = footer.social[p.key];
-        return (
-          <li key={p.key}>
-            {href ? (
-              <Link
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={p.label}
-                className="block text-vv-ink-faint transition-colors hover:text-vv-bronze-text"
-              >
-                <SocialIcon platform={p.key} />
-              </Link>
-            ) : (
-              <span className="block text-vv-ink-faint/35" title={`${p.label} — coming soon`}>
-                <SocialIcon platform={p.key} />
-                <span className="sr-only">{p.label} — coming soon</span>
-              </span>
-            )}
-          </li>
-        );
-      })}
+      {live.map((p) => (
+        <li key={p.key}>
+          <Link
+            href={footer.social[p.key] as string}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={p.label}
+            className="block text-vv-ink-faint transition-colors hover:text-vv-bronze-text"
+          >
+            <SocialIcon platform={p.key} />
+          </Link>
+        </li>
+      ))}
     </ul>
   );
 }

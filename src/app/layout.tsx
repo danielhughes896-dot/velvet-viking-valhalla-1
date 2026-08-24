@@ -61,18 +61,22 @@ export const metadata: Metadata = {
     description: "Valhalla Awaits. Earn Your Place.",
     images: ["/brand/velvet-viking-crest-og.png"],
   },
-  // OVERNIGHT AUDIT: favicon/apple-touch-icon previously pointed straight
-  // at velvet-viking-icon-source.png — a 1184x1328, 1.48MB file — fetched
-  // by the browser at full size for a tab icon. These two derivatives are
-  // that exact same source image resized to the dimensions browsers
-  // actually request (192px / Apple's 180px spec size), nothing recomposed
-  // or altered. This does NOT resolve the pending "swap to a crest-derived
-  // icon" decision noted in README.md — that source image is still the one
-  // in use, just delivered efficiently.
-  icons: {
-    icon: "/brand/velvet-viking-icon-192.png",
-    apple: "/brand/velvet-viking-icon-180.png",
-  },
+  // NO `icons` DECLARATION, DELIBERATELY. It used to name two crest-derived
+  // PNGs in /public, which left /favicon.ico returning 404 because nothing
+  // served that path — the one URL every browser asks for unprompted.
+  //
+  // The App Router's file convention now owns all three: src/app/favicon.ico,
+  // icon.png and apple-icon.png. Next emits the <link> tags and serves
+  // /favicon.ico itself. Declaring `icons` here as well would override the
+  // convention and reintroduce exactly the gap it closes.
+  //
+  // THE MARK, NOT THE CREST, and that is the settled hierarchy rather than a
+  // preference: the circular crest is the full identity and keeps the hero;
+  // the gold VV is the compact mark for small-format identity, which is what
+  // a 16px tab icon is. The crest's wordmark and two mottos are illegible at
+  // that size; the VV is one shape and survives it. Generated from the
+  // supplied artwork by containing it in a square canvas — never stretched,
+  // never cropped, proportions exactly the artwork's 1148x957.
 };
 
 export const viewport: Viewport = {

@@ -19,13 +19,20 @@ type CtaButtonProps = {
   pendingLabel?: string;
 };
 
-// FOCUS RING, NAMED RATHER THAN INHERITED. Tailwind's outline-2 sets a width
-// and leaves the colour at currentColor, so the cherry button — whose label is
-// white — was drawing a WHITE focus ring on an ivory page. A keyboard user
-// tabbing to the site's primary commercial action saw nothing at all. Pinned
-// to the deep gold, which is the one accent that reads on every ground this
-// button appears on: 4.9:1 on ivory, and on the dark sections it sits against
-// the button's own near-black fill rather than the page.
+// NO FOCUS UTILITIES HERE. The focus ring is the one global rule in
+// globals.css — `:focus-visible { outline: 2px solid var(--vv-gold) }` — and
+// this button inherits it like every other control on the site. One ring, one
+// definition, nothing to drift.
+//
+// CORRECTING AN EARLIER NOTE THAT STOOD HERE: it claimed the ring rendered
+// WHITE on this button and was invisible to a keyboard user. That was wrong,
+// and it is worth recording why so nobody re-fixes it. The reading came from
+// getComputedStyle().outlineColor, which reports the element's own
+// outline-color property — initial value `currentColor`, i.e. this button's
+// white label — rather than the value the :focus-visible rule actually paints.
+// Screenshotting the focused button settles it: the ring is gold, it always
+// was, and it is gold with these utilities absent or present. Measure focus
+// rings by looking at them.
 //
 // min-h-11 is 44px, the floor the Valhalla app enforces on every control it
 // ships (".btn:not(.btn-sm){min-height:44px}"). This button's own padding came
@@ -33,7 +40,7 @@ type CtaButtonProps = {
 // alone because it sets the optical weight, and a floor is added instead, so
 // nothing that already passed moves.
 const base =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-vv-sm px-6 py-3 font-head text-[13px] font-semibold uppercase tracking-[0.14em] transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-vv-gold-deep";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-vv-sm px-6 py-3 font-head text-[13px] font-semibold uppercase tracking-[0.14em] transition duration-200";
 
 // THREE JOBS, THREE FILLS.
 //

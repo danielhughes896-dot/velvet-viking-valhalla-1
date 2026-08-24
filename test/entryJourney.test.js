@@ -123,9 +123,13 @@ test('no first-time route asks for a billing period before a plan has been seen'
 
 test('the journey gate exists, is off, and is the only thing deciding the deep link', () => {
   const j = code(read('src/content/journey.ts'));
-  assert.match(j, /valueFirstLive:\s*false/,
-    'the deep link stays behind the gate until the app exposes the value-first flow');
-  assert.match(j, /buildUrl: string = JOURNEY\.valueFirstLive \? appUrl : "\/start"/);
+  // OPEN, and verified before it was: app main 58b5fb0 runs builder ->
+  // preview -> Save My Plan -> auth, and its pane-build mounts the app's
+  // nine-stage builder (BLD_STAGES) rather than the old one-page form. The
+  // shape of the gate is what still matters — one flag, one exported route.
+  assert.match(j, /valueFirstLive:\s*true/);
+  assert.match(j, /buildUrl: string = JOURNEY\.valueFirstLive \? appUrl : "\/start"/,
+    'the gate must remain a single switch, so it can be closed again in one line');
   // It governs a route, not a claim. If it ever starts gating what the site
   // SAYS about the product, that belongs in PRODUCT_CLAIMS instead.
   assert.ok(!/claim|approved|publish/i.test(j.replace(/JOURNEY|valueFirstLive/g, '')));
@@ -161,10 +165,15 @@ test('no payment provider, checkout or card-collection code exists anywhere in t
   assert.ok(files.length > 20, 'sanity: the walk actually found the source tree');
 });
 
-test('commerce is still fail-closed', () => {
+test('the website still owns no account or billing seam of its own', () => {
+  // LAUNCH: trial.live is TRUE. HQ approved it and the prerequisite is real —
+  // api/_products.js carries TRIAL_DAYS = 14 for both offers and api/_stripe.js
+  // sets trial_period_days from it with payment_method_collection 'always'.
+  // What stays closed is what this site never controlled: charging is
+  // VVV_COMMERCE_ENABLED in the app's environment.
   const commerce = code(read('src/content/commerce.ts'));
-  assert.match(commerce, /live:\s*false/, 'trial signup is still not live');
-  assert.match(commerce, /createAccount:\s*null/, 'the account seam is still null');
+  assert.match(commerce, /live:\s*true/);
+  assert.match(commerce, /createAccount:\s*null/, 'the account seam is still null — the app owns accounts');
   assert.match(commerce, /signIn:\s*null/, 'the sign-in seam is still null');
 });
 

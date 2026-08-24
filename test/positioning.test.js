@@ -147,8 +147,11 @@ test('both prices render through the same markup, so neither can be styled as su
 
 test('adding a second price added no purchase behaviour', () => {
   const commerce = code(read('src/content/commerce.ts'));
-  // Every commercial action stays gated on these, exactly as before.
-  assert.match(commerce, /live:\s*false/, 'trial.live must stay false until billing is real');
+  // trial.live is TRUE at launch, by explicit HQ approval and with the trial
+  // verified real in the app's own commercial system. Charging is still gated
+  // outside this repository (VVV_COMMERCE_ENABLED), which is why "fail-closed"
+  // now means "no billing code and no seams here", not "the flag is false".
+  assert.match(commerce, /live:\s*true/);
   assert.match(commerce, /createAccount:\s*null/);
   assert.match(commerce, /signIn:\s*null/);
 
@@ -231,5 +234,6 @@ test('the gated claims that remain gated', () => {
   assert.match(legal, /terms:\s*false/);
   assert.match(legal, /cookies:\s*false/);
   assert.match(legal, /privacyCommercial:\s*false/);
-  assert.match(code(read('src/content/commerce.ts')), /live:\s*false/);
+  assert.match(code(read('src/content/commerce.ts')), /live:\s*true/,
+    'trial.live opened at launch; the gates below are the ones that stayed shut');
 });

@@ -7,18 +7,22 @@ import { appUrl } from "@/content/site";
 // athlete sees a real programme built from their own answers before anything
 // is asked of them.
 //
-// THE APP IS MID-CHANGE. At the time this shipped, the Valhalla app's /start
-// still opened on "Step one of three — Create your account, or sign in", i.e.
-// the old account-first order, and the app worker owns moving it. Pointing the
-// public CTAs straight at that screen would mean a button labelled "Build My
-// Plan" landing on a signup form: exactly the production mismatch this work
-// was told not to create.
+// THE APP NOW EXPOSES IT, so this is on. When the flag was introduced the
+// Valhalla app's /start still opened on "Step one of three — Create your
+// account, or sign in", and pointing a button labelled "Build My Plan" at a
+// signup form was the production mismatch it existed to prevent.
 //
-// So the label and the architecture ship now, and the DEEP LINK waits behind
-// this flag. While it is false, Build My Plan goes to this site's own /start,
-// which states the journey honestly and hands off from there. Flip it to true
-// once the app exposes the value-first flow and every CTA on the site deep
-// links into the builder instead — one line, no component changes.
+// VERIFIED ON APP MAIN 58b5fb0 BEFORE FLIPPING, on two counts rather than one:
+//   ORDER      pane-build -> pane-preview ("Step two of three") -> Save My
+//              Plan -> pane-auth ("Step three of three") -> trial. The app's
+//              own source says so: "THE APPROVED JOURNEY: builder -> preview
+//              -> 'Save My Plan' -> trial".
+//   AUTHORITY  pane-build carries ZERO inline form controls now. It mounts the
+//              app's staged nine-stage builder (BLD_STAGES, the 01/09 rail,
+//              bld-back/bld-next) instead of the old one-page mini-questionnaire.
+//              That matters more than the order: the website must never send
+//              anybody into a second implementation of the athlete
+//              questionnaire, and the app is the single builder authority.
 //
 // This is not a claim gate like PRODUCT_CLAIMS or LEGAL_APPROVALS: nothing
 // here decides what the site may say about the product, only where a button
@@ -31,7 +35,7 @@ export const JOURNEY = {
    * check is whether app /start's first pane builds a plan, not whether the
    * work is merged somewhere.
    */
-  valueFirstLive: false,
+  valueFirstLive: true,
 } as const;
 
 /**
