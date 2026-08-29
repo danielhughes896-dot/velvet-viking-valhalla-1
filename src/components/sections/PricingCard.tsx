@@ -141,10 +141,6 @@ export default function PricingCard() {
           {`${buildCta.label} — annual`}
         </CtaButton>
       </div>
-      <p className="mt-4 text-center text-sm leading-relaxed text-vv-ink-dim">
-        {`${trial.days}-day free trial. You won’t be charged today, and you can cancel before
-        it ends.`}
-      </p>
 
       <ul className="mt-10 flex flex-col gap-4 border-t border-vv-line-soft pt-8">
         {plan.features.map((feature) => (
