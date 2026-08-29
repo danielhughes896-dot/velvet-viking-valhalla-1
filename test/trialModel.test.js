@@ -163,8 +163,11 @@ test('the legal gates are untouched and commerce stays fail-closed', () => {
   assert.match(legal, /terms:\s*true/);
   assert.match(legal, /privacyCommercial:\s*true/);
   assert.match(legal, /cookies:\s*false/, 'Cookies must remain unapproved');
-  // trial.live is closed again too: it briefly opened on the strength of the
-  // backend being ready, which is not the same fact as a visitor being able to
-  // sign up, and signup is shut. So all four gates below are now false together.
-  assert.match(code(read('src/content/commerce.ts')), /live:\s*false/);
+  // trial.live is a PRODUCT fact and not a legal gate, and at commercial
+  // launch it is true -- signup is open and charging is on. It is asserted
+  // beside the legal flags rather than among them: the three above stay shut
+  // until somebody approves the wording, and this one moved because the
+  // product moved. Grouping them as "all four false together" was what made
+  // an earlier pass read a published Terms as permission to sell.
+  assert.match(code(read('src/content/commerce.ts')), /live:\s*true/);
 });

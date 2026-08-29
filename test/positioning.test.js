@@ -147,20 +147,22 @@ test('both prices render through the same markup, so neither can be styled as su
 
 test('adding a second price added no purchase behaviour', () => {
   const commerce = code(read('src/content/commerce.ts'));
-  // trial.live is FALSE. It tracks whether somebody can actually buy, not
-  // whether the machinery exists: public signup is closed by a trigger on
-  // auth.users, so no visitor can start a trial however real the backend is.
-  // Fail-closed therefore means both things at once here — the flag is false
-  // AND there is no billing code or seam on this side.
-  assert.match(commerce, /live:\s*false/);
-  assert.match(commerce, /createAccount:\s*null/);
-  assert.match(commerce, /signIn:\s*null/);
+  // COMMERCIAL LAUNCH. The trial is open and the seams name the app's routes,
+  // so "no purchase behaviour" can no longer mean "nothing is wired". It means
+  // what it was always really guarding: the SECOND price did not turn this
+  // repository into a billing system. The card offers a choice of period as
+  // two links and submits nothing; there is no control here whose value would
+  // have to be trusted, because a period the website could submit is a period
+  // the website would be deciding.
+  assert.match(commerce, /live:\s*true/);
 
   const card = code(read('src/components/sections/PricingCard.tsx'));
   assert.ok(
     !/<(select|input|form)\b/i.test(card),
-    'no billing-period control may be offered while there is nowhere to submit it'
+    'a billing-period control appeared: the period must travel as a link, not a submission'
   );
+  assert.ok(!/price_[A-Za-z0-9]/.test(card), 'a provider price id reached the website');
+  assert.ok(!/stripe/i.test(card), 'the pricing card names the payment provider');
 });
 
 // ---------------------------------------------------------------------------
@@ -235,6 +237,8 @@ test('the gated claims that remain gated', () => {
   // The commercial Terms and Privacy are published; the cookie policy is not,
   // and that is the gate this test still guards.
   assert.match(legal, /cookies:\s*false/);
-  assert.match(code(read('src/content/commerce.ts')), /live:\s*false/,
-    'trial.live closed again: signup is shut, so the trial cannot be offered');
+  /* trial.live is NOT one of the gated claims and never was: it tracks a
+     product fact rather than an unapproved assertion, and at launch it is
+     true. The three above stay gated, and that is what this test is for. */
+  assert.match(code(read('src/content/commerce.ts')), /live:\s*true/);
 });

@@ -165,16 +165,27 @@ test('no payment provider, checkout or card-collection code exists anywhere in t
   assert.ok(files.length > 20, 'sanity: the walk actually found the source tree');
 });
 
-test('the website still owns no account or billing seam of its own', () => {
-  // trial.live is FALSE again. The backend prerequisite is real and unchanged —
-  // TRIAL_DAYS = 14 in api/_products.js, applied by api/_stripe.js with
-  // payment_method_collection 'always' — but public signup is closed by a
-  // trigger on auth.users, so no visitor can reach any of it. The flag follows
-  // whether a trial can be started, not whether one could be honoured.
+test('the seams are wired, and the website still owns nothing behind them', () => {
+  // COMMERCIAL LAUNCH. trial.live is TRUE and the seams name real routes: the
+  // flag follows whether a trial can be STARTED, and both of its conditions
+  // are met -- charging is on in the app's environment, and public signup is
+  // open now the private beta is retired.
+  //
+  // WHAT THE NULL SEAMS WERE ACTUALLY PROTECTING was authority, not silence,
+  // and that is what is asserted now instead. A seam is allowed to name the
+  // app's origin. It is not allowed to be a route the website serves itself,
+  // because an account or a purchase resolved on this side of the link is one
+  // resolved without the athlete's token, their entitlement or their
+  // agreements.
   const commerce = code(read('src/content/commerce.ts'));
-  assert.match(commerce, /live:\s*false/);
-  assert.match(commerce, /createAccount:\s*null/, 'the account seam is still null — the app owns accounts');
-  assert.match(commerce, /signIn:\s*null/, 'the sign-in seam is still null');
+  assert.match(commerce, /live:\s*true/);
+  assert.match(commerce, /createAccount:\s*appUrl/, 'the account seam must point at the app');
+  assert.match(commerce, /signIn:\s*appSignInUrl/, 'the sign-in seam must point at the app');
+  /* Every seam leaves this origin. A relative href here would be the website
+     quietly becoming the account system. */
+  for (const m of commerce.match(/(createAccount|signIn):[^,]+/g) || []) {
+    assert.ok(!/["'`]\//.test(m), `a seam points at a website-local route: ${m}`);
+  }
 });
 
 // ---------------------------------------------------------------------------
@@ -204,12 +215,24 @@ test('pricing still carries both approved prices', () => {
   assert.match(commerce, /priceAnnual:\s*\{\s*amount:\s*89\.99,\s*currency:\s*"GBP",\s*period:\s*"year"\s*\}/);
 });
 
-test('the pricing card still offers exactly one CTA and no purchase controls', () => {
+test('the pricing card offers one CTA per billing period, and no purchase controls', () => {
+  /* WAS "EXACTLY ONE CTA", AND THE REASONING IS WORTH KEEPING RATHER THAN
+     DELETING. Two buttons were refused on the grounds that they turn one
+     product into a two-option checkout. That held while nothing could be
+     bought: the choice had nowhere to go, so offering it twice was noise.
+     At launch the athlete MUST choose a period before the trial starts, and
+     choosing it here means choosing it once instead of being asked the same
+     question again at the commercial step.
+
+     WHAT THE TEST STILL GUARDS is the part that mattered: the card takes no
+     payment and quotes no price of its own. Two links are not a checkout. */
   const card = code(read('src/components/sections/PricingCard.tsx'));
-  assert.equal((card.match(/<CtaButton/g) || []).length, 1,
-    'two CTAs would turn one product into a two-option checkout');
-  assert.ok(!/<(select|input|form)\b/i.test(card));
+  assert.equal((card.match(/<CtaButton/g) || []).length, 2,
+    'one CTA per billing period, and no more');
+  assert.ok(!/<(select|input|form)\b/i.test(card), 'the card grew a purchase control');
   assert.ok(!/11\.99|89\.99/.test(card), 'prices come from content/commerce.ts');
+  /* And still one product: the periods differ, the plan does not. */
+  assert.equal((card.match(/plan\.features/g) || []).length, 1);
 });
 
 test('no savings, ranking or urgency framing entered the entry journey', () => {

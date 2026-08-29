@@ -140,14 +140,18 @@ test('the statutory company details are real, not placeholders', () => {
 // ---------------------------------------------------------------------------
 // 4. NOTHING COMMERCIAL SWITCHED ON, AND THE BETA DOOR IS INTACT
 // ---------------------------------------------------------------------------
-test('commerce remains fail-closed and no payment code exists on the website', () => {
-  // Fail-closed on both counts again. trial.live is FALSE because public signup
-  // is closed by a trigger on auth.users, so no visitor can start the trial
-  // however complete the app's commercial system is; and charging remains gated
-  // outside this repository by VVV_COMMERCE_ENABLED. Neither is a claim this
-  // site is entitled to make on its own.
+test('the trial is live, and still no payment code exists on the website', () => {
+  // COMMERCIAL LAUNCH. trial.live is TRUE: signup is open now that the private
+  // beta is retired, and charging is switched on in the app's environment.
+  //
+  // THE HALF THIS TEST IS REALLY FOR IS UNCHANGED AND IS THE POINT. Opening
+  // the trial moved no commercial code onto the marketing site. No Stripe SDK,
+  // no key of either kind, no price id, no entitlement reasoning -- anywhere
+  // in src. The site names a price for a reader and hands the athlete to the
+  // app; every fact that decides money or access is resolved there, against
+  // the athlete on the bearer token.
   const commerce = code(read('src/content/commerce.ts'));
-  assert.match(commerce, /live:\s*false/);
+  assert.match(commerce, /live:\s*true/);
   for (const f of srcFiles()) {
     const src = code(read(f));
     for (const rx of [/\bstripe\b/i, /sk_(live|test)_/, /price_[A-Za-z0-9]{6,}/, /entitlement/i]) {
