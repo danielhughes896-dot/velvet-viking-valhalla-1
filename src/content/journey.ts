@@ -45,3 +45,22 @@ export const JOURNEY = {
  * component has to know the flag exists.
  */
 export const buildUrl: string = JOURNEY.valueFirstLive ? appUrl : "/start";
+
+/**
+ * The same route, carrying the billing period the athlete has already chosen.
+ *
+ * WHY THE PERIOD TRAVELS. Commercial launch: a visitor who picks Monthly or
+ * Annual on the pricing page has made the choice, and asking them to make it
+ * again at the commercial step is the site forgetting what they said. The app
+ * treats it as a PRESELECTION and nothing more — it can still be changed
+ * before the trial starts, and the price is resolved server-side from the
+ * offer code, never from this parameter. Nothing purchasable is named here.
+ *
+ * WHY IT IS NOT A PRICE ID. A URL that carried a Stripe price would be a URL
+ * anybody could edit into a different one. "monthly" and "yearly" are the only
+ * two values the app accepts, and it resolves both itself.
+ */
+export function buildUrlForPeriod(period: "monthly" | "yearly"): string {
+  const sep = buildUrl.indexOf("?") === -1 ? "?" : "&";
+  return `${buildUrl}${sep}period=${period}`;
+}

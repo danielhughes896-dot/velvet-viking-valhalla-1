@@ -1,7 +1,7 @@
 import CtaButton from "@/components/ui/CtaButton";
 import { plans, trial } from "@/content/commerce";
 import { buildCta } from "@/content/site";
-import { buildUrl } from "@/content/journey";
+import { buildUrlForPeriod } from "@/content/journey";
 
 const CURRENCY_SYMBOL: Record<string, string> = { GBP: "£" };
 
@@ -110,21 +110,37 @@ export default function PricingCard() {
           they meet after deciding. Same wording and same flag as the notice on
           /start, so the two pages cannot end up describing different states of
           the same product. */}
-      {!trial.live ? (
-        <div className="mt-8 rounded-vv border border-vv-line bg-vv-bg px-5 py-4 text-center">
-          <p className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text">
-            Not open yet
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-vv-ink-dim">
-            Paid subscriptions aren’t switched on yet. Nothing here charges you or starts a
-            trial.
-          </p>
-        </div>
-      ) : null}
+      {/* COMMERCIAL LAUNCH. The "Not open yet" notice that stood here for the
+          whole of the private beta is gone, because the sentence it made is no
+          longer true: subscriptions are switched on and this button leads to a
+          real trial. It was never a hard-coded string — it read trial.live —
+          so removing it is the flag doing its job, not a copy edit racing
+          ahead of the product.
 
-      <CtaButton href={buildUrl} variant="cherry" className="mt-8 w-full">
-        {buildCta.label}
-      </CtaButton>
+          TWO PERIOD BUTTONS NOW, AND THIS IS THE ONE PLACE THAT CHANGED SHAPE.
+          The card previously refused to sprout a button per period on the
+          grounds that it would read as two products. That reasoning held while
+          nothing could be bought: the choice had nowhere to go, so offering it
+          twice was noise. It does not hold now. The athlete has to pick a
+          period before the trial starts, and picking it here means picking it
+          ONCE — the alternative is a visitor deciding "annual" on this page and
+          being asked the same question again at the commercial step, which
+          reads as the site not listening.
+
+          STILL ONE PRODUCT. Same plan, same feature list below, two ways to
+          pay for it — no saving, no per-month equivalent, no "best value", and
+          no comparison of any kind, exactly as the pricing block above states
+          them. The period travels as a preselection the athlete can still
+          change; the price that is charged is resolved by the app's server
+          from the offer, never from this link. */}
+      <div className="mt-8 flex flex-col gap-3">
+        <CtaButton href={buildUrlForPeriod("monthly")} variant="cherry" className="w-full">
+          {`${buildCta.label} — monthly`}
+        </CtaButton>
+        <CtaButton href={buildUrlForPeriod("yearly")} variant="ghost" className="w-full">
+          {`${buildCta.label} — annual`}
+        </CtaButton>
+      </div>
 
       <ul className="mt-10 flex flex-col gap-4 border-t border-vv-line-soft pt-8">
         {plan.features.map((feature) => (

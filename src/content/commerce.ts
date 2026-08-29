@@ -1,16 +1,19 @@
+import { appSignInUrl, appUrl } from "@/content/site";
+
 // Central commercial configuration — pricing, trial terms, plan tiers, and
 // the routing seams that hand off to the account/entitlement system.
 //
-// Nothing here activates a real purchase. Marketing components read prices,
-// trial terms and feature copy from here rather than hard-coding them, so a
-// pricing change is a data edit, not a template edit — and so no component
-// has to encode entitlement logic itself.
+// Marketing components read prices, trial terms and feature copy from here
+// rather than hard-coding them, so a pricing change is a data edit, not a
+// template edit — and so no component has to encode entitlement logic itself.
 //
-// PHASE 3 SCOPE: the backend commercial entitlement/payment system is not
-// live. `trial.live` and the null seam URLs below are what actually gate
-// whether any commercial action on the site is real — see PricingCard and
-// the /start page, which render their disabled/pending state directly off
-// these flags rather than a hard-coded "coming soon" string.
+// COMMERCIAL LAUNCH. This file used to say "nothing here activates a real
+// purchase", which was true for the whole of the private beta and is not true
+// now: the app's commercial system is live against Stripe, and the seams below
+// hand an athlete into it. What has NOT changed is where authority lives —
+// this file names a price for a reader, and the server resolves the price that
+// is actually charged. The site never sends a price, a price id, or an
+// entitlement claim.
 
 export const plans = {
   standard: {
@@ -41,10 +44,9 @@ export const plans = {
     //
     // Distinct from `foundingOffer` below: that is a time-limited
     // promotional price for the monthly plan and stays gated behind
-    // `enabled: false`. This is a permanent billing option and is live in
-    // the UI now — but, like the monthly price, it still cannot be
-    // purchased, because `trial.live` and the null commerceSeams URLs are
-    // what gate every commercial action on the site.
+    // `enabled: false`. This is a permanent billing option, and at commercial
+    // launch both periods are genuinely purchasable — the sentence that used
+    // to sit here saying neither could be bought described the beta.
     // FINAL APPROVED COMMERCIAL PRICING. Was 79.99 while the annual figure
     // was still being decided; 89.99 is the settled number. Monthly is
     // untouched at 11.99.
@@ -111,44 +113,44 @@ export const trial = {
   autoConverts: true,
   /** Monthly or annual is chosen BEFORE the trial, and sets the eventual price. */
   periodChosenUpfront: true,
-  // Whether trial signup is actually wired to a real backend. False until
-  // the commercial entitlement/payment system is approved and connected —
-  // see the Phase 3 brief. This is the single flag that decides whether
-  // the site's trial copy can ever claim to be live.
-  // BACK TO FALSE, and the reason is that the flag was answering the wrong
-  // question. It was flipped true because the trial is real in the app's
-  // commercial system — api/_products.js carries TRIAL_DAYS = 14 for both
-  // offers and api/_stripe.js sets trial_period_days from it with
-  // payment_method_collection 'always'. All of that is still true, and none of
-  // it is what a visitor reads this flag as.
+  // Whether an ordinary visitor can actually start a trial today. This is the
+  // single flag that decides whether the site's trial copy may claim to be
+  // live, and it tracks WHETHER SOMEBODY CAN BUY rather than whether the
+  // machinery behind the purchase exists.
   //
-  // WHAT A VISITOR READS IT AS is "I can start a trial". They cannot. Public
-  // signup is CLOSED: an address that is not on the beta allowlist cannot become
-  // an account at all, and the refusal is a trigger on auth.users rather than a
-  // UI check, so there is no route through. A site that implies otherwise sends
-  // somebody to a door that will not open and calls it an invitation.
+  // TRUE AT COMMERCIAL LAUNCH, and both of the conditions the previous comment
+  // named are now met:
   //
-  // The flag therefore tracks WHETHER SOMEBODY CAN ACTUALLY BUY, not whether the
-  // machinery behind the purchase exists. Two things must both be true before it
-  // goes back: public signup opens, and charging is switched on by
-  // VVV_COMMERCE_ENABLED in the app's environment. That variable belongs to
-  // Stripe commissioning and is deliberately not represented here; until it is
-  // on, the app refuses checkout with commerce_disabled.
+  //   CHARGING IS ON. VVV_COMMERCE_ENABLED and VVV_COMMERCIAL_REQUIRED are set
+  //   in the app's Production environment, against live Stripe prices for
+  //   £11.99/month and £89.99/year with a 14-day trial. Before this, checkout
+  //   refused every athlete with commerce_disabled.
   //
-  // Do not open signup to make this sentence true. The direction of the fix is
-  // the copy following the product, never the other way round.
+  //   SIGNUP IS OPEN. Public signup was closed by a trigger on auth.users that
+  //   refused any address not on the private-beta allowlist. The private beta
+  //   is retired: the trigger is dropped and the allowlist is kept as history
+  //   rather than as an entitlement. An ordinary visitor can now become an
+  //   account, which is what made every earlier version of this sentence
+  //   false.
   //
-  // WHAT THIS SWITCHES BACK ON is the "Not open yet" notice on /start.
-  live: false,
+  // The direction of the fix has not changed: copy follows the product. If
+  // either condition is ever reversed, this goes back to false first.
+  live: true,
 } as const;
 
-// Handoff seams to the account/entitlement system System 3A1 is building.
-// Nullable by design — the same pattern as `footer.social` in site.ts: a
-// null href renders the action as visibly present but inactive, never a
-// fake "#" link or a success path that doesn't exist. Fill in the real
-// route the moment the backend contract lands; no component change
-// required beyond this file.
+// Handoff seams into the app's account/entitlement system.
+//
+// FILLED IN AT COMMERCIAL LAUNCH. These were null for the whole of the private
+// beta — the nullable shape exists so an unwired action renders as visibly
+// present but inactive rather than as a fake "#" link or a success path that
+// does not exist. The backend contract has landed, so they now name the real
+// routes.
+//
+// THE APP OWNS EVERYTHING BEHIND THEM. The site hands over an intent and, at
+// most, a billing period; identity, entitlement, agreements, checkout and the
+// Stripe customer are all resolved on the app's own origin against the athlete
+// on the bearer token. Nothing commercial is decided on this side of the link.
 export const commerceSeams = {
-  createAccount: null as string | null,
-  signIn: null as string | null,
+  createAccount: appUrl as string | null,
+  signIn: appSignInUrl as string | null,
 } as const;

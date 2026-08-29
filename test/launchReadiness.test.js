@@ -221,14 +221,18 @@ test('the launch flags are exactly the two HQ approved, and no others moved', ()
   //                     BLD_STAGES builder, not a second questionnaire.
   assert.match(code(read('src/content/journey.ts')), /valueFirstLive:\s*true/);
 
-  // CLOSED AGAIN, and this one was opened for the wrong reason rather than in
-  // error. The backend prerequisite it named is real and still true —
-  // TRIAL_DAYS = 14 in api/_products.js, applied by api/_stripe.js with
-  // payment_method_collection 'always'. What it did not check is whether a
-  // visitor can reach any of it, and they cannot: public signup is closed by a
-  // trigger on auth.users. A trial the site offers and the product refuses is
-  // the one launch flag that costs trust rather than time.
-  assert.match(code(read('src/content/commerce.ts')), /live:\s*false/);
+  // OPEN, and this time both halves of the question are answered rather than
+  // one. The backend prerequisite was never in doubt — TRIAL_DAYS = 14 in
+  // api/_products.js, applied by api/_stripe.js with payment_method_collection
+  // 'always'. What closed the flag last time was the OTHER half: a visitor
+  // could not reach any of it, because public signup was refused by a trigger
+  // on auth.users for every address outside the private-beta allowlist.
+  //
+  // The private beta is retired. The trigger is dropped, the allowlist is kept
+  // as history rather than as an entitlement, and charging is switched on in
+  // the app's environment. A trial the site offers is now a trial the product
+  // honours, which is the only condition this flag has ever really had.
+  assert.match(code(read('src/content/commerce.ts')), /live:\s*true/);
 
   // STILL CLOSED. Legal publication is not this repository's to grant, and
   // each of these three still carries an unresolved decision inside its own
@@ -247,10 +251,18 @@ test('the launch flags are exactly the two HQ approved, and no others moved', ()
   assert.match(legal, /subscriptionPause:\s*false/);
   // Still gated in the app itself.
   assert.match(code(read('src/content/productClaims.ts')), /garminIntegration:\s*false/);
-  // And the seams the app owns stay null on this side.
+  // And the seams the app owns still resolve on the APP's origin, which is
+  // what "the app owns them" has always meant. They were null while there was
+  // nothing to point at; at launch they name real routes, and the assertion
+  // moves from "unwired" to "not ours to serve" -- an account or a purchase
+  // resolved on this side of the link is one resolved without the athlete's
+  // token, their entitlement or their agreements.
   const commerce = code(read('src/content/commerce.ts'));
-  assert.match(commerce, /createAccount:\s*null/);
-  assert.match(commerce, /signIn:\s*null/);
+  assert.match(commerce, /createAccount:\s*appUrl/);
+  assert.match(commerce, /signIn:\s*appSignInUrl/);
+  for (const m of commerce.match(/(createAccount|signIn):[^,]+/g) || []) {
+    assert.ok(!/["'`]\//.test(m), `a seam points at a website-local route: ${m}`);
+  }
 });
 
 test('no published document carries a placeholder, and the unpublished one still does', () => {

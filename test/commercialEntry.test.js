@@ -34,8 +34,15 @@ test('valhalla -> pricing -> start -> app, and nothing in between', () => {
      route every other first-time CTA uses, so there is one journey rather than
      two that differ by a page. */
   const card = code(read('src/components/sections/PricingCard.tsx'));
-  assert.match(card, /href=\{buildUrl\}/);
+  /* THROUGH THE SHARED ROUTE STILL, but carrying the period the visitor has
+     already chosen -- buildUrlForPeriod() is buildUrl plus one parameter, so
+     there is still exactly one journey and no page-local entry. */
+  assert.match(card, /buildUrlForPeriod\("monthly"\)/);
+  assert.match(card, /buildUrlForPeriod\("yearly"\)/);
   assert.ok(!/href="\/start"/.test(card), 'no page-local entry route');
+  /* And what travels is a period name, never anything purchasable: a URL
+     carrying a Stripe price is a URL anybody can edit into a different one. */
+  assert.ok(!/price_[A-Za-z0-9]/.test(card), 'a provider price id reached the website');
 
   const start = code(read('src/app/start/page.tsx'));
   assert.match(start, /href=\{buildUrl\}/, 'first-time entry goes through the shared build route');
@@ -98,11 +105,17 @@ test('the marketing site does not advertise internal beta plumbing', () => {
       assert.ok(!rx.test(shipped), `${f} advertises the beta gate to visitors: ${rx}`);
     }
   }
-  // The commercial half of the notice stays, because that is what trial.live is for.
+  /* THE COMMERCIAL HALF OF THE NOTICE IS GONE TOO, AT LAUNCH. It said paid
+     subscriptions were not switched on. They are. The assertion inverts rather
+     than being dropped, because a pre-launch sentence reappearing on a live
+     product is a regression worth catching. */
   const terms = code(read('src/components/sections/TrialTerms.tsx'));
-  assert.match(terms, /Paid subscriptions aren.t switched on yet/);
-  assert.match(terms, /Nothing below charges you or starts/);
-  assert.match(terms, /!trial\.live/, 'and it still reads the flag rather than hard-coding it');
+  assert.ok(!/Paid subscriptions aren.t switched on/.test(terms),
+    'the site still tells a paying visitor that subscriptions are closed');
+  assert.ok(!/Not open yet/.test(terms));
+  const card = code(read('src/components/sections/PricingCard.tsx'));
+  assert.ok(!/Not open yet/.test(card));
+  assert.ok(!/Paid subscriptions aren.t switched on/.test(card));
 });
 
 test('the primary CTA enters the builder, and says exactly that', () => {
@@ -193,26 +206,27 @@ test('no password journey is invented for an auth model that has none', () => {
     'and the page should say so, so nobody goes looking for one');
 });
 
-test('nothing here activates commerce, and the flag still says so', () => {
+test('the trial is open, and the site still takes no payment itself', () => {
   const commerce = code(read('src/content/commerce.ts'));
-  /* BACK TO FALSE. The flag was flipped true because the trial is real in the
-     app's commercial system, which it is — api/_products.js carries
-     TRIAL_DAYS = 14 and api/_stripe.js applies it with
-     payment_method_collection 'always'. But that is not the question a visitor
-     asks it. Public signup is closed by a trigger on auth.users, so nobody
-     outside the beta allowlist can start anything, and a site that says
-     otherwise points at a door that will not open.
-     Two things must both be true before it goes back: signup opens, and
-     charging is switched on by VVV_COMMERCE_ENABLED in the app's environment. */
-  assert.match(commerce, /live:\s*false/);
+  /* LIVE. The flag tracks whether somebody can actually BUY, and the two
+     conditions its own comment named are met: charging is switched on in the
+     app's environment, and public signup is open now that the private beta is
+     retired and the allowlist trigger on auth.users is dropped.
+
+     THE HALF THAT MUST NEVER CHANGE is below. Opening the trial did not move
+     one gram of commercial authority onto the marketing site: no Stripe, no
+     checkout, no card field, no form, no fetch. The site hands an athlete to
+     the app and the app does everything. That is the assertion this test was
+     always really making, and it is unchanged. */
+  assert.match(commerce, /live:\s*true/);
   const start = code(read('src/app/start/page.tsx'));
   const terms = code(read('src/components/sections/TrialTerms.tsx'));
-  for (const src of [start, terms]) {
+  const card = code(read('src/components/sections/PricingCard.tsx'));
+  for (const src of [start, terms, card]) {
     for (const rx of [/stripe/i, /checkout/i, /card ?number/i, /<form/i, /fetch\(/]) {
       assert.ok(!rx.test(src), `the commercial entry matches ${rx} — it must take no payment`);
     }
   }
-  assert.match(terms, /!trial\.live/, 'the status notice reads the flag rather than hard-coding it');
 });
 
 test('the private beta door is untouched, and is not the primary action', () => {
