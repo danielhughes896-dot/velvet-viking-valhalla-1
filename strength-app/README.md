@@ -12,9 +12,14 @@ the Valhalla app's (`velvet-viking-valhalla-2`) structure and hierarchy rules:
   Training = understand, Settings = configure.
 - **Same bottom nav** — Valhalla's icons and glow treatment.
 
-The one deliberate departure from the mockup: exercises (and days, weeks,
-history) are **overlapping stacked cards**, not separate rows. Tap a card to
-open it; the stack below moves down.
+Copied from Valhalla rather than approximated: the Today hero (`.th-hero`),
+the 280° cherry ring with its draw-on and pulse (`.th-arc`), the swipeable
+coaching rail (`.how-mod`), and the race-day cherry edge on Start session.
+
+Exercises, days, weeks and history are a **wallet deck**: card-shaped cards
+stacked horizontally, the ones behind peeking out to the right. Swipe or tap a
+peeking card to bring it forward; what it holds opens underneath. Each exercise
+card has a drawn picture; give an exercise an `img` URL to use a photo.
 
 ## What works
 
