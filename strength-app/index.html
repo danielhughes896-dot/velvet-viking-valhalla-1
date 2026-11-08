@@ -151,7 +151,14 @@ svg.i{width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2.1;
 .art .eq{fill:none; stroke:var(--gold); stroke-width:4; stroke-linecap:round; stroke-linejoin:round;}
 .art .eqf{fill:var(--gold); stroke:none; opacity:.95;}
 .art .big{font-family:var(--display-face); font-weight:800; fill:rgba(255,255,255,.9); filter:drop-shadow(0 0 10px rgba(255,255,255,.3));}
-.art .photo{display:block; width:100%; height:100%; object-fit:cover;}
+.art .photo{display:block; width:100%; height:100%; object-fit:cover; filter:brightness(.78) saturate(.92);}
+/* PHOTOS FADE DOWN harder than drawings: a real picture has detail right
+   to the bottom edge, so the scrim starts higher and ends nearly black. A
+   light top fade keeps the number and rest pill readable too. */
+.wcard:has(.photo)::after{height:68%;
+  background:linear-gradient(180deg, rgba(10,10,12,0) 0%, rgba(10,10,12,.55) 38%, rgba(10,10,12,.9) 72%, rgba(10,10,12,.97) 100%);}
+.wcard:has(.photo)::before{content:''; position:absolute; left:0; right:0; top:0; height:26%; z-index:1; pointer-events:none;
+  background:linear-gradient(180deg, rgba(10,10,12,.55), rgba(10,10,12,0));}
 .wc-in{position:absolute; inset:0; z-index:2; pointer-events:none; display:flex; flex-direction:column; justify-content:space-between;
   padding:16px max(16px, env(safe-area-inset-right, 0px)) 18px max(16px, env(safe-area-inset-left, 0px));}
 .wc-top{display:flex; align-items:center; justify-content:space-between; gap:8px;}
@@ -387,11 +394,11 @@ var SESSIONS = {
     why:'Build pulling power, posture and overall strength.', focus:'Controlled reps, full range, strong contraction.',
     feel:'Challenging and controlled, not to failure.', watch:'Shrugging the shoulders up, or heaving with the lower back.',
     exercises:[
-      {id:'pullup', name:'Pull-up', art:'vpull', sets:4, lo:6, hi:8, rest:120, bw:true, start:0, pattern:'Vertical pull · lats', cue:'Start from a dead hang, drive elbows to ribs, lower for three seconds.'},
-      {id:'bbrow', name:'Barbell Row', art:'hrow', sets:4, lo:8, hi:10, rest:120, start:60, pattern:'Horizontal pull · mid-back', cue:'Hinge to 45°, brace, pull the bar to your lower ribs without standing up.'},
-      {id:'cablerow', name:'Seated Cable Row', art:'seatrow', sets:3, lo:10, hi:12, rest:90, start:55, pattern:'Horizontal pull · rhomboids', cue:'Tall chest. Pause one second with shoulder blades squeezed.'},
-      {id:'pulldown', name:'Lat Pulldown', art:'vpull', sets:3, lo:10, hi:12, rest:90, start:55, pattern:'Vertical pull · lats', cue:'Pull to the top of the chest, keep the torso still.'},
-      {id:'facepull', name:'Face Pull', art:'facepull', sets:3, lo:12, hi:15, rest:60, start:20, inc:1.25, pattern:'Rear delts · rotator cuff', cue:'Rope to eye level, thumbs finish pointing behind you.'}
+      {id:'pullup', img:'photos/pullup.jpg', name:'Pull-up', art:'vpull', sets:4, lo:6, hi:8, rest:120, bw:true, start:0, pattern:'Vertical pull · lats', cue:'Start from a dead hang, drive elbows to ribs, lower for three seconds.'},
+      {id:'bbrow', img:'photos/bbrow.jpg', name:'Barbell Row', art:'hrow', sets:4, lo:8, hi:10, rest:120, start:60, pattern:'Horizontal pull · mid-back', cue:'Hinge to 45°, brace, pull the bar to your lower ribs without standing up.'},
+      {id:'cablerow', img:'photos/cablerow.jpg', name:'Seated Cable Row', art:'seatrow', sets:3, lo:10, hi:12, rest:90, start:55, pattern:'Horizontal pull · rhomboids', cue:'Tall chest. Pause one second with shoulder blades squeezed.'},
+      {id:'pulldown', img:'photos/pulldown.jpg', name:'Lat Pulldown', art:'vpull', sets:3, lo:10, hi:12, rest:90, start:55, pattern:'Vertical pull · lats', cue:'Pull to the top of the chest, keep the torso still.'},
+      {id:'facepull', img:'photos/facepull.jpg', name:'Face Pull', art:'facepull', sets:3, lo:12, hi:15, rest:60, start:20, inc:1.25, pattern:'Rear delts · rotator cuff', cue:'Rope to eye level, thumbs finish pointing behind you.'}
     ]},
   legs:{ id:'legs', name:'Leg Strength', area:'Legs', hue:3, minutes:60, effort:'Hard',
     intro:'Heavy, honest lower-body work. Squat, hinge and single-leg strength in one session.',

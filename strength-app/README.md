@@ -41,3 +41,10 @@ clear them in Settings.
 Open `index.html` in a browser. No build step. It is kept outside `src/` and
 `public/` so the website neither builds nor deploys it; move this folder into
 its own repository when the app gets one.
+
+## Photos
+
+`photos/` holds the five Back Strength photos (pull-up, barbell row, seated
+cable row, lat pulldown, face pull), cropped square from the supplied contact
+sheet. They are upscaled from small originals, so replace them with
+full-resolution versions when available (same file names, ideally 1080×1080).
