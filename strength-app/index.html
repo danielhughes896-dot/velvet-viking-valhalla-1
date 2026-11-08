@@ -10,11 +10,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* LAYOUT: one phone-width column in Valhalla's dark identity. Anything you
-   flip through -- exercises, days, weeks, logged sessions -- is a WALLET DECK:
-   card-shaped cards stacked horizontally, the front one whole and the ones
-   behind it peeking out to the right. Swipe (or tap a peeking card) to bring
-   the next one forward. What the front card holds opens underneath it, the way
-   a wallet shows a card's transactions.
+   flip through -- exercises, days, weeks, logged sessions -- is a CAROUSEL
+   like an Instagram post: a full-width square picture, one at a time, with
+   dots underneath saying there is more. Swipe to move. What the showing slide
+   holds opens underneath it.
 
    TOKENS are Valhalla's own (velvet-viking-valhalla-2, protected/
    velvet-viking-valhalla.html :root), character for character.
@@ -44,7 +43,6 @@
   --display-face:'Cinzel', 'Times New Roman', serif;
   --text-face:'Oswald', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
   --mono-face:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
-  --peek:14px;
 }
 *{box-sizing:border-box;}
 html,body{background:var(--bg);}
@@ -127,52 +125,55 @@ svg.i{width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2.1;
 .section-head h2{margin:0; font-size:20px; font-weight:600; letter-spacing:.03em; color:var(--gold); text-transform:uppercase;}
 .section-head span{font-size:14px; letter-spacing:.04em; color:var(--ink-dim); text-transform:uppercase;}
 
-/* ---------- THE WALLET DECK ---------- */
-.deck{position:relative; touch-action:pan-y; user-select:none; -webkit-user-select:none;}
-/* The sizer gives the deck its height: one card, credit-card proportions. */
-.deck::before{content:''; display:block; width:calc(100% - 3 * var(--peek)); aspect-ratio:1.586/1;}
-.wcard{position:absolute; top:0; left:0; width:calc(100% - 3 * var(--peek)); aspect-ratio:1.586/1; border-radius:18px; overflow:hidden;
-  transform-origin:right center; transition:transform .42s cubic-bezier(.22,.61,.36,1), opacity .42s ease, filter .42s ease;
+/* ---------- THE CAROUSEL ----------
+   Full width, edge to edge, square -- an Instagram post. One slide shows at
+   a time; the dots underneath say there is more. Swipe to move. */
+.deck{position:relative; overflow:hidden; touch-action:pan-y; user-select:none; -webkit-user-select:none;
+  margin-left:calc(-1 * max(16px, env(safe-area-inset-left, 0px))); margin-right:calc(-1 * max(16px, env(safe-area-inset-right, 0px)));}
+.deck-track{display:flex; transition:transform .38s cubic-bezier(.22,.61,.36,1); will-change:transform;}
+.deck-track.dragging{transition:none;}
+.wcard{position:relative; flex:0 0 100%; aspect-ratio:1/1; max-width:100%; overflow:hidden;
   --hue:var(--bronze);
   background:
-    radial-gradient(90% 120% at 82% 38%, color-mix(in srgb, var(--hue) 42%, transparent) 0%, transparent 62%),
-    linear-gradient(140deg, color-mix(in srgb, var(--hue) 34%, #121316) 0%, #15161b 58%, #0f1013 100%);
-  border:1px solid rgba(255,255,255,.09);
-  box-shadow:0 14px 30px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.10);}
+    radial-gradient(80% 70% at 50% 38%, color-mix(in srgb, var(--hue) 40%, transparent) 0%, transparent 70%),
+    linear-gradient(160deg, color-mix(in srgb, var(--hue) 30%, #121316) 0%, #15161b 60%, #0f1013 100%);}
 .wcard.hue-0{--hue:var(--c-long);} .wcard.hue-1{--hue:var(--c-threshold);} .wcard.hue-2{--hue:var(--c-tempo);}
 .wcard.hue-3{--hue:var(--c-easy);} .wcard.hue-4{--hue:var(--cherry);} .wcard.hue-rest{--hue:#5a5560;}
-.wcard.current{border-color:var(--gold); box-shadow:0 14px 30px rgba(0,0,0,.55), 0 0 0 1px rgba(227,177,90,.25), 0 0 22px rgba(227,177,90,.25), inset 0 1px 0 rgba(255,255,255,.10);}
-.wcard.dragging{transition:none;}
-.wcard .art{position:absolute; right:-2%; top:0; height:100%; width:62%;}
+/* Legibility scrim: the words sit on the bottom of the picture. */
+.wcard::after{content:''; position:absolute; left:0; right:0; bottom:0; height:52%; pointer-events:none; z-index:1;
+  background:linear-gradient(180deg, rgba(10,10,12,0) 0%, rgba(10,10,12,.72) 55%, rgba(10,10,12,.94) 100%);}
+.wcard.current{box-shadow:inset 0 0 0 2px var(--gold), inset 0 0 28px rgba(227,177,90,.25);}
+.wcard .art{position:absolute; left:0; right:0; top:4%; height:66%; width:100%;}
+.wcard .art.full{inset:0; top:0; height:100%;}
 .wcard.complete .art{opacity:.45;}
-.art .fig{fill:none; stroke:#FFFFFF; stroke-width:7; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 6px rgba(255,255,255,.35));}
+.art .fig{fill:none; stroke:#FFFFFF; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 6px rgba(255,255,255,.35));}
 .art .head{fill:#FFFFFF; stroke:none; filter:drop-shadow(0 0 6px rgba(255,255,255,.35));}
-.art .eq{fill:none; stroke:var(--gold); stroke-width:4.5; stroke-linecap:round; stroke-linejoin:round;}
+.art .eq{fill:none; stroke:var(--gold); stroke-width:4; stroke-linecap:round; stroke-linejoin:round;}
 .art .eqf{fill:var(--gold); stroke:none; opacity:.95;}
 .art .big{font-family:var(--display-face); font-weight:800; fill:rgba(255,255,255,.9); filter:drop-shadow(0 0 10px rgba(255,255,255,.3));}
-.art .photo{width:100%; height:100%; object-fit:cover;}
-.wc-in{position:absolute; inset:0; padding:14px 16px; display:flex; flex-direction:column; justify-content:space-between; pointer-events:none;}
+.art .photo{display:block; width:100%; height:100%; object-fit:cover;}
+.wc-in{position:absolute; inset:0; z-index:2; pointer-events:none; display:flex; flex-direction:column; justify-content:space-between;
+  padding:16px max(16px, env(safe-area-inset-right, 0px)) 18px max(16px, env(safe-area-inset-left, 0px));}
 .wc-top{display:flex; align-items:center; justify-content:space-between; gap:8px;}
-.wc-badge{width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.12);
-  font-family:var(--display-face); font-weight:700; font-size:16px; color:var(--gold-bright);}
+.wc-badge{width:36px; height:36px; border-radius:10px; display:grid; place-items:center; background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.14);
+  font-family:var(--display-face); font-weight:700; font-size:16px; color:var(--gold-bright); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);}
 .wc-badge.ok{color:var(--c-easy); border-color:rgba(132,165,110,.5);}
 .wc-badge.ok svg.i{width:18px; height:18px; stroke-width:2.8;}
-.wc-name{font-weight:600; font-size:clamp(19px, 5.6vw, 23px); line-height:1.05; letter-spacing:.03em; text-transform:uppercase; max-width:58%; color:#fff;
+.wc-name{font-weight:600; font-size:clamp(26px, 8vw, 34px); line-height:1.02; letter-spacing:.03em; text-transform:uppercase; color:#fff;
   text-shadow:0 0 1px rgba(255,255,255,.42), 0 0 13px rgba(255,255,255,.22); text-wrap:balance;}
-.wc-pat{font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:rgba(244,241,234,.72); margin-top:4px; max-width:55%;}
-.wc-bot{display:flex; align-items:flex-end; justify-content:space-between; gap:8px;}
-.wc-rx{font-family:var(--mono-face); font-size:15px; font-weight:600; letter-spacing:.02em; color:#fff;}
+.wc-pat{font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:rgba(244,241,234,.75); margin-top:4px;}
+.wc-bot{display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-top:12px;}
+.wc-rx{font-family:var(--mono-face); font-size:16px; font-weight:600; letter-spacing:.02em; color:#fff;}
 .wc-rx small{display:block; font-family:var(--text-face); font-weight:400; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:rgba(244,241,234,.65);}
+.wc-in{justify-content:flex-start;}
+.wc-in > :nth-child(2){margin-top:auto;}
 .pill{font-weight:600; font-size:12px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; border:1px solid var(--bronze); color:var(--gold);
-  border-radius:999px; padding:4px 10px; font-variant-numeric:tabular-nums; background:rgba(0,0,0,.3);}
+  border-radius:999px; padding:4px 10px; font-variant-numeric:tabular-nums; background:rgba(0,0,0,.45); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);}
 .pill.ok{border-color:rgba(132,165,110,.6); color:var(--c-easy);}
-.pill.quiet{border-color:rgba(255,255,255,.18); color:var(--ink-dim);}
-.pill.now{border-color:var(--cherry); color:#fff; background:var(--cherry-tint);}
-.pager{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px;}
-.pager .dots{padding:0;}
-.pager .nav{width:40px; height:40px; border-radius:50%; border:1px solid var(--line); display:grid; place-items:center; color:var(--gold);}
-.pager .nav:disabled{opacity:.3; cursor:default;}
-.pager .count{font-family:var(--mono-face); font-size:12px; color:var(--ink-faint); letter-spacing:.06em;}
+.pill.quiet{border-color:rgba(255,255,255,.22); color:var(--ink-dim);}
+.pill.now{border-color:var(--cherry); color:#fff; background:rgba(122,46,66,.55);}
+.pager{display:flex; justify-content:center; margin-top:10px;}
+.pager .dots{padding:4px 0;}
 
 /* ---------- WHAT THE FRONT CARD HOLDS ---------- */
 .panel{padding:18px 2px 0; display:flex; flex-direction:column; gap:12px; animation:fade .22s ease;}
@@ -297,7 +298,7 @@ svg.i{width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2.1;
   *{transition:none !important; animation:none !important;}
   .th-arc path{stroke-dasharray:none;}
 }
-@media (max-width:370px){ :root{--peek:11px;} .pill{font-size:10.5px; padding:3px 8px;} }
+@media (max-width:370px){ .pill{font-size:10.5px; padding:3px 8px;} }
 </style>
 </head>
 <body>
@@ -369,7 +370,7 @@ var POSES = {
     eq:'<line class="eq" x1="130" y1="76" x2="134" y2="10"/><circle class="eqf" cx="134" cy="7" r="5"/>'}
 };
 function artFor(ex){
-  if (ex.img) return '<div class="art"><img class="photo" src="'+ex.img+'" alt=""></div>';
+  if (ex.img) return '<div class="art full"><img class="photo" src="'+ex.img+'" alt="" draggable="false"></div>';
   var p = POSES[ex.art]; if (!p) return '';
   var lines = p.l.map(function(pts){ return '<polyline class="fig" points="'+pts.map(function(q){return q.join(',');}).join(' ')+'"/>'; }).join('');
   return '<svg class="art" viewBox="0 0 200 125" preserveAspectRatio="xMidYMid meet" aria-hidden="true">'+p.eq+lines+'<circle class="head" cx="'+p.h[0]+'" cy="'+p.h[1]+'" r="8.5"/></svg>';
@@ -513,30 +514,25 @@ function fmtVol(kg){ var v = state.units==='lb' ? kg*2.20462 : kg; return v >= 1
 var DETAIL = {};
 function getIdx(key){ return key === 'today' ? (state.active ? state.active.idx || 0 : 0) : (state.idx[key] || 0); }
 function setIdx(key, i){ if (key === 'today'){ if (state.active) state.active.idx = i; } else state.idx[key] = i; save(); }
-function cardStyle(d){
-  if (d < 0) return 'transform:translateX(-118%) rotate(-7deg); opacity:0; z-index:20; pointer-events:none;';
-  if (d > 3) return 'transform:translateX(calc(3 * var(--peek))) scale(.82); opacity:0; z-index:0; pointer-events:none;';
-  return 'transform:translateX(calc('+d+' * var(--peek))) scale('+(1-d*0.06).toFixed(2)+'); opacity:1; z-index:'+(10-d)+'; filter:brightness('+(1-d*0.18).toFixed(2)+');';
-}
 function deck(key, cards, idx){
-  return '<div class="deck" data-deck="'+key+'" role="group" aria-roledescription="card stack">'+
+  return '<div class="deck" data-deck="'+key+'" role="group" aria-roledescription="carousel">'+
+    '<div class="deck-track" style="transform:translateX('+(-idx*100)+'%)">'+
     cards.map(function(c, i){
-      return '<div class="wcard '+(c.cls||'')+'" data-di="'+i+'" style="'+cardStyle(i-idx)+'" aria-hidden="'+(i!==idx)+'">'+c.html+'</div>';
-    }).join('')+'</div>'+pager(key, cards.length, idx)+
+      return '<div class="wcard '+(c.cls||'')+'" data-di="'+i+'" role="group" aria-roledescription="slide" aria-label="'+(i+1)+' of '+cards.length+'" aria-hidden="'+(i!==idx)+'">'+c.html+'</div>';
+    }).join('')+'</div></div>'+pager(key, cards.length, idx)+
     '<div class="detail" id="detail-'+key+'">'+(DETAIL[key] ? DETAIL[key](idx) : '')+'</div>';
 }
 function pager(key, n, idx){
-  var dots = ''; for (var i=0;i<n;i++) dots += '<button type="button" class="'+(i===idx?'on':'')+'" data-action="deck-go" data-deck="'+key+'" data-i="'+i+'" aria-label="Card '+(i+1)+'"></button>';
-  return '<div class="pager" data-pager="'+key+'"><button type="button" class="nav" data-action="deck-go" data-deck="'+key+'" data-i="'+(idx-1)+'" aria-label="Previous card"'+(idx<=0?' disabled':'')+'>'+ICONS.chevronLeft+'</button>'+
-    '<div><div class="dots">'+dots+'</div></div>'+
-    '<button type="button" class="nav" data-action="deck-go" data-deck="'+key+'" data-i="'+(idx+1)+'" aria-label="Next card"'+(idx>=n-1?' disabled':'')+'>'+ICONS.chevronRight+'</button></div>';
+  var dots = ''; for (var i=0;i<n;i++) dots += '<button type="button" class="'+(i===idx?'on':'')+'" data-action="deck-go" data-deck="'+key+'" data-i="'+i+'" aria-label="Show '+(i+1)+' of '+n+'"'+(i===idx?' aria-current="true"':'')+'></button>';
+  return '<div class="pager" data-pager="'+key+'"><div class="dots">'+dots+'</div></div>';
 }
 function goDeck(key, i){
   var el = document.querySelector('[data-deck="'+key+'"]'); if (!el) return;
-  var cards = el.querySelectorAll('.wcard'), n = cards.length;
+  var track = el.querySelector('.deck-track'), cards = el.querySelectorAll('.wcard'), n = cards.length;
   i = Math.max(0, Math.min(n-1, i));
   setIdx(key, i);
-  cards.forEach(function(c, j){ c.classList.remove('dragging'); c.setAttribute('style', cardStyle(j-i)); c.setAttribute('aria-hidden', j!==i); });
+  track.classList.remove('dragging'); track.style.transform = 'translateX('+(-i*100)+'%)';
+  cards.forEach(function(c, j){ c.setAttribute('aria-hidden', j!==i); });
   var pg = document.querySelector('[data-pager="'+key+'"]'); if (pg) pg.outerHTML = pager(key, n, i);
   var dt = document.getElementById('detail-'+key); if (dt && DETAIL[key]) dt.innerHTML = DETAIL[key](i);
 }
@@ -816,8 +812,6 @@ function finish(){
 var suppressClick = false;
 document.addEventListener('click', function(e){
   if (suppressClick){ suppressClick = false; e.preventDefault(); return; }
-  var peek = e.target.closest('.wcard');
-  if (peek){ var dk = peek.parentNode.getAttribute('data-deck'), di = +peek.getAttribute('data-di'); if (di !== getIdx(dk)) goDeck(dk, di); return; }
   var b = e.target.closest('[data-action]'); if (!b) return;
   var act = b.getAttribute('data-action'), a = state.active;
   switch (act){
@@ -872,14 +866,18 @@ document.addEventListener('pointerdown', function(e){
   var dk = e.target.closest('.deck'), rl = e.target.closest('[data-rail]');
   if (!dk && !rl) return;
   if (e.target.closest('input')) return;
-  drag = {deck:dk, rail:rl, x:e.clientX, y:e.clientY, dx:0, active:false, card: dk ? dk.querySelector('.wcard[data-di="'+getIdx(dk.getAttribute('data-deck'))+'"]') : null};
+  drag = {deck:dk, rail:rl, x:e.clientX, y:e.clientY, dx:0, active:false, track: dk ? dk.querySelector('.deck-track') : null};
 });
 document.addEventListener('pointermove', function(e){
   if (!drag) return;
   var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
   if (!drag.active){ if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) drag.active = true; else if (Math.abs(dy) > 10){ drag = null; return; } else return; }
   drag.dx = dx;
-  if (drag.card){ drag.card.classList.add('dragging'); drag.card.style.transform = 'translateX('+dx+'px) rotate('+(dx*0.03)+'deg)'; }
+  if (drag.track){
+    var key = drag.deck.getAttribute('data-deck'), i = getIdx(key), n = drag.track.children.length;
+    if ((i === 0 && dx > 0) || (i === n-1 && dx < 0)) dx = dx / 3; // resist at the ends
+    drag.track.classList.add('dragging'); drag.track.style.transform = 'translateX(calc('+(-i*100)+'% + '+dx+'px))';
+  }
 });
 function endDrag(){
   if (!drag) return;

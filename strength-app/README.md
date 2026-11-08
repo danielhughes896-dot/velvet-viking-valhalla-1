@@ -16,10 +16,13 @@ Copied from Valhalla rather than approximated: the Today hero (`.th-hero`),
 the 280° cherry ring with its draw-on and pulse (`.th-arc`), the swipeable
 coaching rail (`.how-mod`), and the race-day cherry edge on Start session.
 
-Exercises, days, weeks and history are a **wallet deck**: card-shaped cards
-stacked horizontally, the ones behind peeking out to the right. Swipe or tap a
-peeking card to bring it forward; what it holds opens underneath. Each exercise
-card has a drawn picture; give an exercise an `img` URL to use a photo.
+Exercises, days, weeks and history are a **carousel like an Instagram post**:
+a full-width square picture, one at a time, with dots underneath showing there
+is more. Swipe to move; what the showing slide holds opens underneath.
+
+Each exercise has a drawn picture for now. To use a photo, give the exercise an
+`img` path (e.g. `img:'photos/pullup.jpg'`); it fills the square and the name
+sits on a dark fade at the bottom.
 
 ## What works
 
