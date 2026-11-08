@@ -13,8 +13,10 @@ the Valhalla app's (`velvet-viking-valhalla-2`) structure and hierarchy rules:
 - **Same bottom nav** — Valhalla's icons and glow treatment.
 
 Copied from Valhalla rather than approximated: the Today hero (`.th-hero`),
-the 280° cherry ring with its draw-on and pulse (`.th-arc`), the swipeable
-coaching rail (`.how-mod`), and the race-day cherry edge on Start session.
+the 280° cherry ring with its draw-on and pulse (`.th-arc`), the structure
+tiles (`.ws-h-step`, used for Focus / Feel / Watch for), the race-day cherry
+edge on Start session, and the view pager: swipe sideways anywhere outside a
+carousel to move between the five screens.
 
 Exercises, days, weeks and history are a **carousel like an Instagram post**:
 a full-width square picture, one at a time, with dots underneath showing there

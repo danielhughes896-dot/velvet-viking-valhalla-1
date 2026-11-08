@@ -21,7 +21,8 @@
    COPIED FROM VALHALLA, NOT APPROXIMATED:
      .th-hero   the Today hero: no card, lit title + lit metric left, ring right
      .th-ring   the near-complete cherry ring, its gradient, draw-on and pulse
-     .how-mod   the coaching rail: swipeable panels, lit rather than boxed
+     .ws-h-step the 2km/6km/1km tiles, used for Focus / Feel / Watch for
+     view pager swipe sideways anywhere to move between the five screens
      .btn-race  the race-day edge: 1.5px cherry rim, cherry wash, glow
    ACCENT RULES carried over: gold is the brand; cherry is the button that
    moves you forward and progression. SCREEN JOBS carried over: Today = DO,
@@ -52,7 +53,7 @@ button{font:inherit; color:inherit; background:none; border:0; padding:0; cursor
 button:focus-visible, input:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
 svg.i{width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2.1; stroke-linecap:round; stroke-linejoin:round; flex:none;}
 
-.app{max-width:480px; margin:0 auto;
+.app{max-width:480px; margin:0 auto; touch-action:pan-y;
   padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
   padding-block:18px calc(96px + env(safe-area-inset-bottom, 0px));}
 .app.resting{padding-bottom:calc(196px + env(safe-area-inset-bottom, 0px));}
@@ -102,20 +103,21 @@ svg.i{width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2.1;
 .th-row.mp{color:var(--gold-text); font-size:clamp(9px, 2.4vw, 10.5px); letter-spacing:.06em; text-transform:uppercase; font-family:var(--mono-face);}
 .th-steps-note{display:block; margin:0; padding:0 2px 10px; color:var(--ink-faint); font-size:var(--fs-support); text-align:center; text-wrap:balance;}
 
-/* ---------- THE RAIL (Valhalla .how-card .fuel-body / .how-mod) ---------- */
-.rail{overflow:hidden; touch-action:pan-y; margin:6px -4px 0;}
-.rail-track{display:flex; transition:transform .34s cubic-bezier(.22,.61,.36,1);}
-.how-mod{display:block; flex:0 0 33.333%; min-width:0; padding:18px 13px 20px; border-radius:20px; position:relative;
-  opacity:.46; transition:opacity .28s ease; text-align:center;}
-.how-mod.is-active{opacity:1;}
-.how-mod::before{content:''; position:absolute; inset:0; border-radius:26px; pointer-events:none; z-index:0; opacity:0; transition:opacity .34s ease;
-  background:radial-gradient(48% 46% at 50% 46%, rgba(227,177,90,.26) 0%, rgba(227,177,90,.115) 52%, rgba(227,177,90,0) 100%);}
-.how-mod.is-active::before{opacity:1;}
-.how-mod + .how-mod::after{content:''; position:absolute; left:0; top:28%; bottom:28%; width:1px; background:var(--line-soft); opacity:.3; pointer-events:none;}
-.how-mod.is-active + .how-mod::after, .how-mod.is-active::after{opacity:0;}
-.how-mod > *{position:relative; z-index:1;}
-.how-mod .k{display:block; font-weight:700; font-size:17px; letter-spacing:.055em; text-transform:uppercase; margin-bottom:10px; color:var(--gold-text);}
-.how-mod .v{display:block; font-size:var(--fs-support); line-height:1.6; color:var(--ink-dim); overflow-wrap:break-word; hyphens:auto; -webkit-hyphens:auto;}
+/* ---------- THE COACHING TILES ----------
+   Valhalla's session-structure tiles (.ws-h-step), the 2km / 6km / 1km row:
+   three tiles side by side, quiet rim, and the one in focus lit with the
+   cherry edge Valhalla gives the work step (.ws-h-step.ws-work). Tap a tile
+   to move the focus. */
+.tiles{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; align-items:stretch; margin-top:14px;}
+.tile3{display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; min-width:0;
+  padding:12px 8px 14px; border-radius:14px; background:var(--t-tile); border:1px solid var(--t-tile-rim);
+  transition:border-color .2s, box-shadow .2s, background .2s;}
+.tile3 .k{font-weight:600; font-size:17px; letter-spacing:.05em; text-transform:uppercase; color:#fff;
+  text-shadow:0 0 1px rgba(255,255,255,.4), 0 0 12px rgba(255,255,255,.18);}
+.tile3 .v{font-size:var(--fs-support); line-height:1.5; color:var(--ink-dim); overflow-wrap:break-word; hyphens:auto; -webkit-hyphens:auto;}
+.tile3.is-active{border:1.5px solid var(--cherry); background:var(--cherry-tint), var(--t-tile);
+  box-shadow:0 0 16px var(--cherry-dim), inset 0 0 18px var(--cherry-tint);}
+.tile3.is-active .v{color:var(--ink);}
 .dots{display:flex; justify-content:center; gap:7px; padding:12px 0 2px;}
 .dots button{width:6px; height:6px; border-radius:50%; background:var(--ink-faint); opacity:.34; transition:opacity .25s ease, background-color .25s ease, box-shadow .25s ease; position:relative;}
 .dots button::after{content:''; position:absolute; inset:-9px;}
@@ -464,7 +466,7 @@ var state;
 try { state = JSON.parse(localStorage.getItem(KEY)); } catch(e){ state = null; }
 if (!state || state.v !== 2) state = defaults();
 state.idx = state.idx || {};
-var ui = {confirm:null, sheet:null, rest:null, rail:0};
+var ui = {confirm:null, sheet:null, rest:null, tile:0};
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
 
 /* ================= HELPERS ================= */
@@ -586,21 +588,11 @@ DETAIL.today = function(i){
     '<p class="cue">'+ex.cue+'</p><div class="last">'+lastTxt+upTxt+'</div>'+
     '<div class="sets"><div class="set-labels"><span>Set</span><span>'+(ex.bw?'Added':'Weight')+'</span><span></span><span>Reps</span><span></span></div>'+rows+'</div></div>';
 };
-function rail(s){
-  var mods = [['Why', s.why], ['Focus', s.focus], ['Feel', s.feel], ['Watch for', s.watch]];
-  var i = Math.max(0, Math.min(mods.length-1, ui.rail));
-  var off = Math.max(0, Math.min(i-1, mods.length-3)) * 33.333;
-  var dots = mods.map(function(m, j){ return '<button type="button" class="'+(j===i?'on':'')+'" data-action="rail-go" data-i="'+j+'" aria-label="'+m[0]+'"></button>'; }).join('');
-  return '<div class="rail" data-rail><div class="rail-track" style="transform:translateX(-'+off+'%)">'+
-    mods.map(function(m, j){ return '<button type="button" class="how-mod'+(j===i?' is-active':'')+'" data-action="rail-go" data-i="'+j+'"><span class="k">'+m[0]+'</span><span class="v">'+m[1]+'</span></button>'; }).join('')+
-    '</div></div><div class="dots" data-rail-dots>'+dots+'</div>';
-}
-function railGo(i){
-  ui.rail = Math.max(0, Math.min(3, i));
-  var tr = document.querySelector('.rail-track'); if (!tr) return;
-  tr.style.transform = 'translateX(-'+(Math.max(0, Math.min(ui.rail-1, 1)) * 33.333)+'%)';
-  tr.querySelectorAll('.how-mod').forEach(function(m, j){ m.classList.toggle('is-active', j===ui.rail); });
-  document.querySelectorAll('[data-rail-dots] button').forEach(function(b, j){ b.classList.toggle('on', j===ui.rail); });
+function tiles(s){
+  var mods = [['Focus', s.focus], ['Feel', s.feel], ['Watch for', s.watch]];
+  return '<div class="tiles">'+mods.map(function(m, j){
+    return '<button type="button" class="tile3'+(j===ui.tile?' is-active':'')+'" data-action="tile-go" data-i="'+j+'" aria-pressed="'+(j===ui.tile)+'"><span class="k">'+m[0]+'</span><span class="v">'+m[1]+'</span></button>';
+  }).join('')+'</div>';
 }
 
 function viewToday(){
@@ -623,7 +615,7 @@ function viewToday(){
         '<div class="th-row"><span class="th-ic">'+ICONS.flame+'</span>'+s.effort+'</div>'+
         '<div class="th-row mp">'+s.exercises.length+' lifts</div></div></div></div></section>'+
     '<p class="th-steps-note">'+s.intro+'</p>'+
-    rail(s)+
+    tiles(s)+
     '<div class="section-head"><h2>Session</h2><span>'+s.exercises.length+' exercises</span></div>'+
     deck('today', exCards(a), a.idx || 0)+
     '<div class="cta-wrap">'+cta+'</div>';
@@ -822,9 +814,9 @@ document.addEventListener('click', function(e){
   var b = e.target.closest('[data-action]'); if (!b) return;
   var act = b.getAttribute('data-action'), a = state.active;
   switch (act){
-    case 'view': state.view = b.getAttribute('data-view'); ui.confirm = null; save(); render(); window.scrollTo(0,0); return;
+    case 'view': goView(b.getAttribute('data-view')); return;
     case 'deck-go': goDeck(b.getAttribute('data-deck'), +b.getAttribute('data-i')); return;
-    case 'rail-go': railGo(+b.getAttribute('data-i')); return;
+    case 'tile-go': ui.tile = +b.getAttribute('data-i'); document.querySelectorAll('.tile3').forEach(function(t, j){ t.classList.toggle('is-active', j===ui.tile); t.setAttribute('aria-pressed', j===ui.tile); }); return;
     case 'start': {
       a.startedAt = Date.now(); var fi = firstIncompleteIdx(a); save(); render();
       if (fi >= 0 && fi !== a.idx) requestAnimationFrame(function(){ goDeck('today', fi); });
@@ -854,7 +846,7 @@ document.addEventListener('click', function(e){
     case 'discard': state.active = null; ui.rest = null; save(); render(); return;
     case 'close-sheet': ui.sheet = null; render(); window.scrollTo(0,0); return;
     case 'next-week': state.week = state.week >= BLOCK_WEEKS ? 1 : state.week+1; state.active = null; delete state.idx.week; delete state.idx.program; save(); render(); return;
-    case 'do-today': state.override = b.getAttribute('data-sid'); state.active = null; state.view = 'today'; save(); render(); window.scrollTo(0,0); return;
+    case 'do-today': state.override = b.getAttribute('data-sid'); state.active = null; save(); goView('today'); return;
     case 'rest-add': if (ui.rest){ ui.rest.end += (+b.getAttribute('data-s'))*1000; ui.rest.total = Math.max(ui.rest.total, (ui.rest.end-Date.now())/1000); ui.rest.over = false; renderRest(); } return;
     case 'rest-skip': ui.rest = null; renderRest(); return;
     case 'units': state.units = b.getAttribute('data-u'); save(); render(); return;
@@ -862,28 +854,48 @@ document.addEventListener('click', function(e){
     case 'ask': ui.confirm = b.getAttribute('data-key'); render(); return;
     case 'cancel': ui.confirm = null; render(); return;
     case 'do-examples': state.history = state.history.filter(function(h){return !h.example;}); state.active = null; state.idx = {}; ui.confirm = null; save(); render(); return;
-    case 'do-reset': state = defaults(); ui = {confirm:null, sheet:null, rest:null, rail:0}; save(); render(); return;
+    case 'do-reset': state = defaults(); ui = {confirm:null, sheet:null, rest:null, tile:0}; save(); render(); return;
   }
 });
 
-/* SWIPE: the front card follows the finger; past 50px it goes. The rail
-   takes the same gesture and moves its focus one panel. */
+/* SWIPE. Two gestures share one finger. On a carousel it moves the slides.
+   Anywhere else on the page it moves between the five screens, in nav order,
+   the way Valhalla's view pager does: the screen follows the finger, and past
+   a third of the way (or a quick flick) the next screen slides in. */
+var VIEWS = ['today','week','program','training','prefs'];
+function goView(v, dir){
+  if (v === state.view) { window.scrollTo(0,0); return; }
+  var from = VIEWS.indexOf(state.view), to = VIEWS.indexOf(v);
+  dir = dir || (to > from ? 1 : -1);
+  state.view = v; ui.confirm = null; save(); render(); window.scrollTo(0,0);
+  var el = document.querySelector('#app > .view');
+  if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  el.style.transition = 'none'; el.style.transform = 'translateX('+(dir*36)+'%)'; el.style.opacity = '0';
+  el.offsetWidth; // commit the start position before animating
+  el.style.transition = 'transform .32s cubic-bezier(.22,.61,.36,1), opacity .26s ease';
+  el.style.transform = ''; el.style.opacity = '';
+}
 var drag = null;
 document.addEventListener('pointerdown', function(e){
-  var dk = e.target.closest('.deck'), rl = e.target.closest('[data-rail]');
-  if (!dk && !rl) return;
-  if (e.target.closest('input')) return;
-  drag = {deck:dk, rail:rl, x:e.clientX, y:e.clientY, dx:0, active:false, track: dk ? dk.querySelector('.deck-track') : null};
+  if (e.button !== undefined && e.button !== 0) return;
+  if (!e.target.closest('#app') || e.target.closest('input') || document.querySelector('.sheet-back')) return;
+  var dk = e.target.closest('.deck');
+  drag = {deck:dk, x:e.clientX, y:e.clientY, t:Date.now(), dx:0, active:false,
+    track: dk ? dk.querySelector('.deck-track') : null, page: dk ? null : document.querySelector('#app > .view')};
 });
 document.addEventListener('pointermove', function(e){
   if (!drag) return;
   var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-  if (!drag.active){ if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) drag.active = true; else if (Math.abs(dy) > 10){ drag = null; return; } else return; }
+  if (!drag.active){ if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)*1.3) drag.active = true; else if (Math.abs(dy) > 10){ drag = null; return; } else return; }
   drag.dx = dx;
   if (drag.track){
     var key = drag.deck.getAttribute('data-deck'), i = getIdx(key), n = drag.track.children.length;
-    if ((i === 0 && dx > 0) || (i === n-1 && dx < 0)) dx = dx / 3; // resist at the ends
+    if ((i === 0 && dx > 0) || (i === n-1 && dx < 0)) dx = dx / 3;
     drag.track.classList.add('dragging'); drag.track.style.transform = 'translateX(calc('+(-i*100)+'% + '+dx+'px))';
+  } else if (drag.page){
+    var vi = VIEWS.indexOf(state.view);
+    if ((vi === 0 && dx > 0) || (vi === VIEWS.length-1 && dx < 0)) dx = dx / 4;
+    drag.page.style.transition = 'none'; drag.page.style.transform = 'translateX('+dx+'px)'; drag.page.style.opacity = String(1 - Math.min(.5, Math.abs(dx)/window.innerWidth));
   }
 });
 function endDrag(){
@@ -891,15 +903,23 @@ function endDrag(){
   var d = drag; drag = null;
   if (!d.active) return;
   suppressClick = true; setTimeout(function(){ suppressClick = false; }, 0);
-  if (d.deck){
+  var fast = Math.abs(d.dx) / Math.max(1, Date.now()-d.t) > 0.5 && Math.abs(d.dx) > 40;
+  if (d.track){
     var key = d.deck.getAttribute('data-deck'), i = getIdx(key);
     goDeck(key, d.dx < -50 ? i+1 : d.dx > 50 ? i-1 : i);
-  } else if (d.rail){
-    if (d.dx < -30) railGo(ui.rail+1); else if (d.dx > 30) railGo(ui.rail-1);
+  } else if (d.page){
+    var vi = VIEWS.indexOf(state.view), far = Math.abs(d.dx) > window.innerWidth/3 || fast;
+    var next = far ? vi + (d.dx < 0 ? 1 : -1) : vi;
+    if (next !== vi && next >= 0 && next < VIEWS.length){ goView(VIEWS[next], d.dx < 0 ? 1 : -1); }
+    else { d.page.style.transition = 'transform .25s ease, opacity .25s ease'; d.page.style.transform = ''; d.page.style.opacity = ''; }
   }
 }
 document.addEventListener('pointerup', endDrag);
-document.addEventListener('pointercancel', function(){ if (drag && drag.deck) goDeck(drag.deck.getAttribute('data-deck'), getIdx(drag.deck.getAttribute('data-deck'))); drag = null; });
+document.addEventListener('pointercancel', function(){
+  if (drag && drag.deck) goDeck(drag.deck.getAttribute('data-deck'), getIdx(drag.deck.getAttribute('data-deck')));
+  if (drag && drag.page){ drag.page.style.transform = ''; drag.page.style.opacity = ''; }
+  drag = null;
+});
 
 document.addEventListener('change', function(e){
   var t = e.target, spec = t.getAttribute && t.getAttribute('data-set'); if (!spec || !state.active) return;
