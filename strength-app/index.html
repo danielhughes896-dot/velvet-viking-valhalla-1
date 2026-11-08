@@ -143,7 +143,7 @@ svg.i{width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2.1;
 .wcard::after{content:''; position:absolute; left:0; right:0; bottom:0; height:52%; pointer-events:none; z-index:1;
   background:linear-gradient(180deg, rgba(10,10,12,0) 0%, rgba(10,10,12,.72) 55%, rgba(10,10,12,.94) 100%);}
 .wcard.current{box-shadow:inset 0 0 0 2px var(--gold), inset 0 0 28px rgba(227,177,90,.25);}
-.wcard .art{position:absolute; left:0; right:0; top:4%; height:66%; width:100%;}
+.wcard .art{position:absolute; inset:0; width:100%; height:100%;}
 .wcard .art.full{inset:0; top:0; height:100%;}
 .wcard.complete .art{opacity:.45;}
 .art .fig{fill:none; stroke:#FFFFFF; stroke-width:6; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 6px rgba(255,255,255,.35));}
@@ -373,7 +373,7 @@ function artFor(ex){
   if (ex.img) return '<div class="art full"><img class="photo" src="'+ex.img+'" alt="" draggable="false"></div>';
   var p = POSES[ex.art]; if (!p) return '';
   var lines = p.l.map(function(pts){ return '<polyline class="fig" points="'+pts.map(function(q){return q.join(',');}).join(' ')+'"/>'; }).join('');
-  return '<svg class="art" viewBox="0 0 200 125" preserveAspectRatio="xMidYMid meet" aria-hidden="true">'+p.eq+lines+'<circle class="head" cx="'+p.h[0]+'" cy="'+p.h[1]+'" r="8.5"/></svg>';
+  return '<svg class="art" viewBox="22 -6 156 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'+p.eq+lines+'<circle class="head" cx="'+p.h[0]+'" cy="'+p.h[1]+'" r="8.5"/></svg>';
 }
 function bigArt(txt){
   return '<svg class="art" viewBox="0 0 200 125" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><text class="big" x="118" y="92" text-anchor="middle" font-size="'+(txt.length>2?52:84)+'">'+txt+'</text></svg>';
