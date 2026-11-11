@@ -26,10 +26,10 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const code = (src) =>
   src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
 
-// The Valhalla app is a separate deployment and its URL is genuine. It is named
+// The Sacoro app is a separate deployment and its URL is genuine. It is named
 // explicitly so the blanket vercel.app ban below cannot break the route into the
 // product while still catching every other Vercel host.
-const VALHALLA_APP_HOST = 'velvet-viking-valhalla-1.vercel.app';
+const SACORO_APP_HOST = 'velvet-viking-valhalla-1.vercel.app';
 
 const PRODUCTION_ORIGIN = 'https://velvetviking.co.uk';
 
@@ -59,9 +59,9 @@ test('no preview or vercel.app host appears in any public metadata file', () => 
       !/velvet-viking-website-preview/.test(src),
       `${file} still references the preview deployment`
     );
-    // Every Vercel host except the real Valhalla app deployment.
+    // Every Vercel host except the real Sacoro app deployment.
     const strays = (src.match(/[a-z0-9-]+\.vercel\.app/g) || []).filter(
-      (h) => h !== VALHALLA_APP_HOST
+      (h) => h !== SACORO_APP_HOST
     );
     assert.deepEqual(
       strays,
@@ -103,13 +103,13 @@ test('robots declares the sitemap and host against the production origin', () =>
 });
 
 test('the app link that must stay Vercel-specific is untouched', () => {
-  // Not every vercel.app URL is a mistake. Valhalla is a separate deployment and
+  // Not every vercel.app URL is a mistake. Sacoro is a separate deployment and
   // the CTA into it is a genuine deployment URL. This test is here so a future
   // sweep for "vercel.app" does not helpfully break the route into the product.
   const site = read('src/content/site.ts');
   assert.ok(
     site.includes('velvet-viking-valhalla-1.vercel.app/get'),
-    'the Valhalla app CTA is a real deployment URL and must not be rewritten to the marketing domain'
+    'the Sacoro app CTA is a real deployment URL and must not be rewritten to the marketing domain'
   );
 });
 

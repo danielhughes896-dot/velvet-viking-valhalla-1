@@ -201,7 +201,7 @@ test('every secondary text CTA clears a 44px hit area', () => {
   for (const f of [
     'src/components/sections/Hero.tsx',
     'src/components/sections/ProductShowcase.tsx',
-    'src/app/valhalla/page.tsx',
+    'src/app/sacoro/page.tsx',
   ]) {
     const src = code(read(f));
     const links = [...src.matchAll(/text-vv-bronze-text transition-opacity/g)];

@@ -19,13 +19,13 @@ const code = (src) =>
 // ---------------------------------------------------------------------------
 // 1. NAVIGATION
 // ---------------------------------------------------------------------------
-test('Gallery sits in nav.links between Valhalla and Pricing', () => {
+test('Gallery sits in nav.links between Sacoro and Pricing', () => {
   const site = code(read('src/content/site.ts'));
   const at = site.indexOf('export const nav');
   const block = site.slice(at, site.indexOf('} as const;', at));
   const labels = [...block.matchAll(/label:\s*"([^"]+)"/g)].map((m) => m[1]);
-  const order = labels.filter((l) => ['Valhalla', 'Gallery', 'Pricing', 'Philosophy', 'About'].includes(l));
-  assert.deepEqual(order, ['Valhalla', 'Gallery', 'Pricing', 'Philosophy', 'About']);
+  const order = labels.filter((l) => ['Sacoro', 'Gallery', 'Pricing', 'Philosophy', 'About'].includes(l));
+  assert.deepEqual(order, ['Sacoro', 'Gallery', 'Pricing', 'Philosophy', 'About']);
 });
 
 test('Gallery links to /gallery', () => {
@@ -102,7 +102,7 @@ test('no gallery image src is used with an identical aspect ratio in more than o
   }
 });
 
-test('the gallery does not use the Valhalla app screenshots (product UI, not photography)', () => {
+test('the gallery does not use the Sacoro app screenshots (product UI, not photography)', () => {
   const galleryContent = read('src/content/gallery.ts');
   assert.ok(!/app-today\.jpg|app-full-plan\.jpg/.test(galleryContent));
 });
@@ -117,9 +117,9 @@ test('the gallery never uses the Work Travels composite file, which has homepage
 });
 
 // ---------------------------------------------------------------------------
-// 4. COPY DISCIPLINE — no re-explaining Valhalla/Philosophy/About
+// 4. COPY DISCIPLINE — no re-explaining Sacoro/Philosophy/About
 // ---------------------------------------------------------------------------
-test('gallery intro copy does not restate Valhalla/Philosophy/About\'s own claims', () => {
+test('gallery intro copy does not restate Sacoro/Philosophy/About\'s own claims', () => {
   const site = read('src/content/site.ts');
   const at = site.indexOf('gallery: {');
   const end = site.indexOf('\n  },', at);

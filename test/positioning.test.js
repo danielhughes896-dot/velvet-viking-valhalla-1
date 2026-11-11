@@ -8,7 +8,7 @@ const path = require('path');
 //
 // The claim boundary this guards, from the Business review: a reasonable
 // visitor must not come away thinking they are buying access to a qualified
-// running coach, and must not come away thinking Valhalla is a static
+// running coach, and must not come away thinking Sacoro is a static
 // downloadable plan either. The public copy therefore describes what the
 // product DOES — reads what happened, waits for a real pattern, adjusts when
 // justified, leaves the decision with the athlete — and never asserts a
@@ -44,7 +44,7 @@ const PUBLIC_COPY_FILES = [
   'src/components/sections/PricingCard.tsx',
 ];
 
-test('no public-facing copy positions Valhalla as a coach or as coaching', () => {
+test('no public-facing copy positions Sacoro as a coach or as coaching', () => {
   for (const file of PUBLIC_COPY_FILES) {
     const src = code(read(file));
     assert.ok(
@@ -93,7 +93,7 @@ test('protected brand language survived the positioning pass', () => {
   const site = read('src/content/site.ts');
   for (const phrase of [
     'Earn Your Place',
-    'Valhalla Awaits',
+    'Built Around The Climb',
     'Consistency Compounds',
     'The Flagship',
     'Not punishment. Not luck.',
@@ -183,7 +183,7 @@ test('the meta and Open Graph descriptions carry the same proposition, verbatim'
   // never load a page. They drifted from the hero once before.
   const layout = code(read('src/app/layout.tsx'));
   const site = code(read('src/content/site.ts'));
-  const heroLine = /Training that learns how you train\. The longer you run with Valhalla, the better it understands how you respond\./;
+  const heroLine = /Training that learns how you train\. The longer you run with Sacoro, the better it understands how you respond\./;
   assert.match(site, heroLine);
   // Counting needs the global flag — a non-global match returns one result no
   // matter how many times the string occurs, which made this pass-by-accident
@@ -222,7 +222,7 @@ test('the year-round lifecycle is published and says the athlete chooses', () =>
     assert.ok(yr.includes(stage), `the lifecycle is missing "${stage}"`);
   }
   // No forced transitions: app main is explicit that the athlete decides.
-  assert.match(yr, /You choose when to move on\. Valhalla does not decide it for you\./);
+  assert.match(yr, /You choose when to move on\. Sacoro does not decide it for you\./);
   assert.match(yr, /you can pick none/i);
   assert.match(code(read('src/components/sections/YearRound.tsx')), /yearRound\.footnote/,
     'the "athlete chooses" line must actually render');

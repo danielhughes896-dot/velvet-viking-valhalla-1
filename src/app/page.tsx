@@ -34,7 +34,7 @@ export default function Home() {
       <ProductShowcase />
 
       {/* HOMEPAGE STORY ORDER: moved ahead of Consistency Compounds — once
-          the visitor understands what Valhalla is, the next natural
+          the visitor understands what Sacoro is, the next natural
           question is why it exists and who built it, before the page
           moves on to proving consistency and real-world use. */}
       <Provenance
@@ -77,7 +77,7 @@ export default function Home() {
       {/* FINAL POLISH: moved ahead of Earn Your Place — Work Travels reads
           as an editorial interlude, not the page's last emotional beat
           before the commercial close. Earn Your Place, pricing, and the
-          final CTA now close the page instead, so Velvet Viking/Valhalla
+          final CTA now close the page instead, so Velvet Viking/Sacoro
           reclaims it after this section rather than ending on it.
           CONSISTENCY COMPOUNDS COVER TRANSITION, RE-DERIVED PER
           BREAKPOINT: pulled up over RaceBreak's pinned photo at every
@@ -139,9 +139,9 @@ export default function Home() {
         reverse
       />
 
-      {/* YEAR-ROUND MOVED TO /valhalla. The lifecycle timeline used to sit
+      {/* YEAR-ROUND MOVED TO /sacoro. The lifecycle timeline used to sit
           here, between Earn Your Place and One Philosophy. It is a product
-          argument, not a brand one, and it now opens the Valhalla page
+          argument, not a brand one, and it now opens the Sacoro page
           directly under that page's promise, where the sections either side
           of it are about the same thing. Deliberately NOT left mounted here
           as well: one timeline, one place. */}

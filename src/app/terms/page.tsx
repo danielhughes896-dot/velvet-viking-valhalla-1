@@ -22,7 +22,7 @@ export async function generateMetadata({
   return {
     title: "Terms",
     description:
-      "The agreement between you and Velvet Viking when you use Valhalla: subscriptions, the trial, cancellation, refunds and your rights as a consumer.",
+      "The agreement between you and Velvet Viking when you use Sacoro: subscriptions, the trial, cancellation, refunds and your rights as a consumer.",
     alternates: { canonical: "/terms" },
     // Unpublished OR under review: keep it out of the index. Published and not
     // under review: it is a live contract and should be findable.

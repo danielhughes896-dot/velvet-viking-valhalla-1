@@ -26,7 +26,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Velvet Viking — Valhalla Awaits. Earn Your Place.",
+    default: "Velvet Viking — Built Around The Climb. Earn Your Place.",
     template: "%s — Velvet Viking",
   },
   // POSITIONING PASS: "Endurance coaching" -> "Endurance training", here
@@ -36,14 +36,14 @@ export const metadata: Metadata = {
   // people who never opened the site. Kept character-identical to
   // hero.sub in content/site.ts, which is the same sentence.
   description:
-    "Training that learns how you train. The longer you run with Valhalla, the better it understands how you respond.",
+    "Training that learns how you train. The longer you run with Sacoro, the better it understands how you respond.",
   // Site-wide default; every route below overrides this with its own path
   // so each page declares its own canonical URL rather than inheriting "/".
   alternates: { canonical: "/" },
   openGraph: {
     title: "Velvet Viking",
     description:
-      "Training that learns how you train. The longer you run with Valhalla, the better it understands how you respond.",
+      "Training that learns how you train. The longer you run with Sacoro, the better it understands how you respond.",
     url: siteUrl,
     siteName: "Velvet Viking",
     // OVERNIGHT AUDIT: was the raw canonical crest (2.1MB) served directly
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Velvet Viking",
-    description: "Valhalla Awaits. Earn Your Place.",
+    description: "Built Around The Climb. Earn Your Place.",
     images: ["/brand/velvet-viking-crest-og.png"],
   },
   // NO `icons` DECLARATION, DELIBERATELY. It used to name two crest-derived

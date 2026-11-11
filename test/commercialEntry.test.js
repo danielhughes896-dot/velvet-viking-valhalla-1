@@ -9,10 +9,10 @@ const code = (src) => src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\
 
 // THE SIMPLIFIED COMMERCIAL ENTRY.
 //
-// The journey was /valhalla -> /pricing -> /trial -> /start, and the last two
+// The journey was /sacoro -> /pricing -> /trial -> /start, and the last two
 // were both placeholders in different ways: /trial asked a question the app
 // asks again where the answer does something, and /start described account
-// creation instead of leading to it. It is now /valhalla -> /pricing -> /start
+// creation instead of leading to it. It is now /sacoro -> /pricing -> /start
 // -> the app, and /start is the real thing.
 //
 // What these tests guard is the boundary that survived the simplification:
@@ -22,9 +22,9 @@ const code = (src) => src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\
 // ---------------------------------------------------------------------------
 // THE JOURNEY, END TO END
 // ---------------------------------------------------------------------------
-test('valhalla -> pricing -> start -> app, and nothing in between', () => {
+test('sacoro -> pricing -> start -> app, and nothing in between', () => {
   const site = code(read('src/content/site.ts'));
-  /* "See Prices" survives as /valhalla's SECONDARY link. Its primary closing
+  /* "See Prices" survives as /sacoro's SECONDARY link. Its primary closing
      action is the build — the approved value-first order converts a reader who
      understands the product into a plan, not into a price list. */
   assert.match(site, /label: "See Prices", href: "\/pricing"/);
@@ -185,7 +185,7 @@ test('the website owns no identity: no auth form, no key, no provider', () => {
      to the app and name the provider while doing so. A visitor never reads a
      comment; the rule is about what ships to the page. */
   for (const f of ['src/app/start/page.tsx', 'src/app/pricing/page.tsx',
-                   'src/app/valhalla/page.tsx', 'src/components/sections/TrialTerms.tsx']) {
+                   'src/app/sacoro/page.tsx', 'src/components/sections/TrialTerms.tsx']) {
     assert.ok(!/supabase|gotrue|postgres/i.test(code(read(f))),
       `${f} exposes provider terminology in shipped text`);
   }

@@ -7,7 +7,7 @@
 // that describes an unmerged feature branch is making a claim an athlete who
 // subscribes today cannot hold us to.
 //
-// Each flag was set by reading the Valhalla app repository, not by reading a
+// Each flag was set by reading the Sacoro app repository, not by reading a
 // brief about it. The evidence is recorded beside each one so the next person
 // can re-check it rather than trust this comment.
 export const PRODUCT_CLAIMS = {
@@ -31,7 +31,7 @@ export const PRODUCT_CLAIMS = {
    * previous main (7578494).
    *
    * ONE CLAIM WAS CHECKED PARTICULARLY CAREFULLY, because getting it wrong
-   * was the earlier risk: the copy must not imply Valhalla moves an athlete
+   * was the earlier risk: the copy must not imply Sacoro moves an athlete
    * between phases on its own. The app is explicit that it does not —
    * "ATHLETE DECIDES", and "the athlete chooses, and choosing nothing is a
    * legitimate answer" — so the website says the athlete chooses too.

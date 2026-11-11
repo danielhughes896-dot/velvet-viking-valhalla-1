@@ -8,7 +8,7 @@ import { appUrl } from "@/content/site";
 // is asked of them.
 //
 // THE APP NOW EXPOSES IT, so this is on. When the flag was introduced the
-// Valhalla app's /start still opened on "Step one of three — Create your
+// Sacoro app's /start still opened on "Step one of three — Create your
 // account, or sign in", and pointing a button labelled "Build My Plan" at a
 // signup form was the production mismatch it existed to prevent.
 //
@@ -30,7 +30,7 @@ import { appUrl } from "@/content/site";
 // that flag governs whether money can change hands, this one governs a route.
 export const JOURNEY = {
   /**
-   * True once the Valhalla app's own entry point opens on the builder rather
+   * True once the Sacoro app's own entry point opens on the builder rather
    * than on account creation. VERIFY AGAINST THE APP BEFORE FLIPPING — the
    * check is whether app /start's first pane builds a plan, not whether the
    * work is merged somewhere.

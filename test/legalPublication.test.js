@@ -223,7 +223,7 @@ test('the auth wording is accurate and not absolute', () => {
   // control. So the policy describes what the ATHLETE does — true and checkable —
   // and must not make an absolute claim the database could contradict.
   const body = docBody('privacyDraft');
-  assert.match(body, /you do not create or use a password to access Valhalla/);
+  assert.match(body, /you do not create or use a password to access Sacoro/);
   for (const overclaim of [
     /we do not store (a )?passwords?/i,
     /no password to (store or )?leak/i,

@@ -7,8 +7,8 @@ import { buildUrl } from "@/content/journey";
 // moment is carried by typography and spacing instead, per the brand's
 // "treat the crest as a high-value asset, not a repeated stamp" rule.
 //
-// Deliberately does NOT repeat the hero's fused "Valhalla Awaits. Earn Your
-// Place." — this is Valhalla's own closing statement ("Valhalla Awaits"),
+// Deliberately does NOT repeat the hero's fused "Built Around The Climb. Earn Your
+// Place." — this is Sacoro's own closing statement ("Built Around The Climb"),
 // not a hero echo, per the brand/product ownership split.
 //
 // Top padding is intentionally lighter than the bottom — see FutureWorld's

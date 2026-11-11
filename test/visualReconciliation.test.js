@@ -27,7 +27,7 @@ const srcFiles = () => {
 // who never saw them.
 const css = () => code(read('src/app/globals.css'));
 
-// VISUAL RECONCILIATION with the Valhalla app (repo velvet-viking-valhalla-2).
+// VISUAL RECONCILIATION with the Sacoro app (repo velvet-viking-valhalla-2).
 //
 // The values below are the app's own, copied from its :root and
 // [data-theme="light"] blocks at main 7831de0. They are asserted as literals
@@ -151,8 +151,11 @@ test('the accent is used for one job: the action that starts a plan', () => {
   assert.deepEqual(
     users.sort(),
     [
+      // Reordered, not changed: the SET is identical. `users.sort()` is
+      // alphabetical and the route moved from /valhalla to /sacoro, so this
+      // entry now sorts before /start rather than after it.
+      'src/app/sacoro/page.tsx',
       'src/app/start/page.tsx',
-      'src/app/valhalla/page.tsx',
       'src/components/layout/Header.tsx',
       'src/components/layout/MobileNav.tsx',
       'src/components/sections/FinalCta.tsx',

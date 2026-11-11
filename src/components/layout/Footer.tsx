@@ -4,8 +4,8 @@ import { footer } from "@/content/site";
 import { tradingDisclosure, publicLegalLinks } from "@/content/legal";
 
 // A quiet close, not a site directory: no repeat of the primary nav
-// (Philosophy/About/Valhalla are one click away in the header already), and
-// no fused "Valhalla Awaits. Earn Your Place." — that pairing is the hero's
+// (Philosophy/About/Sacoro are one click away in the header already), and
+// no fused "Built Around The Climb. Earn Your Place." — that pairing is the hero's
 // alone. "Earn Your Place." here is Velvet Viking's own line. No top border
 // either: the final CTA above should settle into this rather than hit a
 // hard edge — the footer's much quieter type/density already reads as a

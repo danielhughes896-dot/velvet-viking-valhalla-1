@@ -28,11 +28,11 @@ function useIsClient() {
   );
 }
 
-// Display-only relabeling ("Valhalla" -> "Valhalla App") for navigation
+// Display-only relabeling ("Sacoro" -> "Sacoro App") for navigation
 // clarity — the product's real name (nav.links / site.ts) is untouched.
 const menuLinks = [
   { label: "Home", href: "/" },
-  ...nav.links.map((link) => (link.href === "/valhalla" ? { ...link, label: "Valhalla App" } : link)),
+  ...nav.links.map((link) => (link.href === "/sacoro" ? { ...link, label: "Sacoro App" } : link)),
 ];
 
 // Despite the filename (kept to avoid an unrelated rename), this is now the

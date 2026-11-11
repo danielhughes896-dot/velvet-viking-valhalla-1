@@ -23,7 +23,7 @@ export const plans = {
     // it also appeared verbatim as pages.pricing.sub, so the same phrase
     // ran twice inside one viewport. Both are now plain English and
     // deliberately different from each other.
-    tagline: "The whole of Valhalla.",
+    tagline: "The whole of Sacoro.",
     // Working hypothesis, not yet finalized pricing.
     price: { amount: 11.99, currency: "GBP", period: "month" },
     // ANNUAL BILLING OPTION for the SAME plan — not a second tier, and not
@@ -64,14 +64,14 @@ export const plans = {
     // HUMAN COPY PASS. Four of these seven carried a machine-writing
     // pattern, and none of the fixes changes what is being promised:
     //   1. dash used as a colon, and "from day one" also appeared verbatim
-    //      in valhallaProduct.points on the homepage;
+    //      in sacoroProduct.points on the homepage;
     //   3. a fourth "not just" (seven site-wide) plus a redundant
     //      "actually";
     //   5. the clause after the dash restated the clause before it — the
     //      same defect as the homepage's "Adaptation with purpose" bullet,
     //      which it also duplicated;
     //   6. "doesn't spiral into a rescue plan" was word-for-word identical
-    //      to a sentence on /valhalla.
+    //      to a sentence on /sacoro.
     features: [
       "Training built around you: your fitness, pace zones and race target set the plan from the start.",
       "Clear guidance for every session: exactly what to do, and how it should feel.",

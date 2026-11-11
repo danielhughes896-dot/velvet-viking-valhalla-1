@@ -2,7 +2,7 @@ import Link from "next/link";
 import SectionHeading from "@/components/ui/SectionHeading";
 import CtaButton from "@/components/ui/CtaButton";
 import DeviceFrame from "@/components/ui/DeviceFrame";
-import { valhallaProduct } from "@/content/site";
+import { sacoroProduct } from "@/content/site";
 import { buildUrl } from "@/content/journey";
 
 export default function ProductShowcase() {
@@ -10,15 +10,15 @@ export default function ProductShowcase() {
     <section className="theme-dark bg-vv-bg">
       <div className="mx-auto max-w-6xl px-6 py-24 sm:px-8 sm:py-32">
         <SectionHeading
-          eyebrow={valhallaProduct.eyebrow}
-          heading={valhallaProduct.heading}
+          eyebrow={sacoroProduct.eyebrow}
+          heading={sacoroProduct.heading}
           align="center"
         />
         <p className="mx-auto mt-5 max-w-lg text-center text-lg text-vv-ink-dim">
-          {valhallaProduct.sub}
+          {sacoroProduct.sub}
         </p>
 
-        {/* PROTOTYPE: both frames are portrait — Valhalla is phone-first,
+        {/* PROTOTYPE: both frames are portrait — Sacoro is phone-first,
             there's no desktop app to screenshot. Primary (Next Move/Plan
             Evolution) leads, unshifted; secondary (Execution Review) is
             deliberately smaller and offset behind/below it, echoing the
@@ -29,29 +29,29 @@ export default function ProductShowcase() {
         <div className="relative mt-16 flex flex-col items-center justify-center gap-10 sm:flex-row sm:items-start sm:justify-center sm:gap-0">
           <DeviceFrame
             kind="mobile"
-            label={valhallaProduct.screenshots.primary.placeholder}
-            src={valhallaProduct.screenshots.primary.src}
-            alt={valhallaProduct.screenshots.primary.alt}
+            label={sacoroProduct.screenshots.primary.placeholder}
+            src={sacoroProduct.screenshots.primary.src}
+            alt={sacoroProduct.screenshots.primary.alt}
             priority
             className="sm:-mr-14"
           />
           <div className="relative z-10 origin-top scale-[0.84] sm:mt-20 md:mt-28">
             <DeviceFrame
               kind="mobile"
-              label={valhallaProduct.screenshots.secondary.placeholder}
-              src={valhallaProduct.screenshots.secondary.src}
-              alt={valhallaProduct.screenshots.secondary.alt}
+              label={sacoroProduct.screenshots.secondary.placeholder}
+              src={sacoroProduct.screenshots.secondary.src}
+              alt={sacoroProduct.screenshots.secondary.alt}
             />
           </div>
         </div>
 
         <div className="mx-auto mt-12 max-w-3xl sm:mt-10">
           <p className="text-center text-base leading-relaxed text-vv-ink-dim">
-            {valhallaProduct.body}
+            {sacoroProduct.body}
           </p>
 
           <ul className="mt-10 grid gap-8 text-center sm:grid-cols-3">
-            {valhallaProduct.points.map((point) => (
+            {sacoroProduct.points.map((point) => (
               <li key={point.heading}>
                 <p className="font-head text-sm font-medium uppercase tracking-[0.1em] text-vv-ink-dim">
                   {point.heading}
@@ -69,13 +69,13 @@ export default function ProductShowcase() {
               rim supplies the boundary. See CtaButton and globals.css. */}
           <div className="mt-12 flex flex-col items-center gap-5">
             <CtaButton href={buildUrl} variant="cherry">
-              {valhallaProduct.cta.label}
+              {sacoroProduct.cta.label}
             </CtaButton>
             <Link
-              href={valhallaProduct.secondaryCta.href}
+              href={sacoroProduct.secondaryCta.href}
               className="inline-flex min-h-11 items-center font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text transition-opacity hover:opacity-70"
             >
-              {valhallaProduct.secondaryCta.label}
+              {sacoroProduct.secondaryCta.label}
             </Link>
           </div>
         </div>

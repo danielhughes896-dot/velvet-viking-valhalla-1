@@ -34,7 +34,7 @@ type CtaButtonProps = {
 // was, and it is gold with these utilities absent or present. Measure focus
 // rings by looking at them.
 //
-// min-h-11 is 44px, the floor the Valhalla app enforces on every control it
+// min-h-11 is 44px, the floor the Sacoro app enforces on every control it
 // ships (".btn:not(.btn-sm){min-height:44px}"). This button's own padding came
 // to 43.5px, which cleared nothing and matched nothing; the padding is left
 // alone because it sets the optical weight, and a floor is added instead, so

@@ -2,11 +2,11 @@
 
 /*
   RECONCILED PALETTE — "warm ivory first", now sharing one token layer with
-  the Valhalla app (repo velvet-viking-valhalla-2, main 7831de0).
+  the Sacoro app (repo velvet-viking-valhalla-2, main 7831de0).
 
   WHAT THIS SUPERSEDES. The block that used to head this file called itself
   "PROTOTYPE PALETTE — v2" and closed by saying it was "not yet reconciled
-  with the live Valhalla app's own token set; that reconciliation is a
+  with the live Sacoro app's own token set; that reconciliation is a
   decision for the approval step, not this prototype." This is that approval
   step. The audit that preceded it found the two products already shared
   their FOUNDATION exactly — page #F4F1EA, ink #171717, the Cinzel/Oswald/
@@ -24,7 +24,7 @@
 
   Ivory (:root) is the default, page-wide identity; .theme-dark is applied
   per <section> for the few deliberately dark moments (ProductShowcase and
-  the /valhalla screenshot block, which echo Valhalla's own dark product UI
+  the /sacoro screenshot block, which echo Sacoro's own dark product UI
   rather than the editorial ivory world); .theme-light is kept (identical to
   :root) purely so existing theme="light" call sites don't need to change.
   The website still has no user-facing theme toggle.

@@ -9,7 +9,7 @@ const path = require('path');
 // Guards the six defects fixed off the pre-launch QA audit: the mobile menu's
 // focus management, the missing <h1> on live legal documents, the disabled
 // Sign In label's contrast, the sitemap listing gated/noindex routes, and the
-// two content deduplications (valhalla vs. homepage, about's same-page
+// two content deduplications (sacoro vs. homepage, about's same-page
 // repeat). Source-level, matching this repo's existing test style — no build
 // or server required.
 const ROOT = path.join(__dirname, '..');
@@ -122,7 +122,7 @@ test('the sitemap derives its legal routes from the approval gates', () => {
   );
   assert.ok(!/beta-terms/.test(sitemap), '/beta-terms stays out of the public sitemap');
   // The non-legal routes are still a plain list, because nothing gates them.
-  for (const r of ['/valhalla', '/pricing', '/start', '/philosophy', '/about', '/support']) {
+  for (const r of ['/sacoro', '/pricing', '/start', '/philosophy', '/about', '/support']) {
     assert.ok(sitemap.includes(`"${r}"`), `${r} must be listed`);
   }
 });
@@ -144,23 +144,23 @@ test('the gated routes still exist as real pages, only excluded from the sitemap
 });
 
 // ---------------------------------------------------------------------------
-// 5. CROSS-PAGE REPETITION — HOMEPAGE VS /VALHALLA
+// 5. CROSS-PAGE REPETITION — HOMEPAGE VS /SACORO
 // ---------------------------------------------------------------------------
-test('the exact "you decide whether to take it" clause is not duplicated across homepage and /valhalla', () => {
-  // The phrase is expected to survive exactly once — in valhallaProduct.body,
+test('the exact "you decide whether to take it" clause is not duplicated across homepage and /sacoro', () => {
+  // The phrase is expected to survive exactly once — in sacoroProduct.body,
   // the homepage's own concise introduction, which this fix deliberately
   // left untouched. What must not happen is a SECOND, verbatim copy of it
-  // living in the /valhalla deep-dive paragraph too.
+  // living in the /sacoro deep-dive paragraph too.
   const site = code(read('src/content/site.ts'));
   const occurrences = (site.match(/you decide whether to take it/g) || []).length;
   assert.equal(
     occurrences,
     1,
-    'the closing clause should appear exactly once (on the homepage) — a second, verbatim copy on /valhalla is the defect this fix removed'
+    'the closing clause should appear exactly once (on the homepage) — a second, verbatim copy on /sacoro is the defect this fix removed'
   );
 });
 
-test('the valhalla deep-dive paragraph advances beyond the homepage summary with concrete specifics', () => {
+test('the sacoro deep-dive paragraph advances beyond the homepage summary with concrete specifics', () => {
   const site = read('src/content/site.ts');
   assert.match(
     site,

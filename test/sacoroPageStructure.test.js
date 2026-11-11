@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('fs');
 const path = require('path');
 
-// /valhalla STRUCTURE — the narrative order, and the two CTAs.
+// /sacoro STRUCTURE — the narrative order, and the two CTAs.
 //
 // The order this guards is promise -> the year the product lives in -> how the
 // system actually works -> what it looks like. It is checked by source
@@ -15,7 +15,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const code = (src) =>
   src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
 
-const page = () => code(read('src/app/valhalla/page.tsx'));
+const page = () => code(read('src/app/sacoro/page.tsx'));
 
 // ---------------------------------------------------------------------------
 // 1. SECTION ORDER
@@ -24,14 +24,14 @@ test('the page runs hero -> year-round -> explanation -> visuals, in that order'
   const src = page();
   const at = (rx, what) => {
     const i = src.search(rx);
-    assert.ok(i > -1, `the ${what} section is missing from /valhalla`);
+    assert.ok(i > -1, `the ${what} section is missing from /sacoro`);
     return i;
   };
 
   const hero = at(/<PageIntro /, 'hero');
   const yearRound = at(/<YearRound \/>/, 'year-round');
-  const explanation = at(/pages\.valhalla\.explanation\.eyebrow/, 'explanation heading');
-  const paragraphs = at(/pages\.valhalla\.expanded\.map/, 'explanation body');
+  const explanation = at(/pages\.sacoro\.explanation\.eyebrow/, 'explanation heading');
+  const paragraphs = at(/pages\.sacoro\.expanded\.map/, 'explanation body');
   const visuals = at(/<DeviceFrame/, 'product visuals');
 
   assert.ok(hero < yearRound, 'the timeline must follow the opening hero, not precede it');
@@ -49,7 +49,7 @@ test('the timeline is mounted once, on this page and nowhere else', () => {
       else if (/\.tsx$/.test(e.name) && /<YearRound \/>/.test(code(read(rel)))) mounts.push(rel);
     }
   })('src');
-  assert.deepEqual(mounts, ['src/app/valhalla/page.tsx'], 'exactly one mount, on /valhalla');
+  assert.deepEqual(mounts, ['src/app/sacoro/page.tsx'], 'exactly one mount, on /sacoro');
 });
 
 // ---------------------------------------------------------------------------
@@ -62,7 +62,7 @@ test('the same primary CTA appears exactly twice, from one source of truth', () 
 
   // Both read their label from the same object and their destination from the
   // one gated build route, so they can never drift into two different offers.
-  assert.equal((src.match(/pages\.valhalla\.closingCta\.label/g) || []).length, 2);
+  assert.equal((src.match(/pages\.sacoro\.closingCta\.label/g) || []).length, 2);
   assert.equal((src.match(/href=\{buildUrl\}/g) || []).length, 2);
   assert.ok(
     !/href="\/pricing"|See Prices/.test(src),
@@ -86,7 +86,7 @@ test('the page converts into the build, and keeps pricing as a quiet secondary',
   assert.match(site, /secondaryCta: \{ label: "See Prices", href: "\/pricing" \}/);
   assert.ok(!/See Standard Pricing/.test(site), 'the old label must not survive anywhere');
   const src = page();
-  assert.match(src, /pages\.valhalla\.secondaryCta\.href/, 'the pricing route must still render');
+  assert.match(src, /pages\.sacoro\.secondaryCta\.href/, 'the pricing route must still render');
 });
 
 test('the second CTA follows the visuals and no second pricing block was added', () => {
@@ -107,7 +107,7 @@ test('the protected lines survive the move verbatim', () => {
   const site = code(read('src/content/site.ts'));
   for (const line of [
     'A programme that learns you, not a plan that forgets you.',
-    'You choose when to move on. Valhalla does not decide it for you.',
+    'You choose when to move on. Sacoro does not decide it for you.',
   ]) {
     assert.ok(site.includes(line), `protected copy lost: "${line}"`);
   }
@@ -120,7 +120,7 @@ test('the move introduced no new colour, type or spacing language', () => {
   const yr = code(read('src/components/sections/YearRound.tsx'));
   // Every colour on both surfaces is a vv- token; no raw hex, rgb or
   // arbitrary Tailwind colour values crept in with the restructure.
-  for (const [name, s] of [['valhalla/page.tsx', src], ['YearRound.tsx', yr]]) {
+  for (const [name, s] of [['sacoro/page.tsx', src], ['YearRound.tsx', yr]]) {
     assert.ok(!/#[0-9a-fA-F]{3,8}\b/.test(s), `${name} introduces a raw hex colour`);
     assert.ok(!/(bg|text|border)-\[/.test(s), `${name} introduces an arbitrary colour value`);
   }
@@ -145,7 +145,7 @@ test('the timeline carries its own divider, so the gate takes the rule with it',
 
 test('the new explanation heading is real copy in the content file, not inline text', () => {
   const site = code(read('src/content/site.ts'));
-  assert.match(site, /explanation: \{\s*eyebrow: "Inside Valhalla",/);
+  assert.match(site, /explanation: \{\s*eyebrow: "Inside Sacoro",/);
   assert.match(site, /heading: \["Your first plan", "Your next session"\]/);
   // The site's own vocabulary: no coach claim, no generic SaaS heading.
   const src = page();

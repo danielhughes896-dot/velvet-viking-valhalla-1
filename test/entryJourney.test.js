@@ -56,7 +56,7 @@ test('every first-time CTA goes through the single gated build route', () => {
     'src/components/sections/ProductShowcase.tsx',
     'src/components/sections/FinalCta.tsx',
     'src/components/sections/PricingCard.tsx',
-    'src/app/valhalla/page.tsx',
+    'src/app/sacoro/page.tsx',
     'src/components/layout/Header.tsx',
     'src/components/layout/MobileNav.tsx',
   ];
@@ -197,7 +197,7 @@ test('the private beta entry still lives on /start and still points at the app',
   assert.match(start, /betaAccess\.eyebrow/);
   const site = read('src/content/site.ts');
   assert.match(site, /velvet-viking-valhalla-1\.vercel\.app\/get/, 'the beta app URL must be unchanged');
-  assert.match(site, /label: "Continue to Valhalla"/, 'the beta label is a separate lane and keeps its own words');
+  assert.match(site, /label: "Continue to Sacoro"/, 'the beta label is a separate lane and keeps its own words');
 });
 
 test('the beta lane is separate from the public one', () => {

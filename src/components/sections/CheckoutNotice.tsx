@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 
 // THE ONE PIECE OF THE CHECKOUT THE WEBSITE OWNS.
 //
-// Valhalla's Stripe session is created in the app (api/_stripe.js) and its two
+// Sacoro's Stripe session is created in the app (api/_stripe.js) and its two
 // return addresses are set there, not here:
 //
 //   success_url  <app origin>/account?checkout=complete&session_id=...

@@ -23,11 +23,11 @@ import { buildUrl } from "@/content/journey";
 //      between the crest and the rule was removed — the crest already
 //      states the brand name (it's baked into the artwork), and the
 //      header wordmark is a click away; repeating it a third time here,
-//      right before the H1 restates "Valhalla Awaits. Earn Your Place."
+//      right before the H1 restates "Built Around The Climb. Earn Your Place."
 //      again, was the one honest weak point flagged in the prototype
 //      report. The rule + descriptor now carry this tier alone.
 //   2. PRODUCT MOMENT — hero.eyebrow/heading/sub/cta, unchanged in every
-//      character except eyebrow (see site.ts note); this is Valhalla
+//      character except eyebrow (see site.ts note); this is Sacoro
 //      announcing itself, not Velvet Viking repeating itself.
 export default function Hero() {
   return (
