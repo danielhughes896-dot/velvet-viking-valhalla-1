@@ -1,121 +1,130 @@
-import Link from "next/link";
-import Wordmark from "@/components/ui/Wordmark";
 import CtaButton from "@/components/ui/CtaButton";
 import { hero } from "@/content/site";
 import { buildUrl } from "@/content/journey";
 
-// Two-tier composition:
-//   1. MASTER-BRAND MOMENT — the mark, a thin gold rule, and the category
-//      line below. (copy audit: the earlier "Built Differently" line
-//      asserted differentiation without demonstrating it — this version
-//      points at the actual differentiator instead of a generic
-//      superiority claim.)
-//      POSITIONING PASS: that line read "Endurance Performance, Coached
-//      With Intent". "Coached" implied a qualified human coach behind the
-//      product, which is not what is being sold. Replaced with what the
-//      product actually does — decide from training evidence — so the
-//      line still names a differentiator rather than a credential. This
-//      is the one piece of public copy hard-coded in a component rather
-//      than read from content/site.ts, which is why an earlier
-//      config-only copy sweep did not catch it.
-//      REFINEMENT ROUND 2: the standalone "Velvet Viking" wordmark that
-//      previously sat
-//      between the crest and the rule was removed — the crest already
-//      states the brand name (it's baked into the artwork), and the
-//      header wordmark is a click away; repeating it a third time here,
-//      right before the H1 restates "Valhalla Awaits. Earn Your Place."
-//      again, was the one honest weak point flagged in the prototype
-//      report. The rule + descriptor now carry this tier alone.
-//   2. PRODUCT MOMENT — hero.eyebrow/heading/sub/cta, unchanged in every
-//      character except eyebrow (see site.ts note); this is Valhalla
-//      announcing itself, not Velvet Viking repeating itself.
+// THE HERO IS DARK, AND IT IS ONE TIER NOW.
+//
+// It used to be two: a master-brand moment (the crest, a gold rule, a category
+// line) stacked on top of a product moment (an eyebrow, the headline, the sub,
+// the CTA). That worked when the crest was the brand's only full statement and
+// the two tiers were different objects. The crest is retired, the mark is the
+// name, and the header already carries it — so the upper tier had nothing left
+// to say that the lower tier was not about to say better.
+//
+// WHAT THE MOCK CHANGED, and why each one earns its place:
+//
+//   DARK. The product is dark. An athlete meets a near-black screen in the app
+//   every morning, and opening the site on cream made the first impression and
+//   the product two different things. It also gives the one bright object on
+//   the page — the primary action — somewhere to glow.
+//
+//   NO MARK HERE. The header is forty pixels above and says the same six
+//   letters. Two identical lockups in one viewport is the name said twice; the
+//   previous pass papered over it with a "By Velvet Viking" byline to make them
+//   different objects, which solved the symptom. Removing one solves it.
+//
+//   ONE EYEBROW, NOT TWO. "The Flagship" and the category line both sat here,
+//   the first naming the product's rank and the second its argument. The
+//   argument wins: it is the only line above the fold that says what Sacoro is
+//   FOR. The category line also moved into content/site.ts on the way — it was
+//   the one piece of public copy hard-coded in this component, which is why an
+//   earlier copy sweep missed it entirely.
+//
+//   THE RULE IS CHERRY AND IT GLOWS. It was a flat gold hairline. Gold is
+//   brand, destination and milestone; this rule sits directly above the thing
+//   being asked of the reader, and it is the page's first sign of the colour
+//   every action on the site is about to be painted in.
+//
+//   TWO BUTTONS, BOTH REAL. The secondary was a bare text link, which made
+//   "read more about it before you commit" look like a footnote rather than
+//   the reasonable second option it is. Full-width pills, stacked, with the
+//   weight difference carrying the order instead of one of them being small.
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-vv-bg">
+    <section
+      className="theme-dark relative overflow-hidden bg-vv-bg"
+      // RUNS BEHIND THE MASTHEAD. The header is sticky and therefore in the
+      // flow, so without this the hero starts below it and the transparent bar
+      // shows the ivory page behind it instead of this section's dark. Pulled
+      // up by the header's height and padded back down by the same, so nothing
+      // moves except what is behind the bar.
+      style={{ marginTop: "calc(-1 * var(--vv-header-h))", paddingTop: "var(--vv-header-h)" }}
+    >
+      {/* TWO GRADIENTS, NOT ONE. The first lifts the ground away from flat
+          black so the section has depth; the second is a wide, very low-opacity
+          cherry wash behind the headline and button, which is what stops the
+          primary action reading as a bright object dropped onto a dark
+          rectangle. Both are aria-hidden decoration. */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 90% at 50% 15%, var(--vv-bg-3) 0%, var(--vv-bg) 60%)",
+            "radial-gradient(120% 90% at 50% 12%, var(--vv-bg-3) 0%, var(--vv-bg) 62%)",
         }}
         aria-hidden
       />
-      <div className="relative mx-auto flex min-h-[85vh] max-w-4xl flex-col items-center justify-center px-6 py-14 text-center sm:px-8 sm:py-20 md:py-24">
-        {/* THE CREST IS RETIRED, AND THIS IS WHAT STOOD IN ITS PLACE.
-            A 200–300px disc carrying a wordmark, "Valhalla Awaits" and "Earn
-            Your Place" baked into the artwork. Two of those three strings name
-            a product that no longer exists, and they were pixels rather than
-            text, so they could not be renamed — the artwork had to go, not be
-            edited. The app retired it in the same pass.
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(70% 45% at 50% 62%, color-mix(in srgb, var(--vv-cherry) 14%, transparent) 0%, transparent 70%)",
+        }}
+        aria-hidden
+      />
 
-            THE DROP SHADOW WENT WITH IT. It existed to seat a dark circular
-            raster on a dark field. Type needs no seating; it carries the same
-            soft white lift the hero headline does, via `lift`. */}
-        <Wordmark size="clamp(2.2rem, 8vw, 4rem)" dot="clamp(10px, 1.6vw, 16px)" lift />
+      <div className="relative mx-auto flex min-h-[88vh] max-w-3xl flex-col items-center justify-center px-6 py-16 text-center sm:px-8 sm:py-24">
+        <p className="font-head text-[10px] font-semibold tracking-[0.3em] text-vv-gold uppercase sm:text-xs sm:tracking-[0.34em]">
+          {hero.eyebrow}
+        </p>
 
-        {/* NO BYLINE HERE, AND THE REASON IS WHOSE SITE THIS IS. The app's
-            public pages sign the mark "By Velvet Viking" because an athlete is
-            inside the product and the company is standing behind it. This is
-            the company's own site — signing it would be the host introducing
-            himself at his own front door. The company speaks where it has a
-            job to do instead: the footer, the statutory disclosure, /about and
-            the legal pages, all of which name it.
-
-            The header carries the same mark a few hundred pixels up. That is
-            accepted rather than overlooked: it is chrome at a fifth of this
-            size, and the alternative — dropping the mark here — would open the
-            page on a floating rule with no brand moment at all. */}
-
-        <div className="mt-7 flex flex-col items-center sm:mt-8">
+        {/* The glow is on a second, blurred copy of the same rule rather than a
+            box-shadow, so the light spreads along the line instead of ringing
+            a 1px box. */}
+        <span className="relative mt-5 block h-px w-40 sm:w-52" aria-hidden>
           <span
-            aria-hidden
-            className="h-px w-24 sm:w-28"
+            className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(90deg, transparent, var(--vv-gold), transparent)",
+                "linear-gradient(90deg, transparent, var(--vv-cherry-soft), transparent)",
             }}
           />
-          <p className="mt-4 font-head text-[11px] font-semibold uppercase tracking-[0.32em] text-vv-ink-faint sm:text-xs">
-            Endurance Performance, Built On Evidence
-          </p>
-        </div>
+          <span
+            className="absolute inset-x-0 -top-1 h-[3px] blur-[3px]"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, var(--vv-cherry), transparent)",
+            }}
+          />
+        </span>
 
-        <div className="mt-11 flex flex-col items-center sm:mt-[52px] md:mt-16">
-          <p className="font-head text-xs font-semibold uppercase tracking-[0.32em] text-vv-bronze-text">
-            {hero.eyebrow}
-          </p>
-          <h1 className="mt-4 font-display text-4xl leading-[1.08] font-semibold uppercase tracking-[0.01em] text-vv-ink sm:text-5xl md:text-6xl">
-            {/* MAPPED, NOT INDEXED. This read heading[0] <br/> heading[1],
-                which hard-coded the two-line composition into the markup —
-                so dropping the dead "Valhalla Awaits" line left the h1 asking
-                for an element that is not there. The headline is now whatever
-                the content file says it is, one line or several. */}
-            {hero.heading.map((line, i) => (
-              <span key={line}>
-                {i > 0 ? <br /> : null}
-                {line}
-              </span>
-            ))}
-          </h1>
-          <p className="mt-6 max-w-lg text-balance text-base leading-relaxed text-vv-ink-dim sm:text-lg">
-            {hero.sub}
-          </p>
-          {/* BUILD FIRST. The primary action starts a plan; the editorial
-              deep dive stays reachable underneath it as a quiet link rather
-              than competing for the same visual weight. */}
-          <CtaButton href={buildUrl} variant="cherry" className="mt-8">
+        <h1 className="mt-8 font-display text-[2.75rem] leading-[1.02] font-semibold tracking-[0.005em] text-vv-ink uppercase sm:mt-10 sm:text-6xl md:text-7xl">
+          {hero.heading.map((line, i) => (
+            <span key={line}>
+              {i > 0 ? <br /> : null}
+              {line}
+            </span>
+          ))}
+        </h1>
+
+        <p className="mt-6 max-w-xl text-base leading-relaxed text-balance text-vv-ink-dim sm:mt-7 sm:text-lg">
+          {hero.sub}
+        </p>
+
+        {/* STACKED AND FULL WIDTH, capped so they do not stretch into a banner
+            on a laptop. The primary carries a glow that only exists on dark —
+            see the .cta-glow rule in globals.css, which is a no-op on ivory. */}
+        <div className="mt-10 flex w-full max-w-sm flex-col gap-3 sm:mt-12">
+          <CtaButton href={buildUrl} variant="cherry" className="cta-glow w-full rounded-full">
             {hero.cta.label}
           </CtaButton>
-          <p className="mt-4 max-w-xs text-center text-xs leading-relaxed text-vv-ink-faint">
-            {hero.ctaNote}
-          </p>
-          <Link
-            href={hero.secondaryCta.href}
-            className="mt-5 inline-flex min-h-11 items-center font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-cherry-text transition-opacity hover:opacity-70"
-          >
+          <CtaButton href={hero.secondaryCta.href} variant="ghost" className="w-full rounded-full">
             {hero.secondaryCta.label}
-          </Link>
+          </CtaButton>
         </div>
+
+        <p className="mt-5 max-w-xs text-xs leading-relaxed text-vv-ink-faint">
+          {hero.ctaNote}
+        </p>
       </div>
     </section>
   );

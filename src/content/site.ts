@@ -140,7 +140,16 @@ export const hero = {
   // Sacoro as a product noun ("The Flagship / Valhalla Awaits.") rather
   // than repeating the brand name a second time in the same viewport.
   // heading/sub/cta below are unchanged and remain protected verbatim.
-  eyebrow: "The Flagship",
+  /* THE CATEGORY LINE, PROMOTED. This was "The Flagship" — the product's rank
+     — while the line that says what Sacoro is FOR sat hard-coded in Hero.tsx,
+     the one piece of public copy not in this file, which is how an earlier
+     copy sweep missed it. The hero now carries one eyebrow and it is the
+     argument rather than the ranking. "The Flagship" survives where it is
+     still doing that job, on the product section further down.
+
+     The separator is a middle dot, not a comma: the two halves are a pair of
+     equal claims rather than a clause and its qualifier. */
+  eyebrow: "Endurance Performance · Built On Evidence",
   // FINAL TYPOGRAPHY CONSISTENCY CHANGE: supersedes the earlier "internal
   // periods stay" rule for this specific set of major display headlines —
   // no full stop anywhere in this heading now, internal or terminal.

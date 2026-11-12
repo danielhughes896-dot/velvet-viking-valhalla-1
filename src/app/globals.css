@@ -291,3 +291,46 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* THE PRIMARY ACTION'S GLOW, and it exists only where there is dark to glow
+   into. On ivory a coloured halo around a dark button reads as a print
+   registration error, so this rule is scoped to .theme-dark and is a complete
+   no-op everywhere else — the hero can hand the class to its button
+   unconditionally and the light sections stay flat.
+
+   Two shadows: a tight one that gives the fill an edge, and a wide soft one
+   that is the light itself. Both derive from --vv-cherry via color-mix, so the
+   glow follows the accent rather than pinning a second hex. */
+.theme-dark .cta-glow {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--vv-cherry) 85%, transparent),
+    0 0 22px color-mix(in srgb, var(--vv-cherry) 38%, transparent),
+    0 0 60px color-mix(in srgb, var(--vv-cherry) 18%, transparent);
+}
+.theme-dark .cta-glow:hover {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--vv-cherry) 100%, transparent),
+    0 0 26px color-mix(in srgb, var(--vv-cherry) 50%, transparent),
+    0 0 72px color-mix(in srgb, var(--vv-cherry) 24%, transparent);
+}
+
+/* THE MASTHEAD'S HEIGHT, AS A NUMBER THE PAGE CAN USE.
+   The header is `sticky`, which means it occupies space in the flow rather
+   than floating over it — so a transparent header shows the PAGE's ground, not
+   the section's. For the homepage's dark hero to run behind it, the hero pulls
+   itself up by exactly this much and pads itself back down by the same, which
+   it cannot do without knowing the figure.
+
+   Measured in Chromium rather than derived from the padding: 81px below the
+   sm breakpoint and 85px at and above it, where the inline CTA and sign-in
+   link appear and set the row's height. Pinned as numbers with the
+   measurement beside them, because the thing they came from is two components
+   away and would otherwise have to be re-measured to be trusted. */
+:root {
+  --vv-header-h: 81px;
+}
+@media (min-width: 40rem) {
+  :root {
+    --vv-header-h: 85px;
+  }
+}

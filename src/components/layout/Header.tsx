@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeaderChrome from "@/components/layout/HeaderChrome";
 import HeaderBrand from "@/components/layout/HeaderBrand";
 import MobileNav from "@/components/layout/MobileNav";
 import CtaButton from "@/components/ui/CtaButton";
@@ -20,16 +21,18 @@ import { buildUrl } from "@/content/journey";
 // are the first things inside the menu, and the hero's own primary button is
 // visible without scrolling.
 //
-// bg-vv-bg here always resolves to the ivory :root tokens — Header isn't a
-// descendant of any .theme-dark section, so the custom property itself
-// never changes. What DID visibly shift was the dark section behind it
-// showing through the translucency (bg-vv-bg/90 + blur) as it scrolled
-// underneath. Raised to /95 (still soft, not a flat app toolbar) and given
-// a hairline bottom border — using the header's own (always-ivory) line
-// token — so the masthead reads as one stable object over every section.
+// THE BAR ITSELF LIVES IN HeaderChrome, because what it looks like now depends
+// on where the reader is: transparent inside the homepage's dark hero, ivory
+// everywhere else and the moment that page scrolls. Everything below is the
+// masthead's CONTENTS, which do not change — they inherit whichever token ramp
+// HeaderChrome puts them in.
+//
+// Previously this element carried bg-vv-bg/95 + blur and a hairline border
+// directly. That was correct while the header was never a descendant of a
+// .theme-dark section; it is now sometimes its own.
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-vv-line/70 bg-vv-bg/95 backdrop-blur-md">
+    <HeaderChrome>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-5 sm:px-8">
         <HeaderBrand />
         <div className="flex items-center gap-3">
@@ -79,6 +82,6 @@ export default function Header() {
           </ul>
         </nav>
       </noscript>
-    </header>
+    </HeaderChrome>
   );
 }

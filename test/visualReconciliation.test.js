@@ -179,8 +179,12 @@ test('gold keeps brand, destination and milestone — and nothing else', () => {
     'eyebrows are labels, not actions');
   assert.match(code(read('src/components/ui/Wordmark.tsx')), /bg-vv-gold-bright/,
     'the mark keeps its two dots, exactly as the app kept gold on its wordmark');
-  assert.match(code(read('src/components/sections/Hero.tsx')), /var\(--vv-gold\)/,
-    'the hero rule is a brand divider');
+  /* WAS the hero's gold rule. That rule is cherry now and deliberately so:
+     it sits directly above the action and is the page's first sign of the
+     interaction colour. Gold's job in the hero moved up one line, to the
+     category eyebrow — which is brand, and is the stronger example anyway. */
+  assert.match(code(read('src/components/sections/Hero.tsx')), /text-vv-gold/,
+    'the hero eyebrow is a brand label');
   assert.match(css(), /::selection[\s\S]{0,80}var\(--vv-bronze\)/);
   // And the button variants must no longer offer a gold fill at all.
   const btn = code(read('src/components/ui/CtaButton.tsx'));

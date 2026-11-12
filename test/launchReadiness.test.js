@@ -64,10 +64,20 @@ test('the retired artwork is gone from the product, not merely unreferenced', ()
   }
 });
 
-test('one component owns the mark, so both surfaces carry the same object', () => {
+test('one component owns the mark, and the page states it once', () => {
+  /* WAS: assert the mark appears in BOTH the header and the hero. The hero's
+     copy is gone. Two identical lockups in one viewport is the name said
+     twice, and the previous pass papered over that with a byline to make them
+     different objects — which treated the symptom. The header carries it. */
   const users = srcFiles().filter((f) => /<Wordmark/.test(code(read(f))));
-  assert.ok(users.includes('src/components/layout/HeaderBrand.tsx'), 'the header');
-  assert.ok(users.includes('src/components/sections/Hero.tsx'), 'the hero');
+  assert.deepEqual(users.sort(), [
+    'src/components/layout/HeaderBrand.tsx',
+    // The open menu's own mark. Not a repeat: the panel covers the header, so
+    // the two are never on screen together.
+    'src/components/layout/MobileNav.tsx',
+  ], 'the mark renders on the masthead and the menu, and nowhere else');
+  assert.ok(!/<Wordmark/.test(code(read('src/components/sections/Hero.tsx'))),
+    'the hero must not restate the name the header is already showing');
   // Nothing may hand-set the name in display type and call it the mark.
   for (const f of srcFiles()) {
     if (f.endsWith('Wordmark.tsx')) continue;
@@ -192,8 +202,12 @@ test('there is exactly one focus ring on the site, defined once', () => {
 });
 
 test('every secondary text CTA clears a 44px hit area', () => {
+  /* Hero is off this list: its secondary is a full-width ghost BUTTON now,
+     which clears the floor through CtaButton's own min-h-11 rather than
+     through the inline-flex pattern these two still use. The hero's own
+     guarantee is covered by the CtaButton floor test in
+     visualReconciliation. */
   for (const f of [
-    'src/components/sections/Hero.tsx',
     'src/components/sections/ProductShowcase.tsx',
     'src/app/sacoro/page.tsx',
   ]) {
