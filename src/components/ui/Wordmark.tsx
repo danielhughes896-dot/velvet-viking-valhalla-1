@@ -33,6 +33,14 @@ type WordmarkProps = {
   gap?: string;
   /** Dot diameter. The app pins 7px at bar size. */
   dot?: string;
+  /**
+   * A pinned line box for the word. The app does this on .bm-word
+   * (line-height:36px) for a reason worth copying: the font-size is a clamp(),
+   * so without it the mark's height — and anything measuring the bar it sits
+   * in — slides continuously with viewport width. Leave it unset where the
+   * mark is free to be whatever height it wants, as in the hero.
+   */
+  lineHeight?: string;
   className?: string;
   /**
    * The soft white lift the app's hero titles carry, so the mark belongs to
@@ -46,6 +54,7 @@ export default function Wordmark({
   size = "clamp(1.22rem, 6.2vw, 1.62rem)",
   gap = "0.68em",
   dot = "7px",
+  lineHeight,
   className = "",
   lift = false,
 }: WordmarkProps) {
@@ -61,6 +70,7 @@ export default function Wordmark({
           fontSize: size,
           letterSpacing: "0.17em",
           marginRight: "-0.17em",
+          ...(lineHeight ? { lineHeight } : null),
           ...(lift
             ? {
                 textShadow:

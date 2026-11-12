@@ -174,8 +174,16 @@ test('the mark fits a 360px phone without a breakpoint', () => {
   assert.match(w, /clamp\(1\.22rem, 6\.2vw, 1\.62rem\)/, 'the mark caps its own size');
   assert.match(w, /whitespace-nowrap/, 'the name must never wrap');
   const brandMark = code(read('src/components/layout/HeaderBrand.tsx'));
-  assert.ok(!/text-\[\d+px\]/.test(brandMark),
+  /* SCOPED TO THE MARK. This forbade any text-[Npx] anywhere in the file,
+     which caught the company byline the moment it was added — a 9px line that
+     has nothing to do with the mark's sizing. What must not come back is a
+     fixed size on the MARK, which would undo the clamp that makes it fit. */
+  assert.ok(!/<Wordmark[^>]*\bsize=/.test(brandMark),
     'the header must not re-impose a fixed size on the mark');
+  /* The pinned line box IS allowed, and is load-bearing: the clamp otherwise
+     slides the bar's height with viewport width and --vv-header-h stops being
+     one honest number. */
+  assert.match(brandMark, /<Wordmark lineHeight="36px" \/>/);
   // And the real check is the rendered one: a 360px sweep runs in the
   // verification pass, which is what caught the original 2px.
 });

@@ -321,16 +321,14 @@ body {
    itself up by exactly this much and pads itself back down by the same, which
    it cannot do without knowing the figure.
 
-   Measured in Chromium rather than derived from the padding: 81px below the
-   sm breakpoint and 85px at and above it, where the inline CTA and sign-in
-   link appear and set the row's height. Pinned as numbers with the
-   measurement beside them, because the thing they came from is two components
-   away and would otherwise have to be re-measured to be trusted. */
+   ONE NUMBER, NOT A BREAKPOINT PAIR. It was 81px / 85px, and then the byline
+   went under the mark and it became 90px at 360, 92.8 at 390 and 95.4 at 430
+   — sliding continuously, because the mark's font-size is a clamp() and its
+   line box slid with it. A pinned 36px line box on the word (the app's own
+   figure, for the same reason on the same mark) makes the bar one height at
+   every width, which is the only thing that makes a single token honest.
+
+   Measured in Chromium at 360, 390, 430, 768 and 1280: 92.5px at all five. */
 :root {
-  --vv-header-h: 81px;
-}
-@media (min-width: 40rem) {
-  :root {
-    --vv-header-h: 85px;
-  }
+  --vv-header-h: 92.5px;
 }

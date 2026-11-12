@@ -3,6 +3,14 @@
 import { usePathname } from "next/navigation";
 import { useSyncExternalStore } from "react";
 
+// OPAQUE, NOT bg-vv-bg/95. The 5% was deliberate once — "still soft, not a
+// flat app toolbar" — and it was harmless while everything scrolling under the
+// bar was ivory text on ivory. The hero is dark now, so what bleeds through is
+// WHITE text on cream, and the hero's own sub-line was legible through the
+// masthead as a grey smear. A soft masthead is worth less than a clean one;
+// the hairline border and the fact that this state only exists after a scroll
+// carry the same intent without printing the page twice.
+//
 // THE MASTHEAD OVER A DARK HERO.
 //
 // The homepage now opens on a near-black section, and a cream bar sitting on
@@ -60,7 +68,7 @@ export default function HeaderChrome({ children }: { children: React.ReactNode }
       className={
         overDarkHero
           ? "theme-dark sticky top-0 z-50 border-b border-transparent bg-transparent text-vv-ink transition-colors duration-300"
-          : "sticky top-0 z-50 border-b border-vv-line/70 bg-vv-bg/95 text-vv-ink backdrop-blur-md transition-colors duration-300"
+          : "sticky top-0 z-50 border-b border-vv-line/70 bg-vv-bg text-vv-ink backdrop-blur-md transition-colors duration-300"
       }
     >
       {children}
