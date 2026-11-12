@@ -560,6 +560,129 @@ export const privacyDraft: LegalDocument = {
 // TERMS OF USE (draft)
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// THE FREE-TIER AMENDMENT — DRAFTED, NOT APPROVED, NOT PUBLISHED.
+// ---------------------------------------------------------------------------
+//
+// Founder: "I think it should be 7 days free trial. And when they sign up for
+// free all data after 7 days is hidden. Then when they pay they see the full
+// data." Asked which of three shapes that meant, they chose a free account
+// that never expires and never shows more than the next seven days, with
+// payment revealing the whole block. See `freeTier` in content/commerce.ts.
+//
+// WHY THIS IS AN AMENDMENT OBJECT AND NOT A THIRD FULL DOCUMENT. The repo's
+// pattern for unpublished legal is a whole draft — privacyDraft, betaTermsDraft
+// — and that is right when the document is new. This one is not: it changes
+// four clauses inside a live consumer contract that is otherwise correct.
+// Copying nine sections to edit two would create a second text that drifts
+// from the first the moment anybody fixes a typo in either, and a solicitor
+// reviewing it would have to diff two long documents to find what moved. What
+// is set out below is exactly what changes, exactly what replaces it, and
+// exactly what must not be touched.
+//
+// WHAT MAKES THIS NECESSARY RATHER THAN TIDY. The live Terms do not merely
+// describe a longer trial — they make three promises the new model breaks:
+//   "New subscribers are offered a 14-day free trial."     — there is no trial
+//   "This is not a card-free trial"                        — it is card-free
+//   "Nothing is held back for paying subscribers."         — the block is
+// A site cannot publish the free tier while its own Terms say that, on the
+// same domain, one click away.
+//
+// NOTHING HERE IS IN FORCE. LEGAL_APPROVALS.terms still publishes
+// commercial_terms_v2, unchanged, and must keep doing so until this is
+// reviewed and approved. Publishing it is not the website's decision — the
+// same rule that held the commercial documents shut until the founder gave
+// full-document approval after solicitor review.
+export const FREE_TIER_LEGAL_AMENDMENT = {
+  status: "drafted — not reviewed, not approved, not published" as const,
+  termsVersion: { supersedes: "commercial_terms_v2", becomes: "commercial_terms_v3" },
+  privacyVersion: { supersedes: "commercial_privacy_v2", becomes: "commercial_privacy_v3" },
+
+  /**
+   * Section 5 is replaced in full. Its current heading names a trial and its
+   * every paragraph describes one.
+   */
+  termsSection5: {
+    replacesHeading: "5. The free trial, and how it becomes a paid subscription",
+    heading: "5. The free account, and what a subscription adds",
+    paragraphs: [
+      "Sacoro is free to use. You can create an account, answer the build questions and train from the block it produces without giving us a payment method. A free account does not expire, and there is no trial period that runs out.",
+      "A free account shows the next 7 days of your training block at any time. Sacoro builds and stores the whole block; the part beyond those 7 days is not displayed to you unless you subscribe. As you train, those 7 days move forward with you — this is a limit on how far ahead you can see, not a countdown to losing access.",
+      "Subscribing shows you the whole block. You choose monthly or annual billing, and you are shown the price you have chosen and the date of the first payment before you confirm anything.",
+      "Nothing starts by itself. We do not ask for a payment method in advance, there is no trial that converts into a subscription, and no payment is taken unless you choose to subscribe.",
+      "If you subscribe and later cancel, your account and your training history remain, and the block is not deleted. At the end of the period you have paid for, what is displayed returns to the next 7 days.",
+    ],
+  },
+
+  /**
+   * One sentence in section 7, which currently explains the automatic
+   * conversion the processor performs. There is no conversion to explain.
+   */
+  termsSection7: {
+    replaces:
+      "Your subscription, including the trial period, is held as a subscription with that processor, which is what makes the dates and the automatic conversion described above work the way they do.",
+    with:
+      "Your subscription is held as a subscription with that processor, which is what makes the renewal dates described above work the way they do.",
+  },
+
+  /**
+   * One sentence removed from section 8 and one added, because cancelling a
+   * trial that does not exist is not a thing a reader needs told.
+   */
+  termsSection8: {
+    remove: "Cancelling during the 14-day trial stops the subscription before it starts, and you are not charged.",
+    add: "There is nothing to cancel on a free account, and no payment to stop. Cancelling applies only to a subscription you have chosen to start.",
+  },
+
+  /**
+   * Three sentences in the commercial Privacy policy record trial state as a
+   * thing that exists. It will not.
+   */
+  privacyReplacements: [
+    {
+      replaces:
+        "Subscription data: which plan you are on, your billing period, whether you are in a trial and when it ends, and the status of your payments. We do not receive or store your full card number, expiry or security code.",
+      with:
+        "Subscription data: whether you have a subscription, which plan and billing period it is on, when the current period ends, and the status of your payments. We do not receive or store your full card number, expiry or security code.",
+    },
+    {
+      replaces: "To take payment, manage your subscription and trial, and keep the financial records we are required to keep.",
+      with: "To take payment, manage your subscription, and keep the financial records we are required to keep.",
+    },
+    {
+      replaces:
+        "Payments: card payments for web subscriptions are handled by Stripe as our payment processor. Your card details go to Stripe and not to us. We receive the state of your subscription and its payments — whether you are in a trial, when it ends, whether a payment succeeded — and never your full card number, expiry or security code.",
+      with:
+        "Payments: card payments for web subscriptions are handled by Stripe as our payment processor. Your card details go to Stripe and not to us. We receive the state of your subscription and its payments — whether it is active, when the current period ends, whether a payment succeeded — and never your full card number, expiry or security code.",
+    },
+  ],
+
+  /**
+   * THE LINES A CARELESS EDIT WOULD HAVE TAKEN WITH IT.
+   *
+   * The first is not the trial. It is the statutory right to cancel a
+   * distance contract within fourteen days, which is consumer law and has
+   * nothing to do with how long anything is free for. A find-and-replace of
+   * "14" across this file would have rewritten it to seven and quietly
+   * shortened a right the law grants.
+   */
+  mustNotChange: [
+    "You have a statutory right to change your mind about a contract bought at a distance, within 14 days. Where you have asked us to start the service immediately and acknowledged that doing so affects that right, the position is as the law provides. If you want to rely on this right, tell us and we will deal with it properly rather than argue about it.",
+    "There is no charge for beta access, no subscription, no trial that turns into a payment, and no card details asked for or held. Nothing in this beta costs money.",
+  ],
+
+  /**
+   * Questions this draft cannot answer, flagged rather than guessed. Each one
+   * is a decision for the founder or the solicitor, not for the website.
+   */
+  openQuestions: [
+    "ON CANCELLATION, what happens to the view? The draft says it returns to the next 7 days and the block is kept. Nobody has decided that — it is the behaviour that follows most naturally from the model, and it is written here so it is reviewed rather than assumed.",
+    "THE IMMEDIATE-START ACKNOWLEDGEMENT (immediate_start_v1, which lives in the app) currently attaches to starting a trial. With no trial, the moment that engages the statutory right moves to the subscription purchase. Whether the existing wording still fits that moment is a solicitor question.",
+    "IS THE HIDDEN PART STILL PROCESSED? The draft states the whole block is built and stored and merely not displayed. That is what 'when they pay they see the full data' implies, and it is the honest description — but it means a free account's data is processed beyond what that account can see, which the Privacy policy should say plainly if it is true.",
+    "DOES ANYTHING ELSE CHANGE AT 7 DAYS? The founder said data, not features. This draft assumes every other capability is unchanged on a free account.",
+  ],
+} as const;
+
 export const termsDraft: LegalDocument = {
   eyebrow: "Velvet Viking",
   heading: "Terms",

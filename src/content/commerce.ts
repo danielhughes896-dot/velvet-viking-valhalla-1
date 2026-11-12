@@ -104,6 +104,113 @@ export const plans = {
 // These are commercial UX facts. The contractual refund and cancellation terms
 // are a separate matter and remain gated in @/content/legal until HQ supplies
 // the approved wording.
+// THE FREE TIER THAT REPLACES THE TRIAL — DECIDED, NOT YET TRUE.
+//
+// Founder: "I think it should be 7 days free trial. And when they sign up for
+// free all data after 7 days is hidden. Then when they pay they see the full
+// data." Asked which of three shapes that meant, they chose: a free account
+// that never expires and never shows more than the next seven days of the
+// block, with payment revealing the whole thing.
+//
+// THIS IS NOT A SHORTER TRIAL. It is a different commercial object, and
+// calling it a trial would mislead in three separate ways: there is no card,
+// nothing expires, and nothing converts. An athlete who never pays keeps a
+// working account forever — they simply never see past the end of next week.
+//
+// `live` IS FALSE AND MUST STAY FALSE UNTIL THE APP BEHAVES THIS WAY. The
+// product today does the opposite of all three: api/_products.js sets
+// TRIAL_DAYS = 14, checkout collects a card before the trial starts, and the
+// subscription converts automatically. Describing the free tier while that is
+// true would be a live commercial misrepresentation on a site with real
+// Stripe prices behind it — somebody could sign up expecting free and be
+// charged. Same rule as `trial.live` below: copy follows the product.
+//
+// WHAT HAS TO HAPPEN BEFORE IT FLIPS, in order:
+//   1. SYSTEM teaches the app a visibility horizon. Nothing like it exists:
+//      the entitlement model has capabilities (`can('execution_review')`) and
+//      a locked-out state, but nothing that hides part of a plan by date.
+//   2. SYSTEM makes an account creatable without a payment method, and stops
+//      the subscription auto-starting.
+//   3. The Terms are republished. The live ones promise a 14-day card-
+//      required trial and that "Nothing is held back for paying subscribers",
+//      which this model contradicts outright. See termsCommercialV3Draft in
+//      content/legal.ts — drafted, unapproved, unpublished.
+//   4. Then this flag, and only then.
+export const freeTier = {
+  planId: "standard" as const,
+  /**
+   * How far ahead of today a free account can see, in days.
+   *
+   * A HORIZON, NOT A COUNTDOWN. It does not tick down and it is not a
+   * quota: on day 90 a free athlete still sees the next seven days. The
+   * distinction matters for copy — "your next 7 days" is true forever,
+   * "7 days free" sounds like something running out.
+   */
+  horizonDays: 7,
+  /** No payment method is needed to create the account or to keep it. */
+  cardRequired: false,
+  /** It does not expire. There is no date on which access ends. */
+  expires: false,
+  /** Nothing starts by itself. Paying is a deliberate act, or it never happens. */
+  autoConverts: false,
+  /** Paying reveals the whole block, not an extra week. */
+  paidRevealsFullBlock: true,
+  /** See the block comment above. Do not flip this from the website side. */
+  live: false,
+} as const;
+
+/**
+ * Which commercial model the site is allowed to describe.
+ *
+ * ONE BRANCH, READ BY EVERY SURFACE, so the question "what are we offering"
+ * is answered in a single place rather than in each component. While the free
+ * tier is not live this resolves to "trial", and every page keeps describing
+ * the product the app actually runs today.
+ */
+export const COMMERCIAL_MODEL: "freeTier" | "trial" = freeTier.live ? "freeTier" : "trial";
+
+// THE FREE TIER'S CUSTOMER-FACING SENTENCES, WRITTEN BUT NOT RENDERED.
+//
+// Kept here for the same reason content/legal.ts keeps unpublished drafts in
+// the file: the wording is the part worth deciding early and reviewing on its
+// own, and writing it now means the flip later is a review rather than a
+// first draft under time pressure. Nothing reads this while
+// COMMERCIAL_MODEL is "trial" — a test enforces that.
+//
+// WHAT THE WORDING HAS TO GET RIGHT, and where each line earns its place:
+//
+//   "FREE" WITHOUT "TRIAL". Every sentence avoids the word, because the
+//   offer has no clock. An athlete reading "7 days free" hears a countdown
+//   and will expect to be locked out on day eight; they will not be. The
+//   horizon is a window that moves with them.
+//
+//   "YOUR NEXT SEVEN DAYS", NOT "THE FIRST SEVEN DAYS". The second is what a
+//   trial would give. This one stays true in month three.
+//
+//   NOTHING IS TAKEN AND NOTHING STARTS. Two separate promises, both load-
+//   bearing, because the model they replace did the opposite of each: a card
+//   up front, and a subscription that began by itself.
+//
+//   NO SAVINGS FRAMING, SAME AS THE PRICES ABOVE. "Subscribing reveals the
+//   whole block" states what paying does. It does not rank, discount or
+//   compare, and there is no urgency in it.
+export const freeTierCopy = {
+  /** Replaces "AFTER YOUR TRIAL" above the two prices. */
+  pricesEyebrow: "To see the whole block",
+  /** The one-line statement of the offer, for cards and intros. */
+  offer: `Free to use, always. You see your next ${freeTier.horizonDays} days.`,
+  /** The full terms paragraph, replacing the trial sentence block. */
+  terms:
+    `Sacoro is free to use, and stays free. There is no payment method to add and nothing to cancel. ` +
+    `A free account shows the next ${freeTier.horizonDays} days of your training block, ` +
+    `and keeps showing them for as long as you train. Subscribing reveals the whole block.`,
+  /** The note under the billing-period choice. */
+  periodNote: (money: string, period: string) =>
+    `${money} a ${period} reveals your whole block. Nothing starts by itself, and nothing is taken until you subscribe.`,
+  /** The hero's one honest line under the button. */
+  ctaNote: `Get the app, then answer a few questions. Sacoro is free to use — subscribe when you want to see past your next ${freeTier.horizonDays} days.`,
+} as const;
+
 export const trial = {
   planId: "standard" as const,
   days: 14,
