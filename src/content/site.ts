@@ -220,18 +220,18 @@ export const hero = {
 // The meaning is HQ's and is preserved exactly — triangle, ascent, progress,
 // earning your place. The wording is set in this site's voice: short lines,
 // no adjectives doing work the shape already does.
-export const theMark = {
-  eyebrow: "The Mark",
-  heading: ["Built around", "The climb"],
-  body: "The Velvet Viking mark is built around ascent. At its centre, the triangle is progress: the continual climb toward something stronger.",
-  // Three lines, deliberately fragmentary. They are the argument the whole
-  // brand rests on, and they land harder unpunctuated by explanation.
-  lines: [
-    "Not where you started.",
-    "Not where you think you belong.",
-    "Where you earn your place.",
-  ],
-} as const;
+/* THE MARK SECTION IS GONE, AND IT WAS NOT A NAMING PROBLEM.
+   `theMark` described the brand mark as "built around ascent. At its centre,
+   the triangle is progress: the continual climb toward something stronger."
+   There is no triangle. That was the Velvet Viking crest, which was retired
+   when the product became Sacoro — its lettering is artwork reading VALHALLA
+   AWAITS, so it could only be withdrawn, not renamed. The mark now is the
+   Sacoro S between two gold dots, and nothing about it ascends.
+   It had also stopped rendering: a full-repo grep found no component reading
+   it, so this was dead copy making a false claim about a deleted image, and
+   renaming the company inside it would have left both faults in place. If
+   mark copy is ever wanted again it should describe the S, and it should be
+   written then rather than recovered from here. */
 
 export const brandStory = {
   eyebrow: "Velvet Viking",
@@ -643,31 +643,12 @@ export const pages = {
   // deletion. What was worth keeping from it — both prices, and the sentence
   // about what happens when the trial ends — moved into /start, where the
   // athlete is about to do something with it.
-  start: {
-    eyebrow: "Standard",
-    // THE PLACEHOLDER IS GONE. This page used to be a numbered explanation of
-    // what account creation would eventually do — first headed "Create Your
-    // Account", then a six-step description of a journey the athlete could not
-    // take. A page that describes a button instead of being one is a
-    // placeholder however carefully it is written, and this was the last one
-    // in the journey.
-    //
-    // HEADED FOR THE BUILD, NOT THE TRIAL. Two passes reached this page from
-    // different directions and disagreed about its title: "Start Your Free
-    // Trial" is what the athlete eventually gets, but under the approved
-    // value-first journey it is not what happens next. What happens next is
-    // that they answer a few questions and see a real programme; the trial is
-    // the fourth thing, after they have decided the plan is worth keeping.
-    // Naming the page for the trial would put the commercial step back in
-    // front of the value it is supposed to follow.
-    heading: "Build Your Plan",
-    // The app's own builder says "You will see it before you decide anything."
-    // Same promise, same words, so the sentence does not change under them.
-    sub: "See your programme before you decide anything.",
-    // Kept verbatim from the parallel commercial-entry work: nobody should
-    // reach the app without knowing what the fourteen days turn into.
-    body: "Your first 14 days are free. After your trial, your chosen subscription starts automatically unless you cancel beforehand.",
-  },
+  /* THE start ENTRY IS GONE. /start no longer has page copy of its own: it
+     renders the app's builder entry, and its heading, lede and metadata come
+     from content/builderEntry.ts — the app's own specification. Keeping
+     "Build Your Plan" and "See your programme before you decide anything."
+     here would have left a second, unused title for a page that already has
+     one, which is how a route ends up described two different ways. */
   sacoro: {
     eyebrow: sacoroProduct.eyebrow,
     heading: sacoroProduct.heading,
@@ -782,7 +763,15 @@ export const pages = {
   // page someone opens when something has gone wrong, and brand voice matters
   // less there than being answered.
   support: {
-    eyebrow: "Velvet Viking",
+    /* THE ONE PAGE EYEBROW THAT CHANGED SIDES. Every other "Velvet Viking"
+       eyebrow on this site labels brand content — the story, the provenance,
+       the philosophy, the gallery, the about page — and belongs to the
+       company. This one sat over "Something not working, or a question about
+       your account?", which is a person whose training app is misbehaving.
+       Support is the product's, and the founder's rule is "If it's customer
+       facing SACORO". The address they write to is still the company's, and
+       the footer underneath still says so. */
+    eyebrow: "Sacoro",
     heading: "Support",
     sub: "Something not working, or a question about your account?",
     body: "Write to us and a person will read it.",

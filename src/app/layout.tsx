@@ -49,11 +49,18 @@ export const metadata: Metadata = {
     /* WAS "Velvet Viking — Sacoro Awaits. Earn Your Place." The middle
        clause named a product that no longer exists and could not simply be
        renamed: "Sacoro Awaits" asserts nothing, because Sacoro is a family
-       name rather than a hall you are summoned to. What remains is the
-       company, the product and the standard — which is also what a search
-       result needs to carry. */
-    default: "Velvet Viking — Sacoro. Earn Your Place.",
-    template: "%s — Velvet Viking",
+       name rather than a hall you are summoned to.
+
+       THE ORDER THEN SWAPPED, which is the part worth recording. It led with
+       the company, and the template made every page "Pricing — Velvet
+       Viking", "Build Your Training Block — Velvet Viking". A tab and a
+       search result are about as customer-facing as text gets, and the
+       founder's rule is "If it's customer facing SACORO" — so somebody
+       searching for the thing they use met the name of the company that
+       makes it. The lockup here is now exactly the masthead's: the product,
+       then the company signing it. */
+    default: "Sacoro by Velvet Viking — Earn Your Place.",
+    template: "%s — Sacoro",
   },
   // POSITIONING PASS: "Endurance coaching" -> "Endurance training", here
   // and in the Open Graph description below. These two are the site's
@@ -67,11 +74,18 @@ export const metadata: Metadata = {
   // so each page declares its own canonical URL rather than inheriting "/".
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Velvet Viking",
+    // THE SHARED THING IS THE PRODUCT. A link pasted into a chat previews
+    // whatever it is about, and these pages are about Sacoro; the company
+    // signs the card in the artwork and in the footer of every page behind
+    // it. siteName follows for the same reason — it is the label a crawler
+    // prints beside the title, and printing the company there put the two
+    // names in the wrong order on the one surface people see before they
+    // have decided whether to click.
+    title: "Sacoro",
     description:
       "Training that learns how you train. The longer you run with Sacoro, the better it understands how you respond.",
     url: siteUrl,
-    siteName: "Velvet Viking",
+    siteName: "Sacoro",
     // THE CARD IS THE MARK NOW. It was the crest, recompressed to ~300KB for
     // crawlers. The crest is retired — its lettering is artwork reading
     // VALHALLA AWAITS, so it could not be renamed, only withdrawn — and this
@@ -89,8 +103,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Velvet Viking",
-    description: "Sacoro. Earn Your Place.",
+    title: "Sacoro",
+    description: "Earn Your Place. By Velvet Viking.",
     images: ["/brand/sacoro-og.png"],
   },
   // NO `icons` DECLARATION, DELIBERATELY. It used to name two crest-derived

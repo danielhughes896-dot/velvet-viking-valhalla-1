@@ -76,20 +76,27 @@ test('valhalla -> pricing -> start -> app, and nothing in between', () => {
 test('the account entry says what the trial turns into, before the account is made', () => {
   // The one thing a visitor must not be able to miss: the prices are what
   // happens AFTER the free fourteen days, automatically.
-  const site = code(read('src/content/site.ts'));
-  /* HEADED FOR THE BUILD, NOT THE TRIAL. Two passes titled this page from
-     different directions: "Start Your Free Trial" is what the athlete
-     eventually gets, but under the approved value-first journey it is not what
-     happens next — they answer a few questions and see a real programme, and
-     the trial is the fourth thing. Naming the page for the trial would put the
-     commercial step back in front of the value it follows. */
-  assert.match(site, /heading: "Build Your Plan"/);
-  /* The sub carries the app builder's own promise verbatim, so the sentence
-     does not change under the athlete when they cross over. The trial terms
-     themselves are stated below it by TrialTerms, which is what the rest of
-     this test checks. */
-  assert.match(site, /sub: "See your programme before you decide anything\."/);
-  assert.match(site, /Your first 14 days are free\. After your trial, your chosen subscription starts automatically unless you cancel beforehand\./);
+  /* IT IS SAID WHERE THE PRICES ARE NOW, WHICH IS /pricing.
+     This used to read three strings out of pages.start — a heading, a sub,
+     and "Your first 14 days are free. After your trial, your chosen
+     subscription starts automatically unless you cancel beforehand." That
+     page was a marketing surface showing two prices, so the sentence had to
+     be on it. /start is the app's builder entry now: it shows no price, asks
+     nothing and sells nothing, so a paragraph about what happens to a card
+     after fourteen days has nothing on that screen to attach to, and
+     pages.start went with it.
+     The guarantee is not weakened, it is relocated and now checked in three
+     places rather than one — the visitor must not be able to miss that the
+     prices are what happens AFTER the free fourteen days, automatically. */
+  const card = code(read('src/components/sections/PricingCard.tsx'));
+  assert.match(card, /trial\.days\}-day free trial/);
+  assert.match(card, /chosen subscription starts automatically/,
+    'the card must say the subscription starts by itself');
+  assert.match(card, /trial\.autoConverts/, 'and it must follow the flag, not assert it in copy');
+
+  const choice = code(read('src/components/sections/PeriodChoice.tsx'));
+  assert.match(choice, /After \$\{trial\.days\} days this becomes/,
+    'the note under the choice names the post-trial price');
 
   const terms = code(read('src/components/sections/TrialTerms.tsx'));
   assert.match(terms, /After your trial/, 'the prices must be labelled as post-trial');
