@@ -338,10 +338,22 @@ export const sacoroProduct = {
 // RESTORED: an intentional, permanent seam for a future real Velvet Viking
 // reel — not an accidental unfinished box. Deliberately kept even after the
 // zero-placeholder pass elsewhere on the homepage; see DocumentaryReel.tsx.
+/* THE SEAM IS FILLED. This held a bracketed placeholder for a piece of
+   footage that did not exist, and nothing read it — the frame on the homepage
+   drew a dashed box and an inert play glyph instead. Real footage arrived, so
+   the slot carries a src, a poster and an alt that describes what is actually
+   in it rather than what was hoped for.
+
+   SOURCE: 1080x1890 H.264, 17.7MB at 7Mbps. Re-encoded to 720x1260 at CRF 27
+   with 96k audio — 1.73MB, a tenth of the original, which is the difference
+   between a homepage that loads and one that does not. The ratio is untouched
+   at 4:7, because cropping a product shot to fit a frame is how a phone loses
+   its top and bottom. */
 export const documentaryReel = {
   media: {
-    placeholder: "[DOCUMENTARY REEL — placeholder]",
-    alt: "[DOCUMENTARY REEL — placeholder, opening motion piece, footage to be confirmed]",
+    src: "/media/sacoro-reel.mp4",
+    poster: "/media/sacoro-reel-poster.jpg",
+    alt: "Sacoro on a phone: the mark, the morning screen, and the Recovery, Evolution and Adaptation rings.",
   },
 } as const;
 

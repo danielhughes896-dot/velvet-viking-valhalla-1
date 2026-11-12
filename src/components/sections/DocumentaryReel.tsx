@@ -1,44 +1,42 @@
-// Prototype-only "opening media" slot, directly under the hero. A neutral
-// poster/placeholder at a realistic final aspect for a short documentary
-// piece — NOT fabricated footage or a stock clip. The play affordance is
-// purely a compositional cue for what this slot is for; it isn't wired to
-// anything, and this component takes no autoplay/video dependency.
+import { documentaryReel } from "@/content/site";
+
+// THE OPENING MEDIA SLOT, NOW CARRYING REAL FOOTAGE.
 //
-// NO VISIBLE LABEL. This frame used to print documentaryReel.media
-// .placeholder — the literal string "[DOCUMENTARY REEL — placeholder]" —
-// as public-facing text on the homepage. Every other placeholder label in
-// the codebase became unreachable once real photography landed (see
-// PlaceholderMedia, which renders its label only when given no `src`);
-// this was the last one still reaching the DOM, and internal bracketed
-// production shorthand is not something a visitor should ever read. The
-// frame itself is unchanged: same aspect, same tint, same dashed inner
-// marker, same play glyph, same section padding. The `documentaryReel`
-// export in content/site.ts is deliberately left in place — it is the
-// seam for real footage later — but nothing reads it now, so restoring a
-// caption is an explicit decision rather than an accident.
+// This was a placeholder: a 16:9 tinted rectangle with a dashed inner marker
+// and a play glyph wired to nothing, holding the composition until there was
+// something to put in it. The seam it was holding open — `documentaryReel` in
+// content/site.ts, deliberately left exported while nothing read it — is now
+// read again.
+//
+// PORTRAIT, BECAUSE THE FOOTAGE IS. The clip is 1080x1890 — exactly 4:7 — and
+// the frame it replaced was aspect-video. A portrait clip in a 16:9 box either
+// crops the phone's top and bottom off or sits in two black pillars, so the
+// frame takes the footage's own ratio instead of the footage taking the
+// frame's. Capped at a phone-ish width and centred: at max-w-6xl a 4:7 box
+// would stand over 2000px tall on a laptop, which is not a section, it is a
+// wall.
+//
+// CONTROLS RATHER THAN AUTOPLAY, and the audio is why. The track is real —
+// mean -22.3 dB, peaks at -7.7 — so this is not ambient B-roll that can be
+// muted and looped without losing half of it. A clip with something to say
+// should not say it uninvited, and a visitor who wants it presses the control
+// the slot has always shown. preload="metadata" so the poster and duration
+// arrive without pulling 1.7MB at every page load.
 export default function DocumentaryReel() {
   return (
     <section className="bg-vv-bg">
       <div className="mx-auto max-w-6xl px-6 pb-20 sm:px-8 sm:pb-28">
-        <div
-          className="relative aspect-video w-full overflow-hidden rounded-vv"
-          style={{ backgroundColor: "var(--vv-placeholder-bg)" }}
-        >
-          <div
-            className="absolute inset-4 border border-dashed sm:inset-8"
-            style={{ borderColor: "var(--vv-placeholder-border)" }}
-            aria-hidden
-          />
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-6 text-center">
-            <span
-              aria-hidden
-              className="flex h-14 w-14 items-center justify-center rounded-full border border-vv-line bg-vv-bg/70 backdrop-blur-sm sm:h-16 sm:w-16"
-            >
-              <svg viewBox="0 0 24 24" className="ml-1 h-5 w-5 fill-vv-ink sm:h-6 sm:w-6" aria-hidden>
-                <path d="M6 4.5v15l14-7.5z" />
-              </svg>
-            </span>
-          </div>
+        <div className="mx-auto w-full max-w-[340px] sm:max-w-[400px]">
+          <video
+            className="aspect-4/7 w-full rounded-vv bg-vv-bg-3 object-cover shadow-vv"
+            controls
+            playsInline
+            preload="metadata"
+            poster={documentaryReel.media.poster}
+            aria-label={documentaryReel.media.alt}
+          >
+            <source src={documentaryReel.media.src} type="video/mp4" />
+          </video>
         </div>
       </div>
     </section>

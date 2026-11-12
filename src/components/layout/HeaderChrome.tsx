@@ -3,15 +3,27 @@
 import { usePathname } from "next/navigation";
 import { useSyncExternalStore } from "react";
 
-// OPAQUE, NOT bg-vv-bg/95. The 5% was deliberate once — "still soft, not a
-// flat app toolbar" — and it was harmless while everything scrolling under the
-// bar was ivory text on ivory. The hero is dark now, so what bleeds through is
-// WHITE text on cream, and the hero's own sub-line was legible through the
-// masthead as a grey smear. A soft masthead is worth less than a clean one;
-// the hairline border and the fact that this state only exists after a scroll
-// carry the same intent without printing the page twice.
+// THE MASTHEAD IS DARK IN BOTH STATES.
 //
-// THE MASTHEAD OVER A DARK HERO.
+// Founder: "The [top] bar is white when you scroll. Make it black."
+//
+// It was ivory once scrolled, which made the bar a different object depending
+// on where you were — dark and seamless inside the hero, then a cream band
+// over the rest of the page. The product's own chrome is dark everywhere, and
+// a masthead is chrome rather than content, so it stops changing allegiance:
+// transparent while it is sitting inside the hero's own dark, solid dark the
+// moment there is something else behind it.
+//
+// .theme-dark IS ON BOTH BRANCHES NOW, so nothing inside has to know which
+// state it is in — the mark, the byline, the sign-in link and the menu all
+// resolve against the dark ramp either way, and only the background and the
+// border change.
+//
+// THE OPACITY WENT WITH THE IVORY. bg-vv-bg/95 was "still soft, not a flat app
+// toolbar", which was harmless while everything scrolling under it was ivory
+// on ivory; against a dark bar it would show the ivory page as a bright haze.
+// Solid, with a hairline that is now a lighter line on dark rather than a
+// darker one on cream.
 //
 // The homepage now opens on a near-black section, and a cream bar sitting on
 // top of it draws a hard horizontal edge across the first thing anybody sees.
@@ -68,7 +80,7 @@ export default function HeaderChrome({ children }: { children: React.ReactNode }
       className={
         overDarkHero
           ? "theme-dark sticky top-0 z-50 border-b border-transparent bg-transparent text-vv-ink transition-colors duration-300"
-          : "sticky top-0 z-50 border-b border-vv-line/70 bg-vv-bg text-vv-ink backdrop-blur-md transition-colors duration-300"
+          : "theme-dark sticky top-0 z-50 border-b border-vv-line/60 bg-vv-bg text-vv-ink transition-colors duration-300"
       }
     >
       {children}
