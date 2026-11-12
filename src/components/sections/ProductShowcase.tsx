@@ -7,7 +7,7 @@ import { buildUrl } from "@/content/journey";
 
 export default function ProductShowcase() {
   return (
-    <section className="theme-dark bg-vv-bg">
+    <section className="bg-vv-bg">
       <div className="mx-auto max-w-6xl px-6 py-24 sm:px-8 sm:py-32">
         <SectionHeading
           eyebrow={sacoroProduct.eyebrow}

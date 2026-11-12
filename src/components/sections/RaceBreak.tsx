@@ -104,10 +104,16 @@ type RaceBreakProps = {
 //     depending on the arithmetic accident |M| < WT_h + eypH rather than
 //     on anything structural.
 //
-// CAPTION: unchanged — a small overlay near the TOP of the photo (below).
+// CAPTION: a small overlay near the TOP of the photo. It takes --vv-gold
+// rather than --vv-gold-text, and the distinction is the whole point: this
+// text is printed ON a photograph, so the section's theme says nothing about
+// what is behind it. --vv-gold-text flips to #7a5c1e on ivory, which this
+// caption did the moment the section stopped being dark — dark bronze over a
+// bright sky, with only a drop shadow holding it up. --vv-gold is one value
+// in both ramps.
 export default function RaceBreak({ src, alt, caption }: RaceBreakProps) {
   return (
-    <section className="theme-dark bg-vv-bg">
+    <section className="bg-vv-bg">
       <div className="mx-auto flex max-w-4xl justify-center px-6 pt-20 motion-safe:sticky motion-safe:top-24 sm:px-8 sm:pt-28">
         <div className="relative aspect-3/4 w-full max-w-sm overflow-hidden rounded-vv shadow-vv sm:h-[78vh] sm:w-auto sm:max-w-none">
           <Image
@@ -119,7 +125,7 @@ export default function RaceBreak({ src, alt, caption }: RaceBreakProps) {
           />
           {caption ? (
             <p
-              className="pointer-events-none absolute inset-x-0 top-3 hidden text-center font-head text-xs font-semibold uppercase tracking-[0.24em] text-vv-gold-text motion-safe:block sm:top-5 sm:text-sm"
+              className="pointer-events-none absolute inset-x-0 top-3 hidden text-center font-head text-xs font-semibold uppercase tracking-[0.24em] text-vv-gold motion-safe:block sm:top-5 sm:text-sm"
               style={{ textShadow: "0 1px 6px rgba(0,0,0,0.6)" }}
             >
               {caption}

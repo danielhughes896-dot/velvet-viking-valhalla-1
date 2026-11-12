@@ -28,7 +28,21 @@ const GOLD_HAIRLINE = "border border-vv-gold/35";
 // Small, uppercase, tracked, muted-gold — the same "editorial location
 // marker" language for all three captions, deliberately subordinate to
 // the photographs themselves.
+//
+// TWO OF THEM, BECAUSE THE GROUND IS NOT ALWAYS THE SAME. This was one
+// constant used in both places, which was invisible while the section was
+// dark: --vv-gold-text resolves bright there, so it worked over a photo and
+// over the section alike. The section is ivory now, the token resolves to
+// #7a5c1e, and the label sitting ON the Athens photograph went from legible
+// to a smudge against a bright sky.
+//
+// A caption printed on a photograph does not belong to the section's theme —
+// the photograph is its ground, and no theme can predict what is underneath.
+// So that one takes --vv-gold, which is one value in both ramps, and keeps
+// its shadow. The two figcaptions below their images sit on the section and
+// correctly follow it.
 const LOCATION_LABEL = "font-head text-[11px] font-semibold uppercase tracking-[0.22em] text-vv-gold-text";
+const LOCATION_LABEL_ON_PHOTO = "font-head text-[11px] font-semibold uppercase tracking-[0.22em] text-vv-gold";
 
 // EDITORIAL TRAVEL GRID: the supplied composite is one flat file with the
 // headline band, the temple photo and the map photo all baked into a
@@ -58,7 +72,7 @@ export default function WorkTravels({
   className = "",
 }: WorkTravelsProps) {
   return (
-    <section className={`theme-dark bg-vv-bg ${className}`}>
+    <section className={`bg-vv-bg ${className}`}>
       {/* DESKTOP POLISH: widened to match the rest of the page's max-w-6xl
           rhythm — this section's own container was a step narrower than
           its neighbours, which read as an unintended dip in scale between
@@ -89,7 +103,7 @@ export default function WorkTravels({
             />
           </picture>
           <span
-            className={`absolute right-3 bottom-3 sm:right-5 sm:bottom-5 ${LOCATION_LABEL}`}
+            className={`absolute right-3 bottom-3 sm:right-5 sm:bottom-5 ${LOCATION_LABEL_ON_PHOTO}`}
             style={{ textShadow: "0 1px 6px rgba(0,0,0,0.6)" }}
           >
             {heroLocation}

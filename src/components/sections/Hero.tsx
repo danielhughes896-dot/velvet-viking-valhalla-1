@@ -114,10 +114,10 @@ export default function Hero() {
             on a laptop. The primary carries a glow that only exists on dark —
             see the .cta-glow rule in globals.css, which is a no-op on ivory. */}
         <div className="mt-10 flex w-full max-w-sm flex-col gap-3 sm:mt-12">
-          <CtaButton href={buildUrl} variant="cherry" className="cta-glow w-full rounded-full">
+          <CtaButton href={buildUrl} variant="cherry" className="cta-glow w-full">
             {hero.cta.label}
           </CtaButton>
-          <CtaButton href={hero.secondaryCta.href} variant="ghost" className="w-full rounded-full">
+          <CtaButton href={hero.secondaryCta.href} variant="ghost" className="w-full">
             {hero.secondaryCta.label}
           </CtaButton>
         </div>

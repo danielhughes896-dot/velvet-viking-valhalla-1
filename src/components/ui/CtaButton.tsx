@@ -39,8 +39,13 @@ type CtaButtonProps = {
 // to 43.5px, which cleared nothing and matched nothing; the padding is left
 // alone because it sets the optical weight, and a floor is added instead, so
 // nothing that already passed moves.
+// ROUNDED-FULL, SITE-WIDE. The hero's two buttons were pills and every other
+// CTA was a rounded rectangle, which made the one composition that had been
+// designed deliberately look like the exception rather than the standard. The
+// shape moves to the base so the hero stops overriding it and nothing else
+// has to opt in — a button is the same object wherever it appears.
 const base =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-vv-sm px-6 py-3 font-head text-[13px] font-semibold uppercase tracking-[0.14em] transition duration-200";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 font-head text-[13px] font-semibold uppercase tracking-[0.14em] transition duration-200";
 
 // CHERRY IS THE HIERARCHY NOW, NOT A CLOSED SET OF ONE.
 //
