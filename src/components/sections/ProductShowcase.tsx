@@ -14,7 +14,7 @@ export default function ProductShowcase() {
           heading={sacoroProduct.heading}
           align="center"
         />
-        <p className="mx-auto mt-5 max-w-lg text-center text-lg text-vv-ink-dim">
+        <p className="mx-auto mt-5 max-w-lg text-center text-lg text-vv-ink">
           {sacoroProduct.sub}
         </p>
 
@@ -46,17 +46,17 @@ export default function ProductShowcase() {
         </div>
 
         <div className="mx-auto mt-12 max-w-3xl sm:mt-10">
-          <p className="text-center text-base leading-relaxed text-vv-ink-dim">
+          <p className="text-center text-base leading-relaxed text-vv-ink">
             {sacoroProduct.body}
           </p>
 
           <ul className="mt-10 grid gap-8 text-center sm:grid-cols-3">
             {sacoroProduct.points.map((point) => (
               <li key={point.heading}>
-                <p className="font-head text-sm font-medium uppercase tracking-[0.1em] text-vv-ink-dim">
+                <p className="font-head text-sm font-medium uppercase tracking-[0.1em] text-vv-ink">
                   {point.heading}
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-vv-ink-faint">{point.body}</p>
+                <p className="mt-2 text-sm leading-relaxed text-vv-ink">{point.body}</p>
               </li>
             ))}
           </ul>

@@ -43,7 +43,7 @@ export default function FullWidthPhoto({ mediaLabel, caption }: FullWidthPhotoPr
             aria-hidden
           />
           <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
-            <span className="font-head text-[11px] font-medium uppercase tracking-[0.2em] text-vv-ink-faint">
+            <span className="font-head text-[11px] font-medium uppercase tracking-[0.2em] text-vv-ink">
               {mediaLabel}
             </span>
           </div>

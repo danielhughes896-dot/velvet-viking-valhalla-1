@@ -18,7 +18,7 @@ export default function Footer() {
           <span className="font-display text-metallic text-sm font-bold uppercase tracking-[0.2em]">
             Velvet Viking
           </span>
-          <p className="mt-3 text-sm text-vv-ink-faint">{footer.tagline}</p>
+          <p className="mt-3 text-sm text-vv-ink">{footer.tagline}</p>
         </div>
 
         <SocialLinks />
@@ -39,7 +39,7 @@ export default function Footer() {
           <li>
             <Link
               href="/support"
-              className="font-head text-xs font-medium uppercase tracking-[0.15em] text-vv-ink-faint transition-colors hover:text-vv-ink"
+              className="font-head text-xs font-medium uppercase tracking-[0.15em] text-vv-ink transition-colors hover:text-vv-ink"
             >
               Support
             </Link>
@@ -48,7 +48,7 @@ export default function Footer() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="font-head text-xs font-medium uppercase tracking-[0.15em] text-vv-ink-faint transition-colors hover:text-vv-ink"
+                className="font-head text-xs font-medium uppercase tracking-[0.15em] text-vv-ink transition-colors hover:text-vv-ink"
               >
                 {link.label}
               </Link>
@@ -56,7 +56,7 @@ export default function Footer() {
           ))}
         </ul>
 
-        <p className="text-xs text-vv-ink-faint">{footer.legalLine}</p>
+        <p className="text-xs text-vv-ink">{footer.legalLine}</p>
 
         {/* STATUTORY TRADING DISCLOSURE.
             Required on a company's website by the Companies (Trading
@@ -70,7 +70,7 @@ export default function Footer() {
             each remaining line automatically once the fact is supplied — no
             code change, and no possibility of a "[TO BE CONFIRMED: ...]"
             string reaching a visitor. */}
-        <address className="max-w-md text-[0.6875rem] not-italic leading-relaxed text-vv-ink-faint">
+        <address className="max-w-md text-[0.6875rem] not-italic leading-relaxed text-vv-ink">
           {tradingDisclosure.lines.map((line) => (
             <span key={line} className="block">
               {line}

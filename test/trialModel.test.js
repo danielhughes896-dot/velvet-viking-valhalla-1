@@ -108,7 +108,8 @@ test('no surface implies the trial can be taken without choosing a period', () =
   // on this side is that the page still sends them to the BUILD and not to a
   // sign-up or a checkout — the app owns the rest of the order, and its own
   // suite guards it.
-  const start = code(read('src/app/start/page.tsx'));
+  const start = code(read('src/app/start/page.tsx')) +
+    code(read('src/components/sections/BuilderEntry.tsx'));
   assert.match(start, /buildUrl/, '/start must enter the builder, not account creation');
   assert.ok(!/Create Account|Start Free Trial/.test(start),
     'the primary action must not promise a signup or a trial ahead of the plan');

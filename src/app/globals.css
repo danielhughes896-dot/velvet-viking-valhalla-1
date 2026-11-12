@@ -208,11 +208,15 @@
   --font-display: var(--font-cinzel), serif;
   --font-head: var(--font-oswald), sans-serif;
   --font-sans: var(--font-inter), -apple-system, sans-serif;
-  /* No --font-mono override: nothing on the site uses font-mono (confirmed
-     by a full-repo grep, overnight audit) — JetBrains Mono was a Google
-     Font load with zero visual use. Removed here and in layout.tsx; the
-     font-mono Tailwind utility now falls back to Tailwind's own default
-     monospace stack if anything ever needs it. */
+  /* JETBRAINS MONO IS BACK, AND THIS TIME IT PAINTS SOMETHING.
+     It was removed in the overnight audit on the correct finding that a
+     full-repo grep turned up no use of font-mono at all — a Google Font
+     load for nothing. /start is now the app's builder entry, whose stage
+     counter ("01 / 11") is set in the app's --num-face for a reason a
+     proportional face cannot satisfy: the numerals must share a width or
+     the slash drifts sideways as the stage advances. One weight, 700, which
+     is the only one .bld-stage-no uses. */
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
 * {

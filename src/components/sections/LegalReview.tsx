@@ -42,7 +42,7 @@ export default function LegalReview({
           <p className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text">
             Draft for review — not published
           </p>
-          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-vv-ink-dim">
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-vv-ink">
             This document has not been approved and is not in force. It is not linked from the site
             and search engines are told not to index it. Nothing here creates any obligation until
             it is approved and published.
@@ -53,7 +53,7 @@ export default function LegalReview({
                 <li key={other.href}>
                   <Link
                     href={`${other.href}?review=1`}
-                    className="font-head text-xs font-medium uppercase tracking-[0.15em] text-vv-ink-faint underline decoration-vv-line underline-offset-4 transition-colors hover:text-vv-ink"
+                    className="font-head text-xs font-medium uppercase tracking-[0.15em] text-vv-ink underline decoration-vv-line underline-offset-4 transition-colors hover:text-vv-ink"
                   >
                     {other.label}
                   </Link>

@@ -54,7 +54,7 @@ export default function TrialTerms() {
             key={option.id}
             className="flex grow basis-0 flex-col gap-2 rounded-vv border border-vv-line bg-vv-bg p-5"
           >
-            <span className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink-faint">
+            <span className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink">
               {option.label}
             </span>
             <span className="flex flex-wrap items-baseline gap-x-1.5">
@@ -62,14 +62,14 @@ export default function TrialTerms() {
                 {CURRENCY_SYMBOL[option.price.currency] ?? ""}
                 {option.price.amount.toFixed(2)}
               </span>
-              <span className="font-head text-sm text-vv-ink-faint">/ {option.price.period}</span>
+              <span className="font-head text-sm text-vv-ink">/ {option.price.period}</span>
             </span>
           </div>
         ))}
       </div>
 
       {/* The sentence that stops the two tiles reading as two products. */}
-      <p className="mt-6 text-sm leading-relaxed text-vv-ink-dim">
+      <p className="mt-6 text-sm leading-relaxed text-vv-ink">
         Both are Standard, in full. The only difference is how often you’re billed.
       </p>
 
@@ -78,7 +78,7 @@ export default function TrialTerms() {
           periods, because that wording is not approved and is not this
           component's to invent. Every clause follows a flag rather than being
           asserted, so the copy cannot outrun the model. */}
-      <p className="mt-4 text-xs leading-relaxed text-vv-ink-faint">
+      <p className="mt-4 text-xs leading-relaxed text-vv-ink">
         Your {trial.days}-day trial is free.
         {trial.periodChosenUpfront ? " You choose monthly or annual when you start it." : ""}
         {trial.cardRequired ? " You add a payment method then, and nothing is taken during the trial." : ""}

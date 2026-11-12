@@ -1,9 +1,5 @@
-import CtaButton from "@/components/ui/CtaButton";
+import PeriodChoice from "@/components/sections/PeriodChoice";
 import { plans, trial } from "@/content/commerce";
-import { buildCta } from "@/content/site";
-import { buildUrlForPeriod } from "@/content/journey";
-
-const CURRENCY_SYMBOL: Record<string, string> = { GBP: "£" };
 
 // Single-plan card, deliberately — Basic and Pro exist in the tier
 // architecture (content/commerce.ts) but render nowhere: launch is Standard
@@ -37,38 +33,34 @@ const CURRENCY_SYMBOL: Record<string, string> = { GBP: "£" };
 // keeps a promise it stopped keeping.
 export default function PricingCard() {
   const plan = plans.standard;
-  // TWO BILLING PERIODS, ONE PLAN. Rendered from a list so both options go
-  // through the SAME markup, not two hand-written blocks that could drift
-  // apart in size, weight or spacing later. Neither is flagged, badged,
-  // ordered by value or annotated with a comparison — the only difference
-  // between the two rows a visitor sees is the number and the period.
-  const priceOptions = [plan.price, plan.priceAnnual];
+  // TWO BILLING PERIODS, ONE PLAN — and the list that rendered them moved
+  // into PeriodChoice with the prices themselves. The rule it enforced is
+  // unchanged and enforced there: both options go through the SAME markup,
+  // never two hand-written blocks that could drift apart in size, weight or
+  // spacing. Neither is flagged, badged, ordered by value or annotated with a
+  // comparison — the only difference a visitor sees is the number and the
+  // period.
 
   return (
     <div className="mx-auto w-full max-w-md rounded-vv-lg border border-vv-line bg-vv-bg-2 p-8 shadow-vv sm:p-10">
       <p className="font-head text-xs font-semibold uppercase tracking-[0.28em] text-vv-bronze-text">
         {plan.name}
       </p>
-      <p className="mt-2 text-sm text-vv-ink-dim">{plan.tagline}</p>
+      <p className="mt-2 text-sm text-vv-ink">{plan.tagline}</p>
 
-      {/* Stacked rather than side by side: at this card's width two
-          text-5xl prices on one line would have to shrink to fit, which
-          would make the display type here smaller than it is everywhere
-          else on the site and would set the two options against each other
-          visually. Stacked, each row keeps the exact type scale, weight,
-          colour and baseline alignment the single monthly price already
-          had, so neither option is subordinate to the other. */}
-      <div className="mt-6 flex flex-col gap-3">
-        {priceOptions.map((price) => (
-          <div key={price.period} className="flex items-baseline gap-1.5">
-            <span className="font-display text-4xl font-semibold text-vv-ink sm:text-5xl">
-              {CURRENCY_SYMBOL[price.currency] ?? ""}
-              {price.amount.toFixed(2)}
-            </span>
-            <span className="font-head text-sm text-vv-ink-faint">/ {price.period}</span>
-          </div>
-        ))}
-      </div>
+      {/* THE BIG STACKED PRICE PAIR IS GONE, AND THE CHOICE CARRIES THE
+          FIGURES NOW.
+          It was a mapped list of two display-type prices — deliberately one
+          markup so neither could be styled as subordinate, which was the
+          right instinct. What it could not survive was the period becoming a
+          real selection below it: the card then printed £11.99 and £89.99
+          large, and printed them again inside the two buttons a few hundred
+          pixels down. The same two numbers twice, at two different sizes, is
+          the ranking this card has always refused, arriving by another route.
+          The app states each price exactly once, inside the control that
+          selects it, and so does this now. The guarantee that both go through
+          ONE markup moved with them — see the options.map in PeriodChoice —
+          so they still cannot drift apart in size or weight. */}
 
       {/* THE TRIAL, STATED IN FULL RATHER THAN FLATTERINGLY.
           Was "Includes a 14-day free trial. Card required." — true as far as
@@ -78,7 +70,7 @@ export default function PricingCard() {
           the assumption that nothing happens automatically. Each clause is
           conditional on its own flag in content/commerce.ts, so if the
           commercial model ever changes the sentence changes with it. */}
-      <p className="mt-3 text-sm leading-relaxed text-vv-ink-dim">
+      <p className="mt-3 text-sm leading-relaxed text-vv-ink">
         {trial.days}-day free trial.
         {trial.periodChosenUpfront && trial.cardRequired
           ? " Choose monthly or annual and add a payment method to start it."
@@ -133,18 +125,27 @@ export default function PricingCard() {
           them. The period travels as a preselection the athlete can still
           change; the price that is charged is resolved by the app's server
           from the offer, never from this link. */}
-      <div className="mt-8 flex flex-col gap-3">
-        <CtaButton href={buildUrlForPeriod("monthly")} variant="cherry" className="w-full">
-          {`${buildCta.label} — monthly`}
-        </CtaButton>
-        <CtaButton href={buildUrlForPeriod("yearly")} variant="ghost" className="w-full">
-          {`${buildCta.label} — annual`}
-        </CtaButton>
+      {/* AND THE SHAPE CHANGED AGAIN, THIS TIME TO THE APP'S.
+          The two buttons above became one control. Founder: "The pay monthly/
+          yearly or build my plan yearly ect need to follow the same selection
+          rules as the app also."
+
+          The reasoning in the block above — that the athlete should pick the
+          period ONCE, here, rather than be asked again at the commercial step
+          — is unchanged and is why a choice still lives on this card. What
+          was wrong was the form it took. Two CTAs, one solid and one ghost,
+          ranked two options this very file insists are "equal, parallel
+          choices"; they also had no selected state and answered by
+          navigating. The app asks with two equal pressed buttons, monthly
+          already chosen, and a sentence that follows the press. See
+          PeriodChoice. */}
+      <div className="mt-8">
+        <PeriodChoice />
       </div>
 
       <ul className="mt-10 flex flex-col gap-4 border-t border-vv-line-soft pt-8">
         {plan.features.map((feature) => (
-          <li key={feature} className="flex gap-3 text-sm leading-relaxed text-vv-ink-dim">
+          <li key={feature} className="flex gap-3 text-sm leading-relaxed text-vv-ink">
             <span aria-hidden className="mt-[3px] shrink-0 text-vv-bronze-text">
               —
             </span>

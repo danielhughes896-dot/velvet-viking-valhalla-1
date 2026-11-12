@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel, Oswald, Inter } from "next/font/google";
+import { Cinzel, Oswald, Inter, JetBrains_Mono } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { siteUrl } from "@/content/site";
@@ -21,6 +21,26 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+});
+
+// THE FOURTH FACE, AND IT CARRIES ONE LABEL.
+//
+// globals.css used to say "No --font-mono override: nothing on the site uses
+// font-mono", which was true until /start became the app's builder entry. The
+// app sets its stage counter in --num-face, 'JetBrains Mono' — the rail reads
+// "01 / 11", and a proportional face gives the two numerals different widths,
+// so the slash sits off-centre and the counter wobbles as the stage advances.
+// That is the whole reason a monospace is specified there, and dropping it
+// would make this screen not-quite the app's screen in the one place the
+// founder is most likely to look.
+//
+// ONE WEIGHT ONLY. .bld-stage-no is 700 and nothing else on this site uses
+// the face, so the payload is a single woff2 rather than the five Inter
+// carries.
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+  weight: ["700"],
 });
 
 export const metadata: Metadata = {
@@ -101,7 +121,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${cinzel.variable} ${oswald.variable} ${inter.variable} h-full antialiased`}
+      className={`${cinzel.variable} ${oswald.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       {/* THE SITE IS DARK. Founder: "the whole background should be black… Ever
           end user reach point should be black background. Only use white around

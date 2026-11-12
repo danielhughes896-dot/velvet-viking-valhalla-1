@@ -46,7 +46,7 @@ export default function Header() {
             </CtaButton>
             <Link
               href={appSignInUrl}
-              className="font-head text-[11px] font-semibold uppercase tracking-[0.14em] text-vv-ink-dim transition-colors hover:text-vv-cherry-text"
+              className="font-head text-[11px] font-semibold uppercase tracking-[0.14em] text-vv-ink transition-colors hover:text-vv-cherry-text"
             >
               {nav.signIn.label}
             </Link>
@@ -73,7 +73,7 @@ export default function Header() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="font-head text-xs font-medium uppercase tracking-[0.15em] text-vv-ink-faint hover:text-vv-ink"
+                  className="font-head text-xs font-medium uppercase tracking-[0.15em] text-vv-ink hover:text-vv-ink"
                 >
                   {link.label}
                 </Link>

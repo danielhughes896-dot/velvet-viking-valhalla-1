@@ -19,8 +19,8 @@ export default function PageIntro({ eyebrow, heading, sub, body }: PageIntroProp
     <section className="bg-vv-bg">
       <div className="mx-auto max-w-3xl px-6 py-28 text-center sm:px-8 sm:py-36">
         <SectionHeading eyebrow={eyebrow} heading={heading} align="center" level="h1" />
-        <p className="mx-auto mt-6 max-w-lg text-lg text-vv-ink-dim">{sub}</p>
-        <p className="mx-auto mt-8 max-w-lg text-sm leading-relaxed text-vv-ink-faint">{body}</p>
+        <p className="mx-auto mt-6 max-w-lg text-lg text-vv-ink">{sub}</p>
+        <p className="mx-auto mt-8 max-w-lg text-sm leading-relaxed text-vv-ink">{body}</p>
       </div>
     </section>
   );

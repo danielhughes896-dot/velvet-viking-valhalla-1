@@ -90,7 +90,7 @@ export default function PlaceholderMedia({
             />
           ) : null}
           <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
-            <span className="font-head text-[11px] font-medium uppercase tracking-[0.2em] text-vv-ink-faint">
+            <span className="font-head text-[11px] font-medium uppercase tracking-[0.2em] text-vv-ink">
               {label}
             </span>
           </div>

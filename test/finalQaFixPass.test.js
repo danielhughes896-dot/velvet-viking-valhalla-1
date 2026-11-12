@@ -93,10 +93,21 @@ test('the Sign In label is a real link at a readable contrast, not a muted stub'
     'the low-contrast opacity-50 variant must not be used for the Sign In label'
   );
   assert.match(src, /href=\{appSignInUrl\}/, 'Sign In must be a real link');
+  /* WAS ink-dim, "a full token step above the muted ink-faint". It is full
+     ink now, which is a further step in the same direction, not a retreat
+     from it. Founder: "I want all text to be white!! Titles sub tex ect."
+     The dim and faint tokens came off every reading surface on the site in
+     that pass, so asserting ink-dim here would now require this one label to
+     be the only muted text left. What the test is for — that an active link
+     is never thinned below the full ink token — is asserted directly. */
   assert.match(
     src,
-    /text-vv-ink-dim[^"]*"\s*>\s*\{nav\.signIn\.label\}/,
-    'an active link belongs on ink-dim, a full token step above the muted ink-faint'
+    /text-vv-ink[^-"][^"]*"\s*>\s*\{nav\.signIn\.label\}/,
+    'an active link belongs on the full ink token'
+  );
+  assert.ok(
+    !/text-vv-ink-(dim|faint)[^"]*"\s*>\s*\{nav\.signIn\.label\}/.test(src),
+    'the Sign In label must not be muted below full ink'
   );
 });
 

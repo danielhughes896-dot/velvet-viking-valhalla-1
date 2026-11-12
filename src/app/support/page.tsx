@@ -66,7 +66,7 @@ export default function SupportPage() {
                   {email}
                 </a>
               </p>
-              <p className="mt-4 text-sm leading-relaxed text-vv-ink-dim">
+              <p className="mt-4 text-sm leading-relaxed text-vv-ink">
                 One address for everything. A real person reads it.
               </p>
             </div>
@@ -78,12 +78,12 @@ export default function SupportPage() {
                 <h2 className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text">
                   {topic.heading}
                 </h2>
-                <p className="mt-2 text-sm leading-relaxed text-vv-ink-dim">{topic.body}</p>
+                <p className="mt-2 text-sm leading-relaxed text-vv-ink">{topic.body}</p>
               </div>
             ))}
           </div>
 
-          <div className="border-t border-vv-line-soft pt-8 text-sm leading-relaxed text-vv-ink-dim">
+          <div className="border-t border-vv-line-soft pt-8 text-sm leading-relaxed text-vv-ink">
             <p>
               Sacoro itself lives at{" "}
               <a
@@ -97,7 +97,7 @@ export default function SupportPage() {
             {/* The statutory identity, on the page a reviewer or a regulator is
                 most likely to open first. Each fact is guarded separately so a
                 missing one is simply absent rather than shown as a placeholder. */}
-            <p className="mt-4 text-xs text-vv-ink-faint">
+            <p className="mt-4 text-xs text-vv-ink">
               {legalEntity.name}
               {isConfirmed(legalEntity.companyNumber)
                 ? `, registered in ${legalEntity.placeOfRegistration}, company number ${legalEntity.companyNumber}`

@@ -173,7 +173,7 @@ export default function MobileNav() {
                 <Link
                   href={appSignInUrl}
                   onClick={() => setOpen(false)}
-                  className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink-dim transition-colors hover:text-vv-cherry-text"
+                  className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink transition-colors hover:text-vv-cherry-text"
                 >
                   {nav.signIn.label}
                 </Link>

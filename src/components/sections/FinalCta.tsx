@@ -22,7 +22,7 @@ export default function FinalCta() {
         <h2 className="font-display text-3xl leading-[1.15] font-semibold uppercase tracking-[0.01em] text-vv-ink sm:text-4xl md:text-5xl">
           {finalCta.heading}
         </h2>
-        <p className="mt-5 max-w-md text-base leading-relaxed text-vv-ink-dim">{finalCta.sub}</p>
+        <p className="mt-5 max-w-md text-base leading-relaxed text-vv-ink">{finalCta.sub}</p>
         {/* The page's closing action is the plan, not the price. */}
         <CtaButton href={buildUrl} variant="cherry" className="mt-10">
           {finalCta.cta.label}

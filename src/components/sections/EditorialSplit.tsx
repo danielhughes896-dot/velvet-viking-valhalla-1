@@ -107,7 +107,7 @@ export default function EditorialSplit({
       <section className={`${theme === "light" ? "theme-light bg-vv-bg" : "bg-vv-bg"}`}>
         <div className="mx-auto max-w-2xl px-6 py-24 text-center sm:px-8 sm:py-32 md:max-w-4xl">
           <SectionHeading eyebrow={eyebrow} heading={heading} align="center" />
-          <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-vv-ink-dim">{body}</p>
+          <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-vv-ink">{body}</p>
         </div>
       </section>
     );
@@ -127,7 +127,7 @@ export default function EditorialSplit({
         >
           <div>
             <SectionHeading eyebrow={eyebrow} heading={heading} />
-            <p className="mt-6 max-w-md text-base leading-relaxed text-vv-ink-dim">{body}</p>
+            <p className="mt-6 max-w-md text-base leading-relaxed text-vv-ink">{body}</p>
           </div>
 
           {galleryItems && galleryItems.length > 0 ? (

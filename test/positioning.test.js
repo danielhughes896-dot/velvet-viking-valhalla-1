@@ -138,11 +138,21 @@ test('no savings, discount or urgency framing is stored or rendered anywhere in 
 });
 
 test('both prices render through the same markup, so neither can be styled as subordinate', () => {
-  // Two hand-written price blocks could drift apart in size or weight later;
-  // one mapped block cannot.
+  /* Two hand-written price blocks could drift apart in size or weight later;
+     one mapped block cannot. The block moved: the card used to print a
+     stacked pair of display-type prices ABOVE the period choice, which meant
+     both figures appeared twice on one card once the choice became a real
+     selection carrying its own. The prices live inside the control now,
+     following the app, and the one-markup rule travelled with them. */
+  const choice = code(read('src/components/sections/PeriodChoice.tsx'));
+  assert.match(choice, /\{ key: "monthly", label: "Monthly", price: plan\.price \}/);
+  assert.match(choice, /\{ key: "yearly", label: "Annual", price: plan\.priceAnnual \}/);
+  assert.match(choice, /options\.map\(/, 'one mapped block, so neither option can be styled apart');
+
+  // And the card must not grow a second, competing price display.
   const card = code(read('src/components/sections/PricingCard.tsx'));
-  assert.match(card, /priceOptions\s*=\s*\[plan\.price,\s*plan\.priceAnnual\]/);
-  assert.match(card, /priceOptions\.map\(/);
+  assert.ok(!/amount\.toFixed/.test(card),
+    'the card prints a price of its own again — the control is where prices live');
 });
 
 test('adding a second price added no purchase behaviour', () => {

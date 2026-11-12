@@ -33,7 +33,7 @@ export default function YearRound() {
           heading={yearRound.heading}
           align="center"
         />
-        <p className="mx-auto mt-6 max-w-xl text-center text-base leading-relaxed text-vv-ink-dim">
+        <p className="mx-auto mt-6 max-w-xl text-center text-base leading-relaxed text-vv-ink">
           {yearRound.body}
         </p>
 
@@ -60,7 +60,7 @@ export default function YearRound() {
                 <h3 className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text">
                   {stage.label}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-vv-ink-dim">{stage.body}</p>
+                <p className="mt-2 text-sm leading-relaxed text-vv-ink">{stage.body}</p>
               </div>
             </li>
           ))}
@@ -71,7 +71,7 @@ export default function YearRound() {
             clear that they are not: the athlete decides, and choosing nothing
             is a legitimate answer. Stating it once, plainly, under the
             sequence is cheaper than hedging every stage. */}
-        <p className="mx-auto mt-12 max-w-xl text-center text-sm leading-relaxed text-vv-ink-faint">
+        <p className="mx-auto mt-12 max-w-xl text-center text-sm leading-relaxed text-vv-ink">
           {yearRound.footnote}
         </p>
       </div>

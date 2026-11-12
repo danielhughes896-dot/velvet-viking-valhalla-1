@@ -209,11 +209,32 @@ test('cherry has a readable text token in both themes', () => {
 // 3. INTERACTIVE FLOOR
 // ---------------------------------------------------------------------------
 test('every CTA clears the 44px touch floor the app enforces', () => {
+  /* THERE ARE THREE SHAPES NOW, SO ALL THREE ARE CHECKED.
+     This used to read a single `const base` and assert min-h-11 on it. /start
+     became the app's builder entry, which draws the app's own two button
+     shapes — .btn at 44px and .vvv-btn at 48px — so `base` became a `chromes`
+     table. Checking one entry would have left the other two free to go under
+     the floor, which is the opposite of what this test is for: the floor is
+     the guarantee, not the particular class that happened to carry it. Every
+     chrome is parsed out and measured, so a fourth shape cannot be added
+     below 44px without failing here. */
   const btn = code(read('src/components/ui/CtaButton.tsx'));
-  assert.match(btn, /min-h-11/, '44px, matching .btn:not(.btn-sm){min-height:44px} in the app');
-  // The floor lives on the shared base, so no variant can opt out of it.
-  const base = btn.slice(btn.indexOf('const base ='), btn.indexOf('const variants'));
-  assert.match(base, /min-h-11/);
+  const table = btn.slice(btn.indexOf('const chromes ='), btn.indexOf('const variants'));
+  assert.ok(table.length > 0, 'the chrome table must exist — the floor lives on it');
+
+  const entries = [...table.matchAll(/(\w+):\s*\n?\s*"([^"]+)"/g)];
+  assert.ok(entries.length >= 3, `expected every chrome to be measurable, found ${entries.length}`);
+
+  for (const [, name, classes] of entries) {
+    // min-h-11 is Tailwind's 44px; the app's own shapes state their pixels.
+    const tailwind = /min-h-11\b/.test(classes);
+    const explicit = /min-h-\[(\d+(?:\.\d+)?)px\]/.exec(classes);
+    const px = tailwind ? 44 : explicit ? Number(explicit[1]) : 0;
+    assert.ok(
+      px >= 44,
+      `chrome "${name}" has a ${px || 'missing'}px floor — the app enforces 44px on every tap target`
+    );
+  }
 });
 
 // ---------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import CtaButton from "@/components/ui/CtaButton";
 import { hero } from "@/content/site";
 import { buildUrl } from "@/content/journey";
@@ -80,6 +81,73 @@ export default function Hero() {
           ground, and a glow that passes under the bar reads as the object
           passing rather than as the page changing colour. */}
       <div className="relative mx-auto flex min-h-[88vh] max-w-3xl flex-col items-center justify-center px-6 py-16 text-center sm:px-8 sm:py-24">
+        {/* THE MARK, BACK IN THE SPACE IT LEFT BEHIND.
+            Founder: "What's your thoughts on the S at the top where there is
+            a big gap?"
+
+            THE GAP WAS MINE. Retiring the crest took the mark out of this
+            hero but left the 88vh centring untouched, so the composition kept
+            the room the mark used to occupy and nothing moved into it —
+            roughly four hundred pixels of nothing between the masthead and
+            the eyebrow, which is a hole rather than breathing room.
+
+            AND THE ARGUMENT AGAINST A MARK HERE DOES NOT COVER THIS ONE. The
+            note above says "NO MARK HERE … two identical lockups in one
+            viewport is the name said twice", and that was right about a
+            WORDMARK: the header sets SACORO in type forty pixels up. A
+            monogram is a different object at a different scale, not the name
+            repeated. It is also the icon on the phone home screen, so the
+            thing an athlete taps and the thing they land on become one.
+
+            THIS IS NOT THE RETIRED CREST. That was velvet-viking-crest.png, a
+            busier mark for a product called something else, and retiring it
+            stands. This is the Sacoro mark the app ships today, cut out of
+            assets/icon-foreground.png: the app bakes it onto a black rounded
+            tile, so the tile is keyed off by luminance — the source is
+            cleanly bimodal, background under 80 and letter over 160, with the
+            anti-aliased edge in the valley between, so the ramp is 85→160 and
+            the soft edges survive. The gold dots and the ACORO line are
+            outside the crop, because the header already carries both.
+
+            aria-hidden and alt="": the header's link is already named "Sacoro
+            by Velvet Viking — home", so exposing this would have a screen
+            reader say the brand twice for one screen. */}
+        <div className="relative mb-10 sm:mb-12">
+          {/* THE GLOW IS BOUND TO THE MARK'S OWN BOX, and it had to be.
+              The first attempt was a 220px circle (300 at sm) centred on a
+              132px letter, on the reasoning in the note above: a halo passes
+              under the masthead as an object passing, not as the page
+              changing colour. Measuring it at ten-pixel scroll steps said
+              otherwise. At scrollY 150 the letter had cleared the bar and its
+              lower lobe had not, giving rgb(21,20,23) against rgb(52,35,43)
+              across the boundary — a 31-point step with nothing on screen to
+              explain it, which is worse than the 18-point wash this hero lost
+              its background to in the first place.
+
+              The principle survives; the geometry was wrong. A glow reads as
+              an object only while the object is there to be read, so this one
+              cannot outlive the letter: inset-0 ties it to the image's box,
+              and it fades out by 62% of that box, so it is gone before the
+              edges. Whenever any of it is under the bar, the mark is too. */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 85% 62% at 50% 50%, color-mix(in srgb, var(--vv-cherry) 34%, transparent) 0%, transparent 62%)",
+            }}
+          />
+          <Image
+            src="/brand/sacoro-s.png"
+            alt=""
+            aria-hidden
+            width={428}
+            height={567}
+            priority
+            className="relative h-[132px] w-auto sm:h-[168px]"
+          />
+        </div>
+
         <p className="font-head text-[10px] font-semibold tracking-[0.3em] text-vv-gold uppercase sm:text-xs sm:tracking-[0.34em]">
           {hero.eyebrow}
         </p>
@@ -113,7 +181,7 @@ export default function Hero() {
           ))}
         </h1>
 
-        <p className="mt-6 max-w-xl text-base leading-relaxed text-balance text-vv-ink-dim sm:mt-7 sm:text-lg">
+        <p className="mt-6 max-w-xl text-base leading-relaxed text-balance text-vv-ink sm:mt-7 sm:text-lg">
           {hero.sub}
         </p>
 
@@ -129,7 +197,7 @@ export default function Hero() {
           </CtaButton>
         </div>
 
-        <p className="mt-5 max-w-xs text-xs leading-relaxed text-vv-ink-faint">
+        <p className="mt-5 max-w-xs text-xs leading-relaxed text-vv-ink">
           {hero.ctaNote}
         </p>
       </div>

@@ -15,7 +15,7 @@ export default function PhilosophyPage() {
       <section className="border-t border-vv-line-soft bg-vv-bg">
         <div className="mx-auto flex max-w-2xl flex-col items-center gap-5 px-6 py-24 text-center sm:px-8">
           {pages.philosophy.expanded.map((paragraph) => (
-            <p key={paragraph} className="max-w-md text-base leading-relaxed text-vv-ink-dim">
+            <p key={paragraph} className="max-w-md text-base leading-relaxed text-vv-ink">
               {paragraph}
             </p>
           ))}

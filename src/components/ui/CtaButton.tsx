@@ -13,6 +13,12 @@ type CtaButtonProps = {
    * creation, and nothing else. See the variants table below.
    */
   variant?: "primary" | "ghost" | "cherry";
+  /**
+   * The button's geometry and type. "site" is this site's pill and the
+   * default; "appBtn" and "appShell" are the app's own two button shapes,
+   * for the surfaces that are meant to BE the app rather than to link to it.
+   */
+  chrome?: "site" | "appBtn" | "appShell";
   className?: string;
   onClick?: () => void;
   /** Shown as a title/sr-only note when href is null. */
@@ -44,8 +50,38 @@ type CtaButtonProps = {
 // designed deliberately look like the exception rather than the standard. The
 // shape moves to the base so the hero stops overriding it and nothing else
 // has to opt in — a button is the same object wherever it appears.
-const base =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 font-head text-[13px] font-semibold uppercase tracking-[0.14em] transition duration-200";
+// THREE SHAPES, ONE SET OF COLOURS.
+//
+// `chrome` picks the button's geometry and type; `variant` picks its paint.
+// They are separate because visualReconciliation's "exactly one component
+// knows how to paint the accent" is about the PAINT — the fill, the rim and
+// the ink — and that stays here, in one table, however many shapes exist.
+// Adding the app's shapes to this file is the guard working as intended: the
+// alternative was /start hand-rolling `bg-vv-cherry-fill` beside it, which is
+// a second component knowing the recipe.
+//
+//   site      THIS SITE'S BUTTON. Full pill, uppercase, wide-tracked. A
+//             marketing surface's button, and the default everywhere.
+//   appBtn    THE APP'S .btn — radius var(--radius-sm) (10px), 13.5px,
+//             weight 600, min-height 44px, gap 7px, padding 11px 18px, and
+//             NO uppercase. Used by the builder's Continue.
+//   appShell  THE APP'S .vvv-btn — radius 8px, 14px, weight 600, tracking
+//             .04em, min-height 48px, padding 12px 18px, full width, also no
+//             uppercase. Used by the builder's "Trained with Sacoro before?"
+//
+// THE TWO APP SHAPES ARE NOT INTERCHANGEABLE and are not merged into one
+// "app" chrome, because the app does not treat them as one: .vvv-btn is the
+// shell's button, drawn on panes that are mostly a single action, and .btn is
+// the builder's, drawn in a row with Back. They differ in radius, height and
+// size, and flattening them would put a 48px shell button where the app draws
+// a 44px builder one.
+const chromes = {
+  site: "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 font-head text-[13px] font-semibold uppercase tracking-[0.14em] transition duration-200",
+  appBtn:
+    "inline-flex min-h-[44px] items-center justify-center gap-[7px] rounded-[10px] px-[18px] py-[11px] font-head text-[13.5px] font-semibold transition duration-200",
+  appShell:
+    "flex min-h-[48px] w-full items-center justify-center rounded-[8px] px-[18px] py-[12px] font-head text-[14px] font-semibold tracking-[0.04em] transition duration-200",
+};
 
 // CHERRY IS THE HIERARCHY NOW, NOT A CLOSED SET OF ONE.
 //
@@ -87,6 +123,7 @@ export default function CtaButton({
   href,
   children,
   variant = "primary",
+  chrome = "site",
   className = "",
   onClick,
   pendingLabel = "Coming soon",
@@ -99,7 +136,7 @@ export default function CtaButton({
       <span
         aria-disabled="true"
         title={pendingLabel}
-        className={`${base} ${variants[variant]} cursor-not-allowed opacity-45 ${className}`}
+        className={`${chromes[chrome]} ${variants[variant]} cursor-not-allowed opacity-45 ${className}`}
       >
         {children}
         <span className="sr-only"> — {pendingLabel}</span>
@@ -108,7 +145,7 @@ export default function CtaButton({
   }
 
   return (
-    <Link href={href} onClick={onClick} className={`${base} ${variants[variant]} ${className}`}>
+    <Link href={href} onClick={onClick} className={`${chromes[chrome]} ${variants[variant]} ${className}`}>
       {children}
     </Link>
   );

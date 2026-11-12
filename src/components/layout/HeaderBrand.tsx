@@ -32,8 +32,17 @@ import { brand } from "@/content/site";
 //
 // SET SO IT CANNOT COMPETE. Centred under the full lockup, dots included,
 // because the lockup is symmetrical and aligning to the S instead would hang
-// the line off a dot. 9px, widely tracked, in the faint ink — it should be
-// legible on inspection and invisible to somebody reading the mark.
+// the line off a dot. 9px and widely tracked, so it is legible on inspection
+// and invisible to somebody reading the mark.
+//
+// AND IT IS GOLD, WHICH IS THE APP'S OWN ANSWER. It was --vv-ink-faint: a
+// grey that on a near-black bar read as something switched off rather than
+// something quiet. The app sets this exact line in .vvv-by as
+// `color:var(--gold-text)` at 10.5px/.3em, and 9px for its compact variant,
+// which is the size this masthead uses. Gold is the founder's rule for brand
+// — "Gold = brand/destination/milestone" — and a company signature under the
+// product's name is brand by definition. It also means the byline is no
+// longer grey text, which is the whole point of this pass.
 export default function HeaderBrand() {
   return (
     <Link
@@ -52,7 +61,7 @@ export default function HeaderBrand() {
           company twice for one link. */}
       <span
         aria-hidden
-        className="mt-0.5 font-head text-[9px] font-semibold tracking-[0.26em] text-vv-ink-faint uppercase"
+        className="mt-0.5 font-head text-[9px] font-semibold tracking-[0.3em] text-vv-gold-text uppercase"
       >
         By {brand.name}
       </span>

@@ -55,7 +55,7 @@ test('every first-time CTA goes through the single gated build route', () => {
     'src/components/sections/Hero.tsx',
     'src/components/sections/ProductShowcase.tsx',
     'src/components/sections/FinalCta.tsx',
-    'src/components/sections/PricingCard.tsx',
+    'src/components/sections/PeriodChoice.tsx',
     'src/app/sacoro/page.tsx',
     'src/components/layout/Header.tsx',
     'src/components/layout/MobileNav.tsx',
@@ -77,7 +77,12 @@ test('the returning athlete reaches their account, not the first-time builder', 
   // Two different rooms. Sending both to one URL is what made "Sign In" and
   // "Start Free Trial" the same click with two different promises.
   assert.ok(!/appSignInUrl = `\$\{appOrigin\}\/start`/.test(site));
-  for (const f of ['src/components/layout/Header.tsx', 'src/components/layout/MobileNav.tsx', 'src/app/start/page.tsx']) {
+  /* BuilderEntry rather than app/start/page.tsx: /start is the app's builder
+     entry now, and the returning-athlete door is the "Trained with Sacoro
+     before? Sign in" button on that screen, exactly as the app draws it. The
+     route still offers it; it is one component deeper. */
+  for (const f of ['src/components/layout/Header.tsx', 'src/components/layout/MobileNav.tsx',
+                   'src/components/sections/BuilderEntry.tsx']) {
     assert.match(code(read(f)), /appSignInUrl/, `${f} must offer a real returning-athlete route`);
   }
 });
@@ -224,13 +229,34 @@ test('the pricing card offers one CTA per billing period, and no purchase contro
      choosing it here means choosing it once instead of being asked the same
      question again at the commercial step.
 
-     WHAT THE TEST STILL GUARDS is the part that mattered: the card takes no
-     payment and quotes no price of its own. Two links are not a checkout. */
+     AND THEN THE SHAPE CHANGED ONE MORE TIME, to the app's. Two CTAs — one
+     solid, one ghost — ranked two options commerce.ts calls equal, had no
+     selected state, and answered by navigating. The app asks with a single
+     control: two equal pressed buttons, monthly preselected, a note that
+     follows the press, and ONE action underneath carrying the answer. So
+     "one CTA per billing period" is no longer the rule to hold; "one action,
+     and the period is a selection rather than a door" is.
+
+     WHAT THE TEST STILL GUARDS is the part that always mattered: no payment
+     is taken and no price is quoted in markup. A pressed-state toggle is not
+     a checkout any more than two links were. */
   const card = code(read('src/components/sections/PricingCard.tsx'));
-  assert.equal((card.match(/<CtaButton/g) || []).length, 2,
-    'one CTA per billing period, and no more');
-  assert.ok(!/<(select|input|form)\b/i.test(card), 'the card grew a purchase control');
-  assert.ok(!/11\.99|89\.99/.test(card), 'prices come from content/commerce.ts');
+  const choice = code(read('src/components/sections/PeriodChoice.tsx'));
+
+  assert.equal((card.match(/<CtaButton/g) || []).length, 0,
+    'the card delegates the action to PeriodChoice rather than drawing its own');
+  assert.equal((choice.match(/<CtaButton/g) || []).length, 1,
+    'one action under the choice, not one per period');
+
+  // The two periods are a group of pressed buttons, equal by construction.
+  assert.match(choice, /aria-pressed=\{on\}/, 'the period is a selection, with a pressed state');
+  assert.match(choice, /useState<Period>\("monthly"\)/, "monthly is preselected, as the app initialises it");
+  assert.match(choice, /flex-1/, 'the two options are equal halves of one control');
+
+  for (const src of [card, choice]) {
+    assert.ok(!/<(select|input|form)\b/i.test(src), 'the card grew a purchase control');
+    assert.ok(!/11\.99|89\.99/.test(src), 'prices come from content/commerce.ts');
+  }
   /* And still one product: the periods differ, the plan does not. */
   assert.equal((card.match(/plan\.features/g) || []).length, 1);
 });

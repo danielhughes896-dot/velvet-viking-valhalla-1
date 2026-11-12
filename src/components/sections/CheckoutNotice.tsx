@@ -51,7 +51,7 @@ export default function CheckoutNotice() {
       {/* Says the one thing the athlete actually wants to know, and stops.
           No urgency, no second attempt at selling: they have already seen the
           page this notice sits on. */}
-      <p className="mt-2 text-sm leading-relaxed text-vv-ink-dim">
+      <p className="mt-2 text-sm leading-relaxed text-vv-ink">
         You haven’t been charged. Your plan is still saved, and you can pick this
         up whenever you’re ready.
       </p>

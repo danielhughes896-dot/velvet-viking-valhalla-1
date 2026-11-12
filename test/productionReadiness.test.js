@@ -43,17 +43,26 @@ test('the canonical app entry is declared once and is the .co.uk subdomain', () 
 });
 
 test('no customer-facing CTA renders as permanently disabled', () => {
-  const start = code(read('src/app/start/page.tsx'));
+  /* THE ROUTE IS TWO FILES: app/start/page.tsx composes BuilderEntry, which
+     draws the app's stage 01 and both of its buttons. What this test is
+     about — that neither customer-facing door renders as a dead, null-href
+     button — is unchanged; it just has to look where the buttons now are. */
+  const start = code(read('src/app/start/page.tsx')) +
+    '\n' + code(read('src/components/sections/BuilderEntry.tsx'));
   assert.ok(!/commerceSeams\.(createAccount|signIn)/.test(start),
     'the account CTAs must hand off to the app, not render as dead null-href buttons');
   assert.match(start, /href=\{buildUrl\}/, 'the first-time CTA enters the app builder');
   assert.match(start, /href=\{appSignInUrl\}/, 'the returning CTA hands off to the account');
-  /* WAS /Continue to Create Account/, which was accurate about an app whose
-     /start opened on account creation. App main now opens on the nine-stage
-     builder and asks for an account at step three, so the label reads from
-     buildCta and cannot drift from every other first-time CTA. */
-  assert.match(start, /\{buildCta\.label\}/);
-  assert.match(start, /\{signInCta\.label\}/);
+  /* THE LABELS ARE THE APP'S ON THIS SCREEN. They used to read from buildCta
+     and signInCta so a marketing page could not retype them; /start is the
+     builder's own first stage now, so they read from entryLabels — the app's
+     wording, declared once in content/builderEntry.ts. The guarantee is the
+     same one: a shared declaration, never a string typed into the markup. */
+  assert.match(start, /\{entryLabels\.continue\}/);
+  assert.match(start, /\{entryLabels\.signIn\}/);
+  const labels = code(read('src/content/builderEntry.ts'));
+  assert.match(labels, /continue: "Continue →"/);
+  assert.match(labels, /signIn: "Trained with Sacoro before\? Sign in"/);
 });
 
 test('the website does not duplicate account creation or the plan builder', () => {

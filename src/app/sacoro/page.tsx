@@ -41,7 +41,7 @@ export default function SacoroPage() {
           />
           <div className="mt-10 flex flex-col items-center gap-5 text-center sm:mt-12">
             {pages.sacoro.expanded.map((paragraph) => (
-              <p key={paragraph} className="max-w-md text-base leading-relaxed text-vv-ink-dim">
+              <p key={paragraph} className="max-w-md text-base leading-relaxed text-vv-ink">
                 {paragraph}
               </p>
             ))}

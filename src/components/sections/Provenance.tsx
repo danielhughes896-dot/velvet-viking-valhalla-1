@@ -40,7 +40,7 @@ export default function Provenance({ eyebrow, heading, body, src, alt }: Provena
         </div>
         <div>
           <SectionHeading eyebrow={eyebrow} heading={heading} />
-          <p className="mt-5 max-w-md text-base leading-relaxed text-vv-ink-dim lg:max-w-lg">{body}</p>
+          <p className="mt-5 max-w-md text-base leading-relaxed text-vv-ink lg:max-w-lg">{body}</p>
         </div>
       </div>
     </section>

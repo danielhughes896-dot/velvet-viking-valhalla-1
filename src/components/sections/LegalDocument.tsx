@@ -58,11 +58,11 @@ export default function LegalDocument({ doc }: { doc: LegalDocumentContent }) {
               reasoning PageIntro already applies — so it must be the h1,
               not fall through to SectionHeading's h2 default. */}
           <SectionHeading eyebrow={doc.eyebrow} heading={doc.heading} align="center" level="h1" />
-          <p className="mx-auto mt-6 max-w-lg text-lg text-vv-ink-dim">{doc.sub}</p>
+          <p className="mx-auto mt-6 max-w-lg text-lg text-vv-ink">{doc.sub}</p>
         </div>
 
-        <p className="mt-12 text-sm leading-relaxed text-vv-ink-dim">{withLinks(doc.preamble)}</p>
-        <p className="mt-4 font-head text-[11px] uppercase tracking-[0.2em] text-vv-ink-faint">
+        <p className="mt-12 text-sm leading-relaxed text-vv-ink">{withLinks(doc.preamble)}</p>
+        <p className="mt-4 font-head text-[11px] uppercase tracking-[0.2em] text-vv-ink">
           Last updated: {doc.lastUpdated}
         </p>
 
@@ -95,7 +95,7 @@ export default function LegalDocument({ doc }: { doc: LegalDocumentContent }) {
                     {paragraph}
                   </p>
                 ) : (
-                  <p key={paragraph} className="text-sm leading-relaxed text-vv-ink-dim">
+                  <p key={paragraph} className="text-sm leading-relaxed text-vv-ink">
                     {withLinks(paragraph)}
                   </p>
                 ),
