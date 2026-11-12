@@ -321,16 +321,36 @@ export const sacoroProduct = {
   // "Today" (Next Move + Pace Reference) and "Full Plan" (the block/week
   // structure), not the previous "Execution Review" placeholder, which
   // isn't the screen supplied.
+  /* RECAPTURED 12 NOVEMBER. The two that stood here were taken on 1 November,
+     ten days before the rename, and both carried the retired VELVET VIKING
+     crest at the top of the screen — the site was selling Sacoro using
+     pictures of a product called something else. These are the current app:
+     the mark between its two dots, the cherry interaction colour, the real
+     rings.
+
+     THE PLACEHOLDER LABELS GO WITH THEM. "[VALHALLA — TODAY]" was the
+     accessible-name backstop for a frame with no image; every frame has one
+     now, `alt` is what is read, and the one place the retired name still
+     survived in a string a screen reader could reach was here. */
   screenshots: {
     primary: {
       src: "/photography/app-today.jpg",
-      placeholder: "[VALHALLA — TODAY]",
-      alt: "Sacoro’s Today screen: the day’s Next Move card and pace reference table",
+      placeholder: "Sacoro — Today",
+      alt: "Sacoro’s Today screen: an Easy Aerobic 4.5km session with its heart-rate and pace targets, why the session exists, and the morning check-in",
     },
     secondary: {
       src: "/photography/app-full-plan.jpg",
-      placeholder: "[VALHALLA — FULL PLAN]",
-      alt: "Sacoro’s Full Plan screen: the training block broken into weeks and phases",
+      placeholder: "Sacoro — Goal day",
+      alt: "Sacoro’s Full Plan screen: week 1 of 16 of a full marathon block, goal day, and the target time and pace",
+    },
+    /* A THIRD, AND ONLY ON /sacoro. The homepage shows two because the
+       section there is an introduction; the deep-dive page is where the
+       product gets room, and the block's shape — the phases ahead of you —
+       is the thing a reader goes to that page to understand. */
+    tertiary: {
+      src: "/photography/app-peak.jpg",
+      placeholder: "Sacoro — Peak",
+      alt: "Sacoro’s Full Plan screen showing the Peak phase: weeks 12 to 14 ahead, with the race-specific sessions listed",
     },
   },
 } as const;

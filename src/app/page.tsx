@@ -25,7 +25,6 @@ export default function Home() {
           above and the Earn Your Place gallery below, this specific media
           slot was not flagged for restoration.) */}
       <EditorialSplit
-        theme="light"
         eyebrow={brandStory.eyebrow}
         heading={brandStory.heading}
         body={brandStory.body}
@@ -129,7 +128,6 @@ export default function Home() {
           and everything after it, so it stays visually continuous with
           One Philosophy below rather than being singled out. */}
       <EditorialSplit
-        theme="light"
         eyebrow={earnYourPlace.eyebrow}
         heading={earnYourPlace.heading}
         body={earnYourPlace.body}

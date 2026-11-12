@@ -3,7 +3,7 @@ import type { StaticImageData } from "next/image";
 
 type PlaceholderMediaProps = {
   label: string;
-  aspect?: "landscape" | "portrait" | "square" | "wide";
+  aspect?: "landscape" | "portrait" | "square" | "wide" | "phone";
   className?: string;
   /** Edge-to-edge, no frame/radius — for full-bleed photography moments. */
   bleed?: boolean;
@@ -31,6 +31,14 @@ const aspectClass: Record<NonNullable<PlaceholderMediaProps["aspect"]>, string> 
   portrait: "aspect-3/4",
   square: "aspect-square",
   wide: "aspect-16/9",
+  /* A PHONE, AT A PHONE'S SHAPE. The device frames were 3:4 with
+     fit="contain", which was right for the old 768x1024 captures. Real
+     handset screenshots are 1080x2404 — about 9:20 — and contain does
+     exactly what it promises with those: the screen shrinks until its WIDTH
+     fits a 3:4 box, leaving the UI small between two wide bars. The frame's
+     own comment says the bezel adapts to the screenshot rather than the
+     other way round; this is that, as a number. */
+  phone: "aspect-9/20",
 };
 
 // Deliberately quiet: a small tracked label on a faint tint, not a loud

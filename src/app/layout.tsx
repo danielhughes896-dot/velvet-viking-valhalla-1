@@ -103,7 +103,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${cinzel.variable} ${oswald.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-vv-bg font-sans text-vv-ink">
+      {/* THE SITE IS DARK. Founder: "the whole background should be black… Ever
+          end user reach point should be black background. Only use white around
+          the video."
+
+          Put on <body> rather than section by section, so a page that is added
+          later is dark because that is what the site is, not because somebody
+          remembered. :root stays ivory and .theme-light is unchanged, so the
+          one surface that wants white asks for it explicitly and everything
+          else inherits — which is also why this is a two-line change rather
+          than a repaint. */}
+      <body className="theme-dark flex min-h-full flex-col bg-vv-bg font-sans text-vv-ink">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

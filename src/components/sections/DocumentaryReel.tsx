@@ -22,10 +22,21 @@ import { documentaryReel } from "@/content/site";
 // should not say it uninvited, and a visitor who wants it presses the control
 // the slot has always shown. preload="metadata" so the poster and duration
 // arrive without pulling 1.7MB at every page load.
+// THE ONE WHITE SURFACE ON THE SITE, and it is white for the footage rather
+// than for itself. The clip is a dark phone on a dark ground; run against the
+// page's own black it loses its edges and becomes a glow in the middle of a
+// column. The ivory is a mount, which is why it stops at this section.
+//
+// AND IT HAS A TOP NOW. The section carried bottom padding only, which was
+// invisible while it followed an ivory hero and sat on the same ground. Under
+// a dark page with a sticky masthead it meant the clip's first pixels arrived
+// directly beneath the bar with nothing between them, and the top of the phone
+// read as clipped. scroll-mt keeps the same clearance when the section is
+// jumped to rather than scrolled past.
 export default function DocumentaryReel() {
   return (
-    <section className="bg-vv-bg">
-      <div className="mx-auto max-w-6xl px-6 pb-20 sm:px-8 sm:pb-28">
+    <section className="theme-light scroll-mt-28 bg-vv-bg">
+      <div className="mx-auto max-w-6xl px-6 pt-16 pb-20 sm:px-8 sm:pt-20 sm:pb-28">
         <div className="mx-auto w-full max-w-[340px] sm:max-w-[400px]">
           <video
             className="aspect-4/7 w-full rounded-vv bg-vv-bg-3 object-cover shadow-vv"

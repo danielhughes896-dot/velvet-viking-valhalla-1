@@ -42,7 +42,7 @@ export default function DeviceFrame({
           fit="contain"
           priority={priority}
           sizes="(min-width: 1280px) 300px, (min-width: 1024px) 276px, (min-width: 640px) 248px, 220px"
-          aspect="portrait"
+          aspect="phone"
           className="rounded-[20px]"
         />
       </div>

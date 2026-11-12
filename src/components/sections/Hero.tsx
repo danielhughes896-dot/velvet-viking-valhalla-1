@@ -42,7 +42,7 @@ import { buildUrl } from "@/content/journey";
 export default function Hero() {
   return (
     <section
-      className="theme-dark relative overflow-hidden bg-vv-bg"
+      className="relative overflow-hidden bg-vv-bg"
       // RUNS BEHIND THE MASTHEAD. The header is sticky and therefore in the
       // flow, so without this the hero starts below it and the transparent bar
       // shows the ivory page behind it instead of this section's dark. Pulled

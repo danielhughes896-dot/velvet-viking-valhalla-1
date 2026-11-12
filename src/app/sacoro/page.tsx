@@ -72,9 +72,11 @@ export default function SacoroPage() {
         <div className="theme-dark mx-auto max-w-6xl px-6 pb-24 pt-12 sm:px-8 sm:pt-14">
           {/* PROTOTYPE: two portrait frames, no desktop mockup — see
               ProductShowcase.tsx for the same primary/secondary rationale.
-              theme-dark here too, matching the homepage's ProductShowcase:
-              Sacoro's own product surface stays visually distinct from
-              the ivory editorial page around it. */}
+              The theme note that stood here is gone with the thing it
+              described: this section used to be theme-dark so the product
+              surface stayed distinct from an ivory page. The page is dark now
+              and so is everything around it, so the frames carry their own
+              hairline and need no help. */}
           <div className="flex flex-col items-center justify-center gap-8 sm:flex-row sm:items-end">
             <DeviceFrame
               kind="mobile"
@@ -89,6 +91,20 @@ export default function SacoroPage() {
                 label={sacoroProduct.screenshots.secondary.placeholder}
                 src={sacoroProduct.screenshots.secondary.src}
                 alt={sacoroProduct.screenshots.secondary.alt}
+              />
+            </div>
+            {/* THE THIRD, AND ONLY HERE. The homepage shows two because that
+                section is an introduction; this is the page a reader opens to
+                understand the product, and the shape of the block — the phases
+                ahead of them — is what they came for. Scaled like the second
+                and hidden below sm, where a third phone would stack into a
+                column rather than read as a set. */}
+            <div className="hidden scale-[0.86] sm:block">
+              <DeviceFrame
+                kind="mobile"
+                label={sacoroProduct.screenshots.tertiary.placeholder}
+                src={sacoroProduct.screenshots.tertiary.src}
+                alt={sacoroProduct.screenshots.tertiary.alt}
               />
             </div>
           </div>
