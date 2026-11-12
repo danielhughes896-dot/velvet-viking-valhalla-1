@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import PageIntro from "@/components/sections/PageIntro";
-import { pages, appUrl } from "@/content/site";
+import { pages, appHomeUrl } from "@/content/site";
 import { legalEntity, isConfirmed } from "@/content/legal";
 
 export const metadata: Metadata = {
@@ -87,7 +87,7 @@ export default function SupportPage() {
             <p>
               Sacoro itself lives at{" "}
               <a
-                href={appUrl}
+                href={appHomeUrl}
                 className="underline decoration-vv-line underline-offset-4 hover:text-vv-cherry-text"
               >
                 app.velvetviking.co.uk

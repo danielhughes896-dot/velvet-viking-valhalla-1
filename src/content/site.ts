@@ -41,7 +41,49 @@ export const siteUrl = "https://velvetviking.co.uk";
 // hang off it so neither can drift from the other.
 const appOrigin = "https://app.velvetviking.co.uk";
 
-/** First-time entry: the app's plan builder. */
+/**
+ * First-time entry: the app's install page.
+ *
+ * Founder: "Build my plan should not build it on the website. It should take
+ * them to the app. Then they download the app and register and build from
+ * there."
+ *
+ * WHY /get AND NOT /start. The app serves three public doors and they are not
+ * interchangeable. /start is its plan builder — build, preview, then an
+ * account at step three. /account is the sign-in shell. /get is the page
+ * titled "Get Sacoro": the Android APK, the iPhone add-to-home-screen
+ * instructions, and an "open it in this browser instead" fallback. The
+ * founder's order puts the download FIRST, and /get is the only one of the
+ * three that performs it. Sending a first-time athlete to /start instead
+ * would hand them a builder in a phone browser and never offer the install at
+ * all, which is the step they asked for by name.
+ *
+ * NOTHING ON THIS SITE LINKED HERE BEFORE, which is the hole this closes. The
+ * one /get link anywhere was the private beta lane's, pointing at the beta
+ * deployment. The commercial app's install page had no door at all, so "they
+ * download the app" was a step with nowhere to happen.
+ */
+export const appGetUrl = `${appOrigin}/get`;
+
+/**
+ * The app's own front door, for prose that names where Sacoro lives rather
+ * than sending somebody to a particular screen.
+ *
+ * /support says "Sacoro itself lives at app.velvetviking.co.uk" and linked
+ * that text at the app's /start — so the words named a host and the link went
+ * to a builder. The root is what the sentence actually means, and the app
+ * resolves it properly: with the commercial gate on and no session it answers
+ * 302 /account, which is where a reader of the support page wants to be.
+ */
+export const appHomeUrl = appOrigin;
+
+/**
+ * The app's plan builder, which the website no longer sends anybody to
+ * directly — kept because the sitemap of the app's public surface belongs in
+ * one place, and because the distinction between these three URLs is the
+ * whole reason the journey works. Building happens after the install and the
+ * account now, inside the app.
+ */
 export const appUrl = `${appOrigin}/start`;
 
 /**
@@ -198,11 +240,21 @@ export const hero = {
   // deleted — some visitors genuinely do want to read first.
   cta: buildCta,
   secondaryCta: exploreCta,
-  // One honest line under the button, naming what actually happens next.
-  // Deliberately short: the route architecture is what demonstrates the
-  // build-first model, and this sentence only has to stop the button
-  // reading as a signup form.
-  ctaNote: "Answer a few questions. See the programme before you pay anything.",
+  // ONE HONEST LINE UNDER THE BUTTON, NAMING WHAT ACTUALLY HAPPENS NEXT —
+  // and it stopped being honest when the road map changed.
+  //
+  // It read "Answer a few questions. See the programme before you pay
+  // anything." Answering questions was the next thing while Build My Plan
+  // deep-linked into the app's builder. The founder has put the install
+  // first — "they download the app and register and build from there" — so
+  // the very next screen is now "Get Sacoro", and a note promising questions
+  // would have the button describing step three.
+  //
+  // The second half survives untouched, because it is still true and it is
+  // the part that matters: the app builds and shows the programme before the
+  // trial asks for a card. Short, still, for the original reason — this only
+  // has to stop the button reading as a signup form.
+  ctaNote: "Get the app, then answer a few questions. You see the programme before you pay anything.",
   media: {
     placeholder: "[HERO PHOTOGRAPH]",
     alt: "[HERO PHOTOGRAPH — athlete in training, environment to be confirmed]",
@@ -622,6 +674,42 @@ export const betaAccess = {
   cta: { label: "Continue to Sacoro", href: "https://velvet-viking-valhalla-1.vercel.app/get" },
 } as const;
 
+// THE ROAD MAP, WRITTEN DOWN ONCE.
+//
+// Founder: "It should take them to the app. Then they download the app and
+// register and build from there. Make sure that hole road map works."
+//
+// Three steps, and the website performs none of them — it names them, so an
+// athlete knows what they are agreeing to before they leave, and so the one
+// place this site describes the journey cannot drift from the one place it
+// links to it. Every step after the first belongs to the app.
+//
+// WHY THE SITE SAYS THIS AT ALL, having previously deleted a numbered list
+// from this very route for being "a page that describes a button instead of
+// being one". That criticism was right when the list described account
+// creation the athlete could have simply done — six steps standing in front
+// of one door. It does not hold here: the journey genuinely has three stages
+// across two systems and an app install in the middle, and an install is the
+// one step a person wants warning about before they tap. Three lines naming
+// real stages is orientation; six describing a form was a stall.
+export const roadMap = {
+  eyebrow: "How it works",
+  steps: [
+    {
+      title: "Get the app",
+      body: "Sacoro installs on Android, or adds to your home screen on iPhone. You can also just open it in your browser.",
+    },
+    {
+      title: "Create your account",
+      body: "One email address. We send a link — there is no password to create or remember.",
+    },
+    {
+      title: "Build your plan",
+      body: "Answer a few questions and Sacoro builds the block: sessions, paces and progression, around your running.",
+    },
+  ],
+} as const;
+
 export const pages = {
   pricing: {
     eyebrow: "Standard",
@@ -643,12 +731,18 @@ export const pages = {
   // deletion. What was worth keeping from it — both prices, and the sentence
   // about what happens when the trial ends — moved into /start, where the
   // athlete is about to do something with it.
-  /* THE start ENTRY IS GONE. /start no longer has page copy of its own: it
-     renders the app's builder entry, and its heading, lede and metadata come
-     from content/builderEntry.ts — the app's own specification. Keeping
-     "Build Your Plan" and "See your programme before you decide anything."
-     here would have left a second, unused title for a page that already has
-     one, which is how a route ends up described two different ways. */
+  /* THE start ENTRY IS BACK, and with different copy from the one that was
+     here before. It used to read "See your programme before you decide
+     anything." — the app builder's own promise, borrowed verbatim because
+     this page led straight into that builder. It no longer does: the install
+     comes first now, so promising a programme before any decision would
+     describe a screen that is three steps away rather than the next one. */
+  start: {
+    eyebrow: "Get Started",
+    heading: "Build Your Plan",
+    sub: "Sacoro builds your training block. The app does the work — here is how you get to it.",
+    body: "Three steps, and the last one is the one you came for.",
+  },
   sacoro: {
     eyebrow: sacoroProduct.eyebrow,
     heading: sacoroProduct.heading,

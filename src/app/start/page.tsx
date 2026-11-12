@@ -1,87 +1,122 @@
 import type { Metadata } from "next";
-import BuilderEntry from "@/components/sections/BuilderEntry";
+import PageIntro from "@/components/sections/PageIntro";
+import TrialTerms from "@/components/sections/TrialTerms";
 import CtaButton from "@/components/ui/CtaButton";
-import { overviewStage } from "@/content/builderEntry";
-import { betaAccess } from "@/content/site";
+import { pages, roadMap, betaAccess, appSignInUrl, buildCta, signInCta } from "@/content/site";
+import { buildUrl } from "@/content/journey";
 
 export const metadata: Metadata = {
-  title: overviewStage.heading,
-  description: overviewStage.lede,
+  title: pages.start.heading,
+  description: pages.start.sub,
   alternates: { canonical: "/start" },
 };
 
-// THIS ROUTE IS THE BUILDER'S FRONT DOOR NOW, NOT A PAGE ABOUT ONE.
+// THE HANDOFF, AND NOTHING IS BUILT HERE.
 //
-// Founder: "The build a plan needs to be the same as the app! Exactly same
-// entry point build. Copy the apps into this route."
+// Founder: "Build my plan should not build it on the website. It should take
+// them to the app. Then they download the app and register and build from
+// there. Make sure that hole road map works."
 //
-// WHAT WAS HERE. A marketing page — PageIntro's serif headline, the trial
-// terms, two read-only price cards, a Build My Plan button, a sign-in link
-// and the private-beta footer. Everything about building a plan was a
-// description of building a plan. Put beside the app's /start, which opens
-// straight into the eleven-stage builder, the two pages did not look like the
-// same product, and that is what the founder was looking at.
+// WHAT WAS HERE AN HOUR AGO. The app's builder, stage 01 — the eleven-segment
+// rail, "BUILD YOUR TRAINING BLOCK", Continue. It was a faithful copy and it
+// was the wrong idea: a visitor met a progress rail on a marketing site and
+// had every reason to think the plan was being built where they stood. The
+// website does not build plans. It is removed, with the vendored
+// builder-spec, its parity test and the monospace face the stage counter
+// needed — the whole apparatus, rather than the visible part of it.
 //
-// WHAT IS HERE. The app's stage 01, rendered from the app's own specification
-// file. The heading and lede on this page are the spec's — which is also why
-// the metadata above reads from it rather than from content/site.ts, so the
-// browser tab, the search result and the screen cannot say three things.
+// WHAT IS HERE NOW. The road map, named in three steps, and one button into
+// the app's install page. See content/journey.ts for the full chain and which
+// system owns each link; see content/site.ts `roadMap` for the copy.
 //
-// THE PRICES AND THE TRIAL TERMS LEFT WITH THE REST, and that is not a
-// deletion. /pricing states both periods in full, and the period choice now
-// follows the app's own selection rules there (see PeriodChoice). The app
-// states the trial terms again at the commercial step, where the card is
-// actually taken. This screen asks nothing and sells nothing — matching the
-// app, whose stage 01 is pure orientation — so a price on it would be the
-// one thing on the page that is not the app's.
+// THE STEPS ARE NOT NUMBERED, DELIBERATELY. They are ordered and they read
+// top to bottom, which is enough; numerals would make three stages look like
+// a form to work through. This route once carried six numbered steps
+// describing account creation and they were removed for exactly that reason.
 //
-// THE PRIVATE-BETA DOOR STAYS, AND I NEARLY REMOVED IT.
-//
-// The first pass deleted it on the reasoning that the app's stage 01 has no
-// such door, so a faithful copy should not either. Three separate tests
-// failed at once — commercialEntry, entryJourney and productionReadiness all
-// guard it — which was the suite doing exactly what it was built for. The
-// reasoning was wrong on a fact: the beta lane does NOT point where Continue
-// points. It goes to velvet-viking-valhalla-1.vercel.app/get, a different
-// origin from app.velvetviking.co.uk, under its own label ("Continue to
-// Sacoro"), and entryJourney asserts it must never be folded into the public
-// journey. Deleting it would have shut the only door five private testers
-// have, which is not something the founder asked for and not something a
-// visual change should decide.
-//
-// SO IT SITS UNDER THE BUILDER, ghost-styled and last, exactly where it sat
-// before: the commercial entry keeps the page's weight, and the lane that
-// matters to five people stays open without competing with the one that
-// matters to everybody else.
+// THE TRIAL TERMS COME BACK WITH IT. They moved to /pricing when this page
+// became a builder, because a screen that shows no price should not discuss
+// what happens to a card. This page is a commercial entry again — it is the
+// last thing a visitor reads before leaving for an install — so what the
+// trial turns into belongs on it. /pricing keeps its own copy; both read the
+// same flags in content/commerce.ts, so they cannot describe two products.
 export default function StartPage() {
   return (
     <>
-      <BuilderEntry />
+      <PageIntro {...pages.start} />
 
-      <section className="bg-vv-bg">
-        <div className="mx-auto flex w-full max-w-[560px] flex-col items-center gap-3 border-t border-vv-line-soft px-5 pt-10 pb-24 text-center sm:pb-32">
-          {/* THE NO-PASSWORD PROMISE, KEPT — AND NOT ON THE BUILDER SCREEN.
-              commercialEntry guards this sentence because sign-in is an
-              emailed link and there is no password anywhere in the product,
-              so a visitor who goes looking for one is looking for something
-              that does not exist. The first pass dropped it with the rest of
-              the old page, which was a real loss rather than a tidy-up.
-              It does not go back above, because the app's stage 01 does not
-              carry it and that screen is meant to be the app's exactly. Here,
-              in the website's own chrome under the builder, it is a sentence
-              the site is free to say. */}
-          <p className="mb-6 max-w-sm text-xs leading-relaxed text-vv-ink">
-            Signing in is by emailed link — there is no password to create or remember.
-            Installing the app on your phone is a separate step, and it comes after this.
+      <section className="border-t border-vv-line-soft bg-vv-bg">
+        <div className="mx-auto flex max-w-lg flex-col items-center gap-12 px-6 pb-24 sm:px-8 sm:pb-32">
+          {/* THE ROAD MAP. Each step is a title and a sentence, and the rule
+              between them is the only ornament — this is a list of stages,
+              not three cards competing for a tap. The one tappable thing on
+              the page is below them. */}
+          <div className="w-full pt-14">
+            <p className="font-head text-xs font-semibold tracking-[0.28em] text-vv-gold-text uppercase">
+              {roadMap.eyebrow}
+            </p>
+            <div className="mt-6">
+              {roadMap.steps.map((step, i) => (
+                <div
+                  key={step.title}
+                  className="py-5"
+                  style={
+                    i === roadMap.steps.length - 1
+                      ? undefined
+                      : { borderBottom: "1px solid var(--vv-line-soft)" }
+                  }
+                >
+                  <p className="font-head text-base font-semibold text-vv-ink">{step.title}</p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-vv-ink">{step.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <TrialTerms />
+
+          {/* THE DOOR. buildUrl is the app's install page — step one of the
+              three above, and the only step this site performs any part of.
+              Full width and stacked at every breakpoint: these are the two
+              most important taps on the site and a thumb should not have to
+              find a narrow one.
+
+              TWO GENUINELY DIFFERENT DESTINATIONS. The first-time athlete
+              goes to /get to install; the returning one goes to /account,
+              which is their own sign-in, not an install they already did. */}
+          <div className="flex w-full flex-col items-center gap-6">
+            <CtaButton href={buildUrl} variant="cherry" className="w-full">
+              {buildCta.label}
+            </CtaButton>
+
+            <div className="flex w-full flex-col items-center gap-2">
+              <p className="text-xs text-vv-ink">Already have an account?</p>
+              <CtaButton href={appSignInUrl} variant="ghost" className="w-full">
+                {signInCta.label}
+              </CtaButton>
+            </div>
+          </div>
+
+          {/* THE NO-PASSWORD PROMISE. Sign-in is an emailed link and there is
+              no password anywhere in the product, so somebody looking for one
+              is looking for something that does not exist. */}
+          <p className="max-w-sm text-center text-xs leading-relaxed text-vv-ink">
+            Signing in is by emailed link — there is no password to create or remember. Installing
+            the app is the first step above, and your account is created the first time you sign in.
           </p>
 
-          <p className="font-head text-xs font-semibold tracking-[0.2em] text-vv-bronze-text uppercase">
-            {betaAccess.eyebrow}
-          </p>
-          <p className="text-xs text-vv-ink">{betaAccess.body}</p>
-          <CtaButton href={betaAccess.cta.href} variant="ghost">
-            {betaAccess.cta.label}
-          </CtaButton>
+          {/* FIVE-PERSON PRIVATE BETA: a separate lane, on its own URL, with
+              its own label. Last on the page and ghost-styled so the
+              commercial entry above keeps the page's visual weight. */}
+          <div className="flex w-full flex-col items-center gap-3 border-t border-vv-line-soft pt-10 text-center">
+            <p className="font-head text-xs font-semibold tracking-[0.2em] text-vv-bronze-text uppercase">
+              {betaAccess.eyebrow}
+            </p>
+            <p className="text-xs text-vv-ink">{betaAccess.body}</p>
+            <CtaButton href={betaAccess.cta.href} variant="ghost">
+              {betaAccess.cta.label}
+            </CtaButton>
+          </div>
         </div>
       </section>
     </>

@@ -7,15 +7,12 @@ const ROOT = path.join(__dirname, '..');
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const code = (src) => src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
 
-/* THE /start ENTRY IS TWO FILES NOW, and these guards read both.
-   /start used to be one page component holding its own markup. It is now the
-   app's builder entry: app/start/page.tsx composes BuilderEntry, which draws
-   the rail, the stage copy and the two buttons. Every assertion below is
-   about what the ROUTE offers an athlete, so reading only page.tsx would ask
-   the wrong file and pass on an empty page. Nothing is relaxed — the same
-   strings must still be present, one component deeper. */
-const startEntry = () =>
-  code(read('src/app/start/page.tsx')) + '\n' + code(read('src/components/sections/BuilderEntry.tsx'));
+/* ONE FILE AGAIN. For a few hours /start composed a BuilderEntry component
+   holding the app's stage 01, and these guards read both files. The founder
+   removed the builder from the website — "Build my plan should not build it
+   on the website" — so the route is a single page component again and this
+   helper is what it always was. */
+const startEntry = () => code(read('src/app/start/page.tsx'));
 
 // THE SIMPLIFIED COMMERCIAL ENTRY.
 //
@@ -43,20 +40,22 @@ test('valhalla -> pricing -> start -> app, and nothing in between', () => {
      through buildUrl, straight into the app's nine-stage builder — the same
      route every other first-time CTA uses, so there is one journey rather than
      two that differ by a page. */
-  /* THROUGH THE SHARED ROUTE STILL, but carrying the period the visitor has
-     already chosen -- buildUrlForPeriod() is buildUrl plus one parameter, so
-     there is still exactly one journey and no page-local entry.
-
-     IT IS CALLED ONCE NOW, NOT TWICE PER LITERAL. The card used to hard-code
-     buildUrlForPeriod("monthly") and ("yearly") on two separate buttons; the
-     period is a selection on one control now, following the app's own rules,
-     so the route is built from whichever period is pressed. That is a
-     stronger guarantee than two literals, not a weaker one — there is no
-     second call site that could be pointed somewhere else — so what is
-     asserted is that the only URL the choice can produce is the shared one. */
+  /* ONE ROUTE, AND THE PERIOD NO LONGER RIDES ON IT.
+     This asserted buildUrlForPeriod(period) — buildUrl plus ?period=, which
+     the app's /start read as a preselection on its trial card. The founder
+     has put the app install between /pricing and that card: Build My Plan
+     goes to the app's /get now, and an install page forwards no query at all,
+     so a parameter there would be read by nobody. The helper is gone rather
+     than left appending something nothing consumes.
+     What this test guards is unchanged — one shared journey, no page-local
+     entry route — so it asserts the choice leads to the same buildUrl every
+     other first-time CTA uses, and that the two period values are still the
+     only two the app would accept if the preselection is ever restored. */
   const card = code(read('src/components/sections/PricingCard.tsx'));
   const choice = code(read('src/components/sections/PeriodChoice.tsx'));
-  assert.match(choice, /buildUrlForPeriod\(period\)/);
+  assert.match(choice, /href=\{buildUrl\}/, 'the choice leads to the one shared route');
+  assert.ok(!/buildUrlForPeriod/.test(choice),
+    'a period parameter must not be appended to a URL that forwards nothing');
   assert.match(choice, /type Period = "monthly" \| "yearly"/,
     'and the only two values it can carry are the two the app accepts');
   for (const src of [card, choice]) {
@@ -156,35 +155,22 @@ test('the primary CTA enters the builder, and says exactly that', () => {
      programme has been built and seen — so a button promising account creation
      would name the wrong screen. The label reads from buildCta, shared with
      every other first-time CTA, and cannot drift into a page-local variant. */
-  /* THE LABEL IS THE APP'S NOW, AND THAT IS THE POINT OF THE SCREEN.
-     This used to assert {buildCta.label} — "Build My Plan" — because /start
-     was a marketing page whose button had to match every other first-time CTA
-     on the site. /start IS the builder's first stage now, and the app draws
-     "Continue →" on it, so borrowing the site's label here would make the one
-     screen meant to be identical to the app the one screen that is not.
-     The guarantee underneath is unchanged and still checked: the label is
-     read from a shared declaration rather than retyped into the markup —
-     entryLabels in content/builderEntry.ts, which is the app's own wording —
-     and the destination is still buildUrl. */
+  /* BACK TO THE SITE'S OWN LABEL. It read entryLabels.continue while this
+     route drew the app's builder screen. The builder is gone from the website
+     and this is a handoff page again, so the button is the same "Build My
+     Plan" every other first-time CTA on the site carries, read from buildCta
+     so it cannot drift into a page-local variant. */
   const start = startEntry();
-  assert.match(start, /\{entryLabels\.continue\}/, 'the label is declared, not typed into the markup');
-  assert.match(code(read('src/content/builderEntry.ts')), /continue: "Continue →"/,
-    "and it is the app's own word for this button");
+  assert.match(start, /\{buildCta\.label\}/);
   assert.match(start, /href=\{buildUrl\}/);
   assert.ok(!/Continue to (Create )?Account/.test(start),
     'the account is step three of the app journey, not the promise on this button');
 });
 
 test('sign in is a different door, because it is a different page', () => {
-  /* "Already have an account?" with {signInCta.label} under it was this
-     site's phrasing of the returning-athlete door. The app asks the same
-     question in one line on the same screen — "Trained with Sacoro before?
-     Sign in" — so the door is still here, still separate, and still named
-     from a shared declaration rather than retyped. */
   const start = startEntry();
-  assert.match(start, /\{entryLabels\.signIn\}/, 'the label is shared, not retyped per page');
-  assert.match(code(read('src/content/builderEntry.ts')), /signIn: "Trained with Sacoro before\? Sign in"/);
-  assert.match(start, /href=\{appSignInUrl\}/, 'and it is a different door from the build');
+  assert.match(start, /Already have an account\?/);
+  assert.match(start, /\{signInCta\.label\}/, 'the label is shared, not retyped per page');
   /* Both doors derive from ONE declared origin rather than two absolute
      literals — the two passes that added appSignInUrl differed on the
      mechanism and the shared origin survived, so the host is still written
@@ -296,17 +282,11 @@ test('the private beta door is untouched, and is not the primary action', () => 
 test('the entry is built mobile-first, not shrunk from desktop', () => {
   const start = startEntry();
   const terms = code(read('src/components/sections/TrialTerms.tsx'));
-  /* Both CTAs still span the width — a thumb should not have to find a narrow
-     one — but they get there the app's way rather than by a per-page
-     className. The sign-in button uses the appShell chrome, which carries
-     w-full in CtaButton itself; Continue sits in the app's .bld-actions row
-     with flex-1, which fills it once Back is hidden, and Back IS hidden on
-     stage 01. So the assertion moved from "this page writes w-full" to "the
-     shapes that guarantee full width are the ones in use". */
-  assert.match(start, /chrome="appShell"/, 'the sign-in button is full width by its chrome');
-  assert.match(start, /chrome="appBtn"[^>]*className="flex-1"|className="flex-1"[^>]*chrome="appBtn"/,
-    'Continue fills the actions row');
-  assert.match(code(read('src/components/ui/CtaButton.tsx')), /appShell:\s*\n?\s*"flex min-h-\[48px\] w-full/);
+  // Both CTAs are full-width and stacked at every breakpoint: these are the two
+  // most important taps on the site and a thumb should not have to find a
+  // narrow one.
+  assert.match(start, /className="w-full"/);
+  assert.match(start, /flex-col/);
   // The price tiles stack first and go side by side only from sm.
   assert.match(terms, /flex-col gap-4 sm:flex-row/);
   assert.match(terms, /grow basis-0/, 'equal-width tracks, so neither price reads as preferred');

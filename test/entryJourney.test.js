@@ -77,12 +77,8 @@ test('the returning athlete reaches their account, not the first-time builder', 
   // Two different rooms. Sending both to one URL is what made "Sign In" and
   // "Start Free Trial" the same click with two different promises.
   assert.ok(!/appSignInUrl = `\$\{appOrigin\}\/start`/.test(site));
-  /* BuilderEntry rather than app/start/page.tsx: /start is the app's builder
-     entry now, and the returning-athlete door is the "Trained with Sacoro
-     before? Sign in" button on that screen, exactly as the app draws it. The
-     route still offers it; it is one component deeper. */
   for (const f of ['src/components/layout/Header.tsx', 'src/components/layout/MobileNav.tsx',
-                   'src/components/sections/BuilderEntry.tsx']) {
+                   'src/app/start/page.tsx']) {
     assert.match(code(read(f)), /appSignInUrl/, `${f} must offer a real returning-athlete route`);
   }
 });
@@ -133,7 +129,13 @@ test('the journey gate exists, is off, and is the only thing deciding the deep l
   // nine-stage builder (BLD_STAGES) rather than the old one-page form. The
   // shape of the gate is what still matters — one flag, one exported route.
   assert.match(j, /valueFirstLive:\s*true/);
-  assert.match(j, /buildUrl: string = JOURNEY\.valueFirstLive \? appUrl : "\/start"/,
+  /* THE DESTINATION CHANGED, THE SHAPE DID NOT. The deep link was the app's
+     /start, its plan builder. The founder has put the install first — "they
+     download the app and register and build from there" — so it is the app's
+     /get now. What this assertion is for is the SHAPE: one flag, one exported
+     route, closable in a single line to bring a first-time athlete back to
+     this site's own /start if the app's entry ever goes away. */
+  assert.match(j, /buildUrl: string = JOURNEY\.valueFirstLive \? appGetUrl : "\/start"/,
     'the gate must remain a single switch, so it can be closed again in one line');
   // It governs a route, not a claim. If it ever starts gating what the site
   // SAYS about the product, that belongs in PRODUCT_CLAIMS instead.
@@ -184,11 +186,12 @@ test('the seams are wired, and the website still owns nothing behind them', () =
   // agreements.
   const commerce = code(read('src/content/commerce.ts'));
   assert.match(commerce, /live:\s*true/);
-  assert.match(commerce, /createAccount:\s*appUrl/, 'the account seam must point at the app');
+  assert.match(commerce, /firstTimeEntry:\s*appGetUrl/,
+    'the first-time seam must point at the app, and at the install the journey starts with');
   assert.match(commerce, /signIn:\s*appSignInUrl/, 'the sign-in seam must point at the app');
   /* Every seam leaves this origin. A relative href here would be the website
      quietly becoming the account system. */
-  for (const m of commerce.match(/(createAccount|signIn):[^,]+/g) || []) {
+  for (const m of commerce.match(/(firstTimeEntry|signIn):[^,]+/g) || []) {
     assert.ok(!/["'`]\//.test(m), `a seam points at a website-local route: ${m}`);
   }
 });

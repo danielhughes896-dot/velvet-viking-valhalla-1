@@ -4,7 +4,7 @@ import { useState } from "react";
 import CtaButton from "@/components/ui/CtaButton";
 import { plans, trial } from "@/content/commerce";
 import { buildCta } from "@/content/site";
-import { buildUrlForPeriod } from "@/content/journey";
+import { buildUrl } from "@/content/journey";
 
 // THE BILLING PERIOD, CHOSEN THE WAY THE APP ASKS FOR IT.
 //
@@ -43,10 +43,22 @@ import { buildUrlForPeriod } from "@/content/journey";
 // this file cannot drift into quoting a number nobody updated.
 //
 // NOTHING COMMERCIAL HAPPENS HERE, and adding state does not change that.
-// There is no provider, no checkout, no price id: the period is a preselection
-// that travels as the word "monthly" or "yearly" on the build URL, and the
-// app's server resolves what is actually charged from the offer. See
-// buildUrlForPeriod in content/journey.ts.
+// There is no provider, no checkout and no price id.
+//
+// AND THE CHOICE NO LONGER TRAVELS, which changed under this component
+// rather than inside it. It used to append ?period= to the build URL so the
+// app's trial card opened on whichever period was pressed here. The founder
+// has put the app install between this page and that card — Build My Plan
+// goes to /get now — and an install page forwards nothing: its three buttons
+// all go to "/" with no query at all. A parameter nobody reads is worse than
+// no parameter, because the next person to touch this would believe the
+// answer still crosses.
+//
+// SO THIS IS A PRICE COMPARISON, and it is honest about being one. It answers
+// "what does each one cost" for somebody deciding whether to start at all,
+// and the app asks for the binding answer at the trial card, where the card
+// is actually taken. Making the choice survive the install is a change inside
+// the app, not here — see the note in content/journey.ts.
 //
 // useState RATHER THAN useSyncExternalStore, which the other client
 // components here use: those subscribe to something outside React (scroll
@@ -138,12 +150,11 @@ export default function PeriodChoice() {
           : `${money} a ${chosen.price.period} after your ${trial.days}-day trial.`}
       </p>
 
-      {/* ONE ACTION, CARRYING THE ANSWER. The app's "Start my 14-day trial"
-          sits under the choice rather than being the choice; this is the same
-          shape with the website's own job in it, which is to enter the
-          builder. The period travels on the URL as a preselection the athlete
-          can still change before anything is charged. */}
-      <CtaButton href={buildUrlForPeriod(period)} variant="cherry" className="mt-6 w-full">
+      {/* ONE ACTION UNDER THE CHOICE. The app's "Start my 14-day trial" sits
+          under its own period buttons rather than being them; this is the
+          same shape with the website's job in it, which is to send somebody
+          to the app to install it. */}
+      <CtaButton href={buildUrl} variant="cherry" className="mt-6 w-full">
         {buildCta.label}
       </CtaButton>
     </div>

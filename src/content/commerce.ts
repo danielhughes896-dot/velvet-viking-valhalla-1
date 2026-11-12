@@ -1,4 +1,4 @@
-import { appSignInUrl, appUrl } from "@/content/site";
+import { appSignInUrl, appGetUrl } from "@/content/site";
 
 // Central commercial configuration — pricing, trial terms, plan tiers, and
 // the routing seams that hand off to the account/entitlement system.
@@ -151,6 +151,17 @@ export const trial = {
 // Stripe customer are all resolved on the app's own origin against the athlete
 // on the bearer token. Nothing commercial is decided on this side of the link.
 export const commerceSeams = {
-  createAccount: appUrl as string | null,
+  /**
+   * WAS `createAccount`, POINTING AT THE APP'S BUILDER, and both halves of
+   * that were wrong once the founder set the road map: "It should take them
+   * to the app. Then they download the app and register and build from
+   * there." A first-time athlete is sent to the install page, and the account
+   * is created afterwards, at the sign-in shell — api/beta-signin posts
+   * create_user:true with no allowlist, so one email address both registers
+   * and signs in. Naming this seam after account creation described a screen
+   * the website does not hand off to, and pointing it at /start described one
+   * the journey no longer visits first.
+   */
+  firstTimeEntry: appGetUrl as string | null,
   signIn: appSignInUrl as string | null,
 } as const;

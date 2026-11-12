@@ -279,9 +279,13 @@ test('the launch flags are exactly the two HQ approved, and no others moved', ()
   // resolved on this side of the link is one resolved without the athlete's
   // token, their entitlement or their agreements.
   const commerce = code(read('src/content/commerce.ts'));
-  assert.match(commerce, /createAccount:\s*appUrl/);
+  /* WAS createAccount: appUrl, the app's builder. The founder's road map
+     puts the install first — Build My Plan goes to the app's /get, and the
+     account is created afterwards at the sign-in shell — so the seam is
+     named and pointed at the entry the website actually hands off to. */
+  assert.match(commerce, /firstTimeEntry:\s*appGetUrl/);
   assert.match(commerce, /signIn:\s*appSignInUrl/);
-  for (const m of commerce.match(/(createAccount|signIn):[^,]+/g) || []) {
+  for (const m of commerce.match(/(firstTimeEntry|signIn):[^,]+/g) || []) {
     assert.ok(!/["'`]\//.test(m), `a seam points at a website-local route: ${m}`);
   }
 });

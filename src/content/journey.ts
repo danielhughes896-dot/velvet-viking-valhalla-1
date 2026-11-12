@@ -1,66 +1,88 @@
-import { appUrl } from "@/content/site";
+import { appGetUrl } from "@/content/site";
 
-// THE ACQUISITION JOURNEY, AND THE ONE FLAG THAT GATES ITS DEEP LINK.
+// THE ACQUISITION JOURNEY, AND WHERE THE WEBSITE STOPS.
 //
-// The approved first-time journey is: Build My Plan -> builder -> personalised
-// preview -> Save My Plan / authenticate -> trial or purchase -> app. The
-// athlete sees a real programme built from their own answers before anything
-// is asked of them.
+// Founder: "Build my plan should not build it on the website. It should take
+// them to the app. Then they download the app and register and build from
+// there."
 //
-// THE APP NOW EXPOSES IT, so this is on. When the flag was introduced the
-// Valhalla app's /start still opened on "Step one of three — Create your
-// account, or sign in", and pointing a button labelled "Build My Plan" at a
-// signup form was the production mismatch it existed to prevent.
+// THE ROAD MAP, IN FULL, AND WHICH SIDE OWNS EACH STEP:
 //
-// VERIFIED ON APP MAIN 58b5fb0 BEFORE FLIPPING, on two counts rather than one:
-//   ORDER      pane-build -> pane-preview ("Step two of three") -> Save My
-//              Plan -> pane-auth ("Step three of three") -> trial. The app's
-//              own source says so: "THE APPROVED JOURNEY: builder -> preview
-//              -> 'Save My Plan' -> trial".
-//   AUTHORITY  pane-build carries ZERO inline form controls now. It mounts the
-//              app's staged nine-stage builder (BLD_STAGES, the 01/09 rail,
-//              bld-back/bld-next) instead of the old one-page mini-questionnaire.
-//              That matters more than the order: the website must never send
-//              anybody into a second implementation of the athlete
-//              questionnaire, and the app is the single builder authority.
+//   1. WEBSITE   Build My Plan, anywhere on the site.
+//   2. APP       /get — "Get Sacoro". Android installs the APK, iPhone adds
+//                it to the home screen, and anything else opens it in the
+//                browser. All three of those end at the app's root.
+//   3. APP       The root is the protected runtime. With the commercial gate
+//                on and no session it answers 302 /account.
+//   4. APP       /account takes an email and sends a sign-in link.
+//                api/beta-signin posts create_user:true and no longer checks
+//                an allowlist — "NO ELIGIBILITY CHECK HERE ANY MORE. A new
+//                address is a new athlete" — so this registers as well as
+//                signs in. That is what makes step 4 a real door rather than
+//                a wall for anybody who was never invited to the beta.
+//   5. APP       Signed in, the runtime builds the plan, with the app's own
+//                eleven-stage builder and its own engine.
 //
-// This is not a claim gate like PRODUCT_CLAIMS or LEGAL_APPROVALS: nothing
-// here decides what the site may say about the product, only where a button
-// goes. It is separate from trial.live (commerce.ts) for the same reason —
-// that flag governs whether money can change hands, this one governs a route.
+// THE WEBSITE PERFORMS NONE OF THEM. It names a destination; everything from
+// the download onward is the app's. No identity, no commerce, no builder.
+
 export const JOURNEY = {
   /**
-   * True once the Valhalla app's own entry point opens on the builder rather
-   * than on account creation. VERIFY AGAINST THE APP BEFORE FLIPPING — the
-   * check is whether app /start's first pane builds a plan, not whether the
-   * work is merged somewhere.
+   * True once the app's own public entry is live, so the site may deep-link
+   * into it rather than holding a first-time athlete on /start.
+   *
+   * WHAT CHANGED UNDER THIS FLAG, AND WHAT DID NOT. It was introduced to ask
+   * one question — does the app's entry open on a builder rather than on
+   * account creation? — because pointing a button labelled "Build My Plan" at
+   * a signup form was the production mismatch it existed to prevent. That
+   * answer is still yes, verified on app main 58b5fb0: pane-build mounts the
+   * BLD_STAGES builder and asks for an account at step three.
+   *
+   * What changed is WHICH of the app's three public doors the site opens. The
+   * founder has put the install first — "they download the app and register
+   * and build from there" — so the deep link is the app's /get rather than
+   * its /start. The gate's job is unchanged and so is its shape: one switch,
+   * one exported route, closable in a single line to bring a first-time
+   * athlete back to this site's own /start if the app's entry ever goes away.
+   *
+   * THE NAME NOW DESCRIBES THE APP RATHER THAN THE SITE. "Value first" was
+   * the order this website drove: a programme before a signup. The website no
+   * longer drives any order — the app does, behind an install. The flag is an
+   * HQ-approved launch flag, so it is not renamed here; if HQ wants the name
+   * to match its new subject that is their call, not this repository's.
+   *
+   * VERIFY AGAINST THE APP BEFORE FLIPPING: the check is whether the app
+   * genuinely serves /get, /account and a runtime at its root, not whether
+   * the work is merged somewhere.
    */
   valueFirstLive: true,
 } as const;
 
 /**
- * Where every public "Build My Plan" CTA points.
+ * Where every public "Build My Plan" CTA points: the app's install page.
  *
- * One export, so the whole site moves together when the flag flips and no
- * component has to know the flag exists.
+ * One export, so the whole site moves together and no component has to know
+ * which of the app's public routes is the current front door, or that a flag
+ * decides it.
  */
-export const buildUrl: string = JOURNEY.valueFirstLive ? appUrl : "/start";
+export const buildUrl: string = JOURNEY.valueFirstLive ? appGetUrl : "/start";
 
-/**
- * The same route, carrying the billing period the athlete has already chosen.
- *
- * WHY THE PERIOD TRAVELS. Commercial launch: a visitor who picks Monthly or
- * Annual on the pricing page has made the choice, and asking them to make it
- * again at the commercial step is the site forgetting what they said. The app
- * treats it as a PRESELECTION and nothing more — it can still be changed
- * before the trial starts, and the price is resolved server-side from the
- * offer code, never from this parameter. Nothing purchasable is named here.
- *
- * WHY IT IS NOT A PRICE ID. A URL that carried a Stripe price would be a URL
- * anybody could edit into a different one. "monthly" and "yearly" are the only
- * two values the app accepts, and it resolves both itself.
- */
-export function buildUrlForPeriod(period: "monthly" | "yearly"): string {
-  const sep = buildUrl.indexOf("?") === -1 ? "?" : "&";
-  return `${buildUrl}${sep}period=${period}`;
-}
+// THE BILLING PERIOD NO LONGER TRAVELS ON THIS URL, AND IT IS WORTH SAYING
+// WHY RATHER THAN QUIETLY DROPPING IT.
+//
+// buildUrlForPeriod() appended ?period=monthly or ?period=yearly, and the
+// app's /start read it as a preselection on its trial card, so an athlete who
+// chose annual on /pricing was not asked the same question again at the
+// commercial step.
+//
+// That worked because /pricing linked straight at /start. It cannot work now:
+// the install page sits between them, and it forwards nothing — its three
+// buttons all go to "/" with no query at all. A parameter on /get would be
+// read by nobody, which is worse than no parameter, because the next person
+// to read this would believe the choice still crosses.
+//
+// SO THE CHOICE ON /pricing IS INFORMATION, not a preselection: it answers
+// "what does each one cost", and the app asks for the binding answer at the
+// trial card, where the card is actually taken. Making it survive the install
+// means carrying the parameter through /get and into the runtime, which is a
+// change inside the app and belongs to SYSTEM rather than here.
