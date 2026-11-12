@@ -8,7 +8,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const code = (src) => src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
 
 /* THE GATED SUCCESSOR MODEL IS NOT A SURFACE, AND MUST NOT BE READ AS ONE.
-   content/commerce.ts now carries `freeTrial` and `freeTrialCopy`: the
+   content/commerce.ts now carries `trialRevision` and `trialRevisionCopy`: the
    seven-day, card-free period the founder has asked for, written down and
    switched off until the app behaves that way. Its copy says "no card",
    which is the exact phrase the card-free guard below exists to catch — and
@@ -23,7 +23,7 @@ const code = (src) => src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\
    fails. */
 const stripGatedModel = (src) => {
   let out = src;
-  for (const name of ['freeTrial', 'freeTrialCopy']) {
+  for (const name of ['trialRevision', 'trialRevisionCopy']) {
     const start = out.indexOf(`export const ${name} = {`);
     if (start === -1) continue;
     const end = out.indexOf('} as const;', start);

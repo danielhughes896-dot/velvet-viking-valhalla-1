@@ -19,8 +19,8 @@ const constBlock = (src, name) => {
   const end = src.indexOf('} as const;', start);
   return end === -1 ? '' : src.slice(start, end);
 };
-const freeTrialIsLive = () =>
-  /live:\s*true/.test(constBlock(code(read('src/content/commerce.ts')), 'freeTrial'));
+const trialRevisionIsLive = () =>
+  /live:\s*true/.test(constBlock(code(read('src/content/commerce.ts')), 'trialRevision'));
 
 // THE 7-DAY FREE TRIAL: DECIDED, DRAFTED, AND NOT YET TRUE.
 //
@@ -34,7 +34,7 @@ const freeTrialIsLive = () =>
 //
 // WHAT THIS FILE IS FOR. The model is written down in two places that cannot
 // yet be published — `freeTier`/`freeTierCopy` in content/commerce.ts and
-// FREE_TRIAL_LEGAL_AMENDMENT in content/legal.ts — because the app still runs
+// TRIAL_REVISION_LEGAL_AMENDMENT in content/legal.ts — because the app still runs
 // the opposite product. Writing a commercial model down and not shipping it
 // is exactly the state in which things go wrong quietly: the draft rots
 // against the live document, or somebody flips the flag and the copy is
@@ -52,7 +52,7 @@ test('every clause the amendment replaces is present, verbatim, in the live docu
 
   // The amendment's own quotations are inside the object, so strip it out
   // before searching — otherwise every string trivially finds itself.
-  const start = legal.indexOf('export const FREE_TRIAL_LEGAL_AMENDMENT');
+  const start = legal.indexOf('export const TRIAL_REVISION_LEGAL_AMENDMENT');
   const end = legal.indexOf('export const termsDraft');
   assert.ok(start > -1 && end > start, 'the amendment object must exist, above termsDraft');
   const documents = legal.slice(0, start) + legal.slice(end);
@@ -63,7 +63,13 @@ test('every clause the amendment replaces is present, verbatim, in the live docu
     ...[...amendment.matchAll(/remove:\s*\n?\s*"((?:[^"\\]|\\.)*)"/g)].map((m) => m[1]),
     ...[...amendment.matchAll(/replacesHeading:\s*\n?\s*"((?:[^"\\]|\\.)*)"/g)].map((m) => m[1]),
   ];
-  assert.ok(quoted.length >= 5, `expected the amendment to quote the clauses it changes, found ${quoted.length}`);
+  /* THREE, NOT FIVE. Earlier drafts of this amendment rewrote section 7,
+     section 8 and three Privacy clauses as well, because they changed the
+     card and the conversion. With both unchanged, what is left is one
+     sentence and two lengths. The floor is the real number — raising it
+     would demand changes nobody wants, and removing it would let an empty
+     amendment pass. */
+  assert.ok(quoted.length >= 3, `expected the amendment to quote the clauses it changes, found ${quoted.length}`);
 
   for (const q of quoted) {
     assert.ok(
@@ -80,12 +86,22 @@ test('the lines the amendment protects are still in the documents it protects th
      consumer's right to cancel a distance contract, which is law. A careless
      find-and-replace of "14" would have shortened the right to seven. */
   const legal = read('src/content/legal.ts');
-  const start = legal.indexOf('export const FREE_TRIAL_LEGAL_AMENDMENT');
+  const start = legal.indexOf('export const TRIAL_REVISION_LEGAL_AMENDMENT');
   const end = legal.indexOf('export const termsDraft');
   const documents = legal.slice(0, start) + legal.slice(end);
 
   const amendment = legal.slice(start, end);
-  const protectedSection = amendment.slice(amendment.indexOf('mustNotChange'), amendment.indexOf('openQuestions'));
+  /* ANCHORED ON THE KEY, NOT THE WORD. This sliced from the first mention of
+     "mustNotChange" anywhere in the object — and a comment above
+     termsLengthEdits says "neither is the statutory right — see
+     mustNotChange". So the slice began forty lines early and swept up the
+     length edits' replacement text as though it were protected, then failed
+     because a sentence the amendment deliberately rewrites is, of course,
+     not in the document unchanged. */
+  const protectedSection = amendment.slice(
+    amendment.indexOf('mustNotChange: ['),
+    amendment.indexOf('openQuestions: [')
+  );
   const lines = [...protectedSection.matchAll(/"((?:[^"\\]|\\.)*)"/g)].map((m) => m[1]).filter((s) => s.length > 40);
   assert.ok(lines.length >= 2, 'mustNotChange must name the lines it protects');
 
@@ -105,26 +121,34 @@ test('the lines the amendment protects are still in the documents it protects th
 // ---------------------------------------------------------------------------
 // 2. THE MODEL IS NOT LIVE, AND NOTHING DESCRIBES IT YET
 // ---------------------------------------------------------------------------
-test('the free trial is gated off, and the site still describes the product the app runs', () => {
+test('the trial revision is gated off, and does not redeclare what it leaves alone', () => {
   const commerce = code(read('src/content/commerce.ts'));
-  const block = constBlock(commerce, 'freeTrial');
-  assert.ok(block, 'the freeTrial model must exist');
-  assert.match(block, /live:\s*false/, 'freeTrial.live must be false until the app behaves this way');
+  const block = constBlock(commerce, 'trialRevision');
+  assert.ok(block, 'the trialRevision model must exist');
+  assert.match(block, /live:\s*false/, 'trialRevision.live must be false until the app behaves this way');
 
-  /* TWO SEVENS, AND THEY ARE DIFFERENT NUMBERS — how long the free period
-     lasts, and how much of the block is shown during it. They coincide
-     today, which is exactly why both are asserted: deriving one from the
-     other would hide the day they diverge. */
-  assert.match(block, /days:\s*7/, 'the free period is seven days long');
+  /* TWO SEVENS, AND THEY ARE DIFFERENT NUMBERS — how long the trial lasts,
+     and how much of the block is shown during it. They coincide today, which
+     is exactly why both are asserted: deriving one from the other would hide
+     the day they diverge. */
+  assert.match(block, /days:\s*7/, 'the trial is seven days long');
   assert.match(block, /horizonDays:\s*7/, 'and seven days of the block are visible during it');
 
-  assert.match(block, /cardRequired:\s*false/);
-  assert.match(block, /autoConverts:\s*false/, 'it ends rather than becoming a subscription');
-  assert.match(block, /expires:\s*true/, 'it is a trial with a last day, not a permanent free tier');
-  assert.match(block, /onePerAccount:\s*true/, '"just a single 7 days"');
-
-  // COMMERCIAL_MODEL is the single branch every surface would read.
-  assert.match(commerce, /COMMERCIAL_MODEL: "freeTrial" \| "cardTrial"/);
+  /* THE REVISION MUST NOT RESTATE THE MACHINERY IT DOES NOT CHANGE. The card
+     is still taken up front and the subscription still converts by itself —
+     founder: "No I want the card to start." Those facts live in `trial`, and
+     a second copy here would be a second place for them to drift. Two
+     earlier passes built this object as a rival commercial model with its
+     own cardRequired and autoConverts, and both were wrong about them. */
+  for (const field of ['cardRequired', 'autoConverts', 'expires', 'periodChosenUpfront']) {
+    assert.ok(
+      !new RegExp(`${field}:`).test(block),
+      `trialRevision redeclares ${field} — it is unchanged, and belongs only in \`trial\``
+    );
+  }
+  const live = constBlock(commerce, 'trial');
+  assert.match(live, /cardRequired:\s*true/, 'the card is still taken up front');
+  assert.match(live, /autoConverts:\s*true/, 'and the subscription still converts by itself');
 });
 
 test('no rendered surface describes the free trial while it is gated off', () => {
@@ -146,8 +170,8 @@ test('no rendered surface describes the free trial while it is gated off', () =>
     if (f === 'src/content/commerce.ts') continue;
     const src = code(read(f));
     assert.ok(
-      !/freeTrialCopy|freeTrial\./.test(src),
-      `${f} reads the free-trial model, which is not live — see freeTrial.live in content/commerce.ts`
+      !/trialRevisionCopy|freeTrial\./.test(src),
+      `${f} reads the free-trial model, which is not live — see trialRevision.live in content/commerce.ts`
     );
   }
 });
@@ -155,7 +179,7 @@ test('no rendered surface describes the free trial while it is gated off', () =>
 // ---------------------------------------------------------------------------
 // 3. THE TRIPWIRE: FLIPPING THE FLAG WITHOUT THE REST
 // ---------------------------------------------------------------------------
-test('the free trial cannot go live while the Terms still promise the old one', () => {
+test('the revision cannot go live while the Terms still promise the old trial', () => {
   /* THIS IS THE ONE THAT MATTERS. Flipping freeTier.live is a single
      character, and it would put "free, nothing to cancel, nothing taken" on a
      site whose own Terms — one click away, on the same domain — promise a
@@ -165,20 +189,20 @@ test('the free trial cannot go live while the Terms still promise the old one', 
      So the flag is tied to the document. If the free tier is live, the
      published Terms must no longer describe a trial, and the amendment must
      have been applied rather than left sitting in the file. */
-  if (!freeTrialIsLive()) return;
+  if (!trialRevisionIsLive()) return;
 
   const legal = read('src/content/legal.ts');
-  const start = legal.indexOf('export const FREE_TRIAL_LEGAL_AMENDMENT');
+  const start = legal.indexOf('export const TRIAL_REVISION_LEGAL_AMENDMENT');
   const end = legal.indexOf('export const termsDraft');
   const documents = legal.slice(0, start) + legal.slice(end);
 
   assert.ok(
     !/New subscribers are offered a 14-day free trial/.test(documents),
-    'the free trial is live while the published Terms still offer a 14-day trial'
+    'the revision is live while the published Terms still offer a 14-day trial'
   );
   assert.ok(
     !/Nothing is held back for paying subscribers/.test(documents),
-    'the free trial holds the block back — the Terms must not promise otherwise'
+    'the revision holds the block back — the Terms must not promise otherwise'
   );
   assert.match(
     code(legal),
@@ -187,52 +211,70 @@ test('the free trial cannot go live while the Terms still promise the old one', 
   );
 });
 
-test('the free trial cannot go live while the card trial is still being advertised', () => {
-  /* The two models are mutually exclusive: one takes a card up front and
-     converts, the other takes nothing and never does. Whichever is live, the
-     other must be silent — a page describing both is a page a reader cannot
-     act on. */
-  if (!freeTrialIsLive()) return;
+test('when the revision goes live, the live trial must already carry its numbers', () => {
+  /* THIS TRIPWIRE USED TO SAY THE WRONG THING. It asserted that if the new
+     model went live the old one must be switched off — correct while the two
+     were rival commercial models, and wrong now. The founder settled it as a
+     REVISION: the card is still taken, the subscription still converts,
+     commerce stays live. There is no second model to switch off.
+
+     What has to be true instead is that flipping the flag is the LAST step,
+     not the first: by then `trial` itself carries the revised numbers, and
+     this object has done its job. A revision that is live while the thing it
+     revises still says fourteen days is just two numbers disagreeing. */
+  if (!trialRevisionIsLive()) return;
 
   const commerce = code(read('src/content/commerce.ts'));
-  assert.ok(
-    !/live:\s*true/.test(constBlock(commerce, 'trial')),
-    'both commercial models are switched on at once'
+  const live = constBlock(commerce, 'trial');
+  const revision = constBlock(commerce, 'trialRevision');
+
+  const want = /days:\s*(\d+)/.exec(revision);
+  const got = /days:\s*(\d+)/.exec(live);
+  assert.ok(want && got, 'both the trial and its revision must state a length');
+  assert.equal(
+    got[1],
+    want[1],
+    `the revision is live at ${want[1]} days while the trial still says ${got[1]}`
   );
-  for (const f of ['src/components/sections/TrialTerms.tsx', 'src/components/sections/PricingCard.tsx']) {
-    assert.ok(
-      !/trial\.days/.test(code(read(f))),
-      `${f} still renders the old trial length while the free trial is live`
-    );
-  }
+
+  assert.match(live, /horizonDays:/, 'the live trial must carry the seven-day view the revision adds');
+  // Commerce stays on. A revision does not close the tills.
+  assert.match(live, /live:\s*true/, 'the trial itself must still be live — this is a revision, not a retreat');
 });
 
 // ---------------------------------------------------------------------------
 // 4. WHAT THE WORDING MUST NOT DO
 // ---------------------------------------------------------------------------
-test('the free-trial copy says it ends, and never promises permanence', () => {
-  /* THIS TEST USED TO ASSERT THE OPPOSITE, and that is worth leaving on the
-     record. The first reading of the founder's message modelled a permanent
-     free tier, so this guard banned the word "trial" and banned anything that
-     sounded like a countdown. The founder corrected it — "Just a single 7
-     days. Then it ends" — and every one of those banned words became
-     required. Copy that hid the ending would have been the most damaging
-     possible error here: an athlete planning around an account that does not
-     exist, told so by the page that took their email. */
+test('the revised copy keeps the card and the conversion, and states the limit', () => {
+  /* THIS TEST HAS NOW BEEN WRONG TWICE, which is the point of leaving the
+     history in it. Read as a permanent free tier, it banned the word "trial"
+     and anything resembling a countdown. Read as a card-free trial, it
+     required the countdown and banned permanence. The founder settled it:
+     "No I want the card to start." The card is taken up front and the
+     subscription converts automatically, exactly as the live model does —
+     so the copy's job is to say the two things that actually changed and to
+     keep saying the two that did not. */
   const commerce = read('src/content/commerce.ts');
-  const start = commerce.indexOf('export const freeTrialCopy');
-  const end = commerce.indexOf('export const trial');
-  assert.ok(start > -1 && end > start, 'freeTrialCopy must exist, above the trial it replaces');
+  const start = commerce.indexOf('export const trialRevisionCopy');
+  const end = commerce.indexOf('export const trial = {');
+  assert.ok(start > -1 && end > start, 'trialRevisionCopy must exist, above the trial it revises');
   const copy = code(commerce.slice(start, end));
 
-  // It must not promise permanence in any of the ways that read as a promise.
-  for (const rx of [/\balways\b/i, /\bstays free\b/i, /\bforever\b/i, /\bnever expires?\b/i, /\bunlimited\b/i]) {
+  // The most damaging sentence available here. A reader who believes no card
+  // is involved has not understood that a subscription begins a week later.
+  for (const rx of [/no card/i, /card.free/i, /without a card/i, /no payment (method|details) (needed|required)/i]) {
+    assert.ok(!rx.test(copy), `the copy matches ${rx} — the card is taken before the trial starts`);
+  }
+  // Nor may it promise a free period that does not end.
+  for (const rx of [/\balways\b/i, /\bstays free\b/i, /\bforever\b/i, /\bunlimited\b/i]) {
     assert.ok(!rx.test(copy), `the copy matches ${rx}, which promises a free period that does not end`);
   }
-  // And it must say, in the copy itself, that it ends.
-  assert.match(copy, /\bends\b/i, 'the copy must state that the free period ends');
-  // Paying must be described by what it actually does.
-  assert.match(copy, /whole block/i, 'the copy must say that subscribing shows the whole block');
+  // It must keep the conversion explicit — the sentence the model rests on.
+  assert.match(copy, /automatically/i, 'the copy must say the subscription starts by itself');
+  assert.match(copy, /cancel/i, 'and that cancelling is what stops it');
+  // And it must name the new limit, as what the subscription adds.
+  assert.match(copy, /days of your (training )?block/i, 'the copy must state the seven-day view');
+  assert.match(copy, /whole of it|whole block/i, 'and that subscribing shows the whole block');
   // No urgency framing, same restraint the prices are held to.
   for (const rx of [/\bhurry\b/i, /\bdon.t miss\b/i, /\blimited time\b/i, /\bact now\b/i]) {
     assert.ok(!rx.test(copy), `the copy matches ${rx}, which is urgency framing`);

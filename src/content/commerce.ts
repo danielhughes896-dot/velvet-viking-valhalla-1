@@ -104,133 +104,111 @@ export const plans = {
 // These are commercial UX facts. The contractual refund and cancellation terms
 // are a separate matter and remain gated in @/content/legal until HQ supplies
 // the approved wording.
-// THE 7-DAY FREE TRIAL THAT REPLACES THE 14-DAY ONE — DECIDED, NOT YET TRUE.
+// THE PENDING REVISION TO THE TRIAL — DECIDED, NOT YET TRUE.
 //
-// Founder: "I think it should be 7 days free trial. And when they sign up for
-// free all data after 7 days is hidden. Then when they pay they see the full
-// data." Then, correcting a first reading of that as a permanent free tier:
-// "Just a single 7 days. Then it ends. But a user can only see 7 days."
+// Founder, across four messages, each one narrowing the last:
+//   "I think it should be 7 days free trial. And when they sign up for free
+//    all data after 7 days is hidden. Then when they pay they see the full
+//    data."
+//   "Nooo. Just a single 7 days. Then it ends. But a user can only see 7 days."
+//   "No I want the card to start."
 //
-// SO IT IS A TRIAL, AND IT REALLY ENDS. One seven-day period per account, not
-// a free plan that runs forever on a narrow view. The first pass modelled it
-// as the latter — an account that never expires and only ever shows the next
-// week — and that was wrong in the way that matters most: it promised
-// permanence the product will not give.
+// WHAT IT LANDED ON IS A REVISION, NOT A DIFFERENT PRODUCT, and that is why
+// this is a small object rather than a parallel commercial model. Two passes
+// built bigger things first — a permanent free tier, then a card-free trial
+// that expires — and both were wrong in the same direction: they changed
+// machinery the founder had not asked to change. The card is taken up front
+// and the subscription converts automatically, exactly as `trial` below
+// already says and exactly as the published Terms already describe.
 //
-// TWO SEVENS, AND THEY ARE DIFFERENT NUMBERS. `days` is how long the free
-// period lasts. `horizonDays` is how much of the block an athlete can see
-// while it does. They happen to coincide at seven, which is exactly why they
-// are written as two fields rather than one: a trial that shows a week is a
-// trial whose length and whose view are separate decisions, and setting one
-// from the other would hide that the day the pair diverge.
+// ONLY TWO THINGS MOVE:
+//   days        14 -> 7. The free period is shorter.
+//   horizonDays NEW. During the trial an athlete sees seven days of their
+//               training block rather than the whole of it. "when they pay
+//               they see the full data."
 //
-// WHAT MAKES IT DIFFERENT FROM THE TRIAL BELOW, beyond the length: no card is
-// taken, and nothing converts. The current model collects a payment method
-// before the trial starts and the subscription begins by itself unless
-// cancelled. This one ends. Paying afterwards is a separate, deliberate act,
-// and an athlete who does nothing is never charged.
+// TWO SEVENS, AND THEY ARE DIFFERENT NUMBERS. One is how long the trial
+// lasts; the other is how much of the block it shows. They coincide here,
+// which is exactly why they are two fields: the length of a trial and the
+// depth of its view are separate decisions, and deriving one from the other
+// would hide the day they diverge.
+//
+// WHAT IS DELIBERATELY ABSENT: no cardRequired, no autoConverts, no
+// expires. Restating them here would create a second place where they are
+// declared and a second place for them to drift. They are unchanged, they
+// live in `trial`, and a test asserts this object does not redeclare them.
 //
 // `live` IS FALSE AND MUST STAY FALSE UNTIL THE APP BEHAVES THIS WAY. The
-// product today does the opposite on all three counts: api/_products.js sets
-// TRIAL_DAYS = 14, checkout collects a card before the trial starts, and the
-// subscription converts automatically. Describing this while that is true
-// would be a live commercial misrepresentation on a site with real Stripe
-// prices behind it — somebody could sign up expecting free and be charged.
-// Same rule as `trial.live` below: copy follows the product.
+// app charges on day fourteen (api/_products.js, TRIAL_DAYS = 14) and shows
+// the whole block throughout. Saying "7 days" while Stripe bills on the
+// fourteenth is a false commercial claim; saying "you see 7 days" while the
+// app shows all of it is merely wrong, but it is still wrong in public.
 //
 // WHAT HAS TO HAPPEN BEFORE IT FLIPS, in order:
-//   1. SYSTEM teaches the app a visibility horizon. Nothing like it exists:
+//   1. SYSTEM sets TRIAL_DAYS = 7 and the Stripe trial_period_days with it.
+//   2. SYSTEM teaches the app a visibility horizon. Nothing like it exists:
 //      the entitlement model has capabilities (`can('execution_review')`) and
 //      a locked-out state, but nothing that shows only part of a block.
-//   2. SYSTEM makes an account creatable without a payment method, and makes
-//      the free period end rather than convert.
-//   3. The Terms are republished. The live ones promise a 14-day card-
-//      required trial and that "Nothing is held back for paying subscribers",
-//      which this model contradicts outright. See FREE_TRIAL_LEGAL_AMENDMENT
-//      in content/legal.ts — drafted, unapproved, unpublished.
+//   3. The Terms are republished. The live ones say fourteen days, and say
+//      "Nothing is held back for paying subscribers" — which a seven-day
+//      view contradicts outright. See TRIAL_REVISION_LEGAL_AMENDMENT in
+//      content/legal.ts: drafted, unapproved, unpublished.
 //   4. Then this flag, and only then.
-export const freeTrial = {
-  planId: "standard" as const,
-  /** How long the free period lasts, in days. One period, then it is over. */
+export const trialRevision = {
+  /** Replaces `trial.days`. The free period, shortened from fourteen. */
   days: 7,
   /**
-   * How much of the training block is displayed during it, in days.
-   *
-   * SEPARATE FROM `days` ON PURPOSE — see the note above. Sacoro builds the
-   * whole block; this governs how much of it an athlete is shown before they
-   * subscribe.
+   * NEW, and the only genuinely new idea in the revision: how much of the
+   * training block is displayed while the trial runs. Sacoro builds the
+   * whole block; this governs how much of it an athlete is shown before the
+   * subscription begins.
    */
   horizonDays: 7,
-  /** No payment method to start it, and none held during it. */
-  cardRequired: false,
-  /** It ends. It does not become a subscription on its own. */
-  autoConverts: false,
-  /** There is a last day, and after it the free period is over. */
-  expires: true,
-  /** One per account — "just a single 7 days". */
-  onePerAccount: true,
-  /** Subscribing shows the whole block, not another week of it. */
-  paidRevealsFullBlock: true,
   /** See the block comment above. Do not flip this from the website side. */
   live: false,
 } as const;
 
-/**
- * Which commercial model the site is allowed to describe.
- *
- * ONE BRANCH, READ BY EVERY SURFACE, so the question "what are we offering"
- * is answered in a single place rather than in each component. While the free
- * trial is not live this resolves to "cardTrial", and every page keeps
- * describing the product the app actually runs today.
- */
-export const COMMERCIAL_MODEL: "freeTrial" | "cardTrial" = freeTrial.live
-  ? "freeTrial"
-  : "cardTrial";
-
-// THE FREE TRIAL'S CUSTOMER-FACING SENTENCES, WRITTEN BUT NOT RENDERED.
+// THE REVISED TRIAL'S CUSTOMER-FACING SENTENCES, WRITTEN BUT NOT RENDERED.
 //
 // Kept here for the same reason content/legal.ts keeps unpublished drafts in
 // the file: the wording is the part worth deciding early and reviewing on its
-// own, and writing it now means the flip later is a review rather than a
-// first draft under time pressure. Nothing reads this while COMMERCIAL_MODEL
-// is "cardTrial" — a test enforces that.
+// own. Nothing reads this while `trialRevision.live` is false — a test
+// enforces that.
 //
-// WHAT THE WORDING HAS TO GET RIGHT, and where each line earns its place:
+// WHAT THE WORDING HAS TO GET RIGHT:
 //
-//   IT MUST SAY IT ENDS. The first draft of this copy said "free to use,
-//   always" and "stays free" — it had the model wrong, and an athlete who
-//   read it would have planned around an account that does not exist. A trial
-//   that ends has to say so in the same breath as the word free, not in a
-//   footnote underneath it.
+//   THE CARD IS STILL TAKEN FIRST, and the copy must keep saying so. An
+//   earlier draft of this block said "no card" — a different model, and the
+//   single most damaging sentence available here, because a reader who
+//   believes no card is involved has not understood that a subscription
+//   begins by itself a week later.
 //
-//   IT MUST NOT PROMISE THE WHOLE PLAN. "You see 7 days of your block" is the
-//   honest line. The old 14-day terms said "Nothing is held back", and the
-//   gap between that sentence and this model is the single biggest reason the
-//   contract has to be republished before any of this is said out loud.
+//   IT MUST NAME THE LIMIT WITHOUT SOUNDING LIKE A CATCH. "You see 7 days of
+//   your block during the trial" is the plain version. The thing being
+//   withheld is the rest of a programme the athlete can have in full by
+//   subscribing, so it is stated as what the subscription adds.
 //
-//   NOTHING IS TAKEN AND NOTHING STARTS. Two separate promises, both load-
-//   bearing, because the model they replace does the opposite of each: a card
-//   up front, and a subscription that begins by itself.
-//
-//   NO URGENCY FRAMING. It states a length and what follows it. No counters,
-//   no "hurry", no savings arithmetic — the same restraint the prices above
-//   are held to.
-export const freeTrialCopy = {
+//   THE CONVERSION STAYS EXPLICIT. "Cancel before it ends and you won't be
+//   charged. Otherwise your subscription starts automatically." That
+//   sentence is the one the whole trial model rests on and it does not get
+//   softened because the trial got shorter.
+export const trialRevisionCopy = {
   /** Replaces "AFTER YOUR TRIAL" above the two prices. */
-  pricesEyebrow: "When your 7 days end",
+  pricesEyebrow: "After your 7 days",
   /** The one-line statement of the offer, for cards and intros. */
-  offer: `${freeTrial.days} days free, no card. You see ${freeTrial.horizonDays} days of your block.`,
+  offer: `${trialRevision.days} days free. You see ${trialRevision.horizonDays} days of your block.`,
   /** The full terms paragraph, replacing the trial sentence block. */
   terms:
-    `Your first ${freeTrial.days} days are free and no payment method is needed to start. ` +
-    `During them you can see ${freeTrial.horizonDays} days of your training block. ` +
-    `After ${freeTrial.days} days the free period ends — it does not renew and it does not ` +
-    `become a subscription by itself. Subscribing restores your access and shows you the whole block.`,
+    `Your first ${trialRevision.days} days are free. You choose monthly or annual and add a ` +
+    `payment method to start, and nothing is taken during the ${trialRevision.days} days. ` +
+    `During them you can see ${trialRevision.horizonDays} days of your training block; your ` +
+    `subscription shows you the whole of it. Cancel before the ${trialRevision.days} days end ` +
+    `and you won't be charged. Otherwise the option you picked starts automatically.`,
   /** The note under the billing-period choice. */
   periodNote: (money: string, period: string) =>
-    `${money} a ${period} once your ${freeTrial.days} free days are over. Nothing is taken unless you subscribe.`,
+    `After ${trialRevision.days} days this becomes ${money} a ${period}, unless you cancel.`,
   /** The hero's one honest line under the button. */
-  ctaNote: `Get the app, then answer a few questions. Your first ${freeTrial.days} days are free and no card is needed.`,
+  ctaNote: `Get the app, then answer a few questions. Your first ${trialRevision.days} days are free.`,
 } as const;
 
 export const trial = {
