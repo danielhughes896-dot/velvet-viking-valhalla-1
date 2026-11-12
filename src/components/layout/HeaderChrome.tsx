@@ -22,8 +22,11 @@ import { useSyncExternalStore } from "react";
 // THE OPACITY WENT WITH THE IVORY. bg-vv-bg/95 was "still soft, not a flat app
 // toolbar", which was harmless while everything scrolling under it was ivory
 // on ivory; against a dark bar it would show the ivory page as a bright haze.
-// Solid, with a hairline that is now a lighter line on dark rather than a
-// darker one on cream.
+// AND NO HAIRLINE. On cream a bottom border was a darker line, which read as
+// an edge. On black it is a LIGHTER line — rgb(37,36,41) against rgb(21,20,23)
+// — so the thing meant to tidy the boundary was the brightest object in it.
+// The bar is opaque and the page behind it is the same black, so there is no
+// boundary left to draw.
 //
 // The homepage now opens on a near-black section, and a cream bar sitting on
 // top of it draws a hard horizontal edge across the first thing anybody sees.
@@ -80,7 +83,7 @@ export default function HeaderChrome({ children }: { children: React.ReactNode }
       className={
         overDarkHero
           ? "theme-dark sticky top-0 z-50 border-b border-transparent bg-transparent text-vv-ink transition-colors duration-300"
-          : "theme-dark sticky top-0 z-50 border-b border-vv-line/60 bg-vv-bg text-vv-ink transition-colors duration-300"
+          : "theme-dark sticky top-0 z-50 bg-vv-bg text-vv-ink transition-colors duration-300"
       }
     >
       {children}

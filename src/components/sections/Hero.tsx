@@ -50,28 +50,35 @@ export default function Hero() {
       // moves except what is behind the bar.
       style={{ marginTop: "calc(-1 * var(--vv-header-h))", paddingTop: "var(--vv-header-h)" }}
     >
-      {/* TWO GRADIENTS, NOT ONE. The first lifts the ground away from flat
-          black so the section has depth; the second is a wide, very low-opacity
-          cherry wash behind the headline and button, which is what stops the
-          primary action reading as a bright object dropped onto a dark
-          rectangle. Both are aria-hidden decoration. */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(120% 90% at 50% 12%, var(--vv-bg-3) 0%, var(--vv-bg) 62%)",
-        }}
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(70% 45% at 50% 62%, color-mix(in srgb, var(--vv-cherry) 14%, transparent) 0%, transparent 70%)",
-        }}
-        aria-hidden
-      />
+      {/* NO GROUND WASH HERE, AND THE REASON IS GEOMETRY RATHER THAN TASTE.
+          This section carried two: a base lift (--vv-bg-3 fading to --vv-bg)
+          and a low cherry wash. The founder photographed the result — two
+          different blacks meeting in a line across the masthead.
 
+          THE FIRST GUESS WAS THAT THE GRADIENT WAS IN THE WRONG PLACE. The
+          base lift was centred 12% down, which on an 88vh hero is about 90px
+          — directly behind a 92.5px bar. Moving it to 55% shrank the step
+          from 4 points to 3, which looked like progress and was not: the bar
+          is STICKY, so it sits over a different slice of this section every
+          moment the page moves. Measuring the centre column at nine scroll
+          positions showed the remaining wash stepping 18 points at scrollY
+          400 — rgb(21,20,23) under the bar against rgb(39,28,34) below it.
+          There is no position for a full-section background that a sticky bar
+          does not eventually cross, so there was no placement to find.
+
+          THE ALTERNATIVES EACH COST MORE THAN THE WASH WAS WORTH. A bar that
+          stays transparent for the whole hero has no seam by construction,
+          but the hero's own headline then scrolls up behind the mark and the
+          two collide. A translucent bar with a backdrop blur tracks whatever
+          is behind it, but over the one ivory section it goes muddy grey, and
+          black was the explicit ask ("The [top] bar is white when you scroll.
+          Make it black").
+
+          SO THE GROUND IS FLAT AND THE LIGHT IS ON THE OBJECTS. The cherry
+          rule carries its own blurred copy and the primary action carries
+          .cta-glow; both are small, both are clearly things rather than
+          ground, and a glow that passes under the bar reads as the object
+          passing rather than as the page changing colour. */}
       <div className="relative mx-auto flex min-h-[88vh] max-w-3xl flex-col items-center justify-center px-6 py-16 text-center sm:px-8 sm:py-24">
         <p className="font-head text-[10px] font-semibold tracking-[0.3em] text-vv-gold uppercase sm:text-xs sm:tracking-[0.34em]">
           {hero.eyebrow}
