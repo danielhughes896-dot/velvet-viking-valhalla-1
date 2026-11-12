@@ -1,3 +1,4 @@
+import ReelVideo from "@/components/ui/ReelVideo";
 import { documentaryReel } from "@/content/site";
 
 // THE OPENING MEDIA SLOT, NOW CARRYING REAL FOOTAGE.
@@ -16,12 +17,32 @@ import { documentaryReel } from "@/content/site";
 // would stand over 2000px tall on a laptop, which is not a section, it is a
 // wall.
 //
-// CONTROLS RATHER THAN AUTOPLAY, and the audio is why. The track is real —
-// mean -22.3 dB, peaks at -7.7 — so this is not ambient B-roll that can be
-// muted and looped without losing half of it. A clip with something to say
-// should not say it uninvited, and a visitor who wants it presses the control
-// the slot has always shown. preload="metadata" so the poster and duration
-// arrive without pulling 1.7MB at every page load.
+// IT PLAYS ITSELF NOW, AND IT PLAYS SILENT.
+//
+// Founder: "I want the video to be on constant play back but without the
+// music."
+//
+// WHAT THIS REPLACES, and the reasoning is worth keeping rather than
+// deleting. The slot carried `controls` and no autoplay, because the audio
+// was real — mean -22.3 dB, peaks at -7.7 — so it was not ambient B-roll that
+// could be muted and looped without losing half of it, and a clip with
+// something to say should not say it uninvited. That argument was sound and
+// the founder has decided the other way: it loops, and it loops silent.
+//
+// SO THE AUDIO LEFT THE FILE, NOT JUST THE ELEMENT. `muted` would have
+// silenced it, but the track would still have been fetched — 96 kbps across
+// twenty seconds, about 253KB, on every visit, for something no visitor can
+// ever hear. The mp4 is re-muxed with -an and the video stream copied
+// untouched, so the picture is bit-identical and the file is 14% smaller.
+// The master with its soundtrack is in this repository's history, one
+// `git show` away, if the decision ever goes back the other way.
+//
+// THE PLAYER MOVED TO ReelVideo, which is a client component because
+// everything that makes this acceptable needs the browser: an
+// IntersectionObserver so a clip below the fold is not fetched and decoded
+// before anybody scrolls to it, a pause control because WCAG 2.2.2 requires
+// one for anything moving longer than five seconds, and prefers-reduced-
+// motion so a reader who has asked for stillness still gets the poster.
 // THE ONE WHITE SURFACE ON THE SITE, and it is white for the footage rather
 // than for itself. The clip is a dark phone on a dark ground; run against the
 // page's own black it loses its edges and becomes a glow in the middle of a
@@ -38,16 +59,12 @@ export default function DocumentaryReel() {
     <section className="theme-light scroll-mt-28 bg-vv-bg">
       <div className="mx-auto max-w-6xl px-6 pt-16 pb-20 sm:px-8 sm:pt-20 sm:pb-28">
         <div className="mx-auto w-full max-w-[340px] sm:max-w-[400px]">
-          <video
-            className="aspect-4/7 w-full rounded-vv bg-vv-bg-3 object-cover shadow-vv"
-            controls
-            playsInline
-            preload="metadata"
+          <ReelVideo
+            src={documentaryReel.media.src}
             poster={documentaryReel.media.poster}
-            aria-label={documentaryReel.media.alt}
-          >
-            <source src={documentaryReel.media.src} type="video/mp4" />
-          </video>
+            alt={documentaryReel.media.alt}
+            className="aspect-4/7 w-full rounded-vv bg-vv-bg-3 object-cover shadow-vv"
+          />
         </div>
       </div>
     </section>
