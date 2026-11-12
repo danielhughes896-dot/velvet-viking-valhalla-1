@@ -93,8 +93,17 @@ test('the product is Sacoro on customer-facing surfaces', () => {
   assert.match(site, /name: "Velvet Viking"/, 'the company keeps its own name');
   const brandBlock = site.slice(site.indexOf('export const brand = {'),
                                site.indexOf('} as const;', site.indexOf('export const brand = {')));
-  assert.ok(!/tagline:|crestAlt:/.test(brandBlock),
-    'both named retired artwork and must not return to the brand block');
+  assert.ok(!/crestAlt:/.test(brandBlock),
+    'crestAlt named artwork that no longer exists');
+  /* `tagline` IS back, and holds the right four words. It briefly meant
+     "Valhalla Awaits" while a separate `motto` held the real one — two names
+     for one slot, which is how "Earn Your Place" ended up restated as a
+     literal in four places. One field now, named after the job. */
+  assert.match(brandBlock, /tagline: "Earn Your Place"/);
+  assert.ok(!/motto:/.test(brandBlock), 'a second word for the tagline must not come back');
+  // Shipped copy only: several comments quote the retired line while
+  // explaining why it went, and prose about the copy is not the copy.
+  assert.ok(!/Awaits/.test(code(site)), 'the retired tagline must not reach a visitor');
 });
 
 test('the retired brand-meaning section is gone from /philosophy', () => {

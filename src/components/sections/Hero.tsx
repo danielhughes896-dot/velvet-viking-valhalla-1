@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Wordmark from "@/components/ui/Wordmark";
 import CtaButton from "@/components/ui/CtaButton";
-import { hero, brand } from "@/content/site";
+import { hero } from "@/content/site";
 import { buildUrl } from "@/content/journey";
 
 // Two-tier composition:
@@ -53,22 +53,18 @@ export default function Hero() {
             soft white lift the hero headline does, via `lift`. */}
         <Wordmark size="clamp(2.2rem, 8vw, 4rem)" dot="clamp(10px, 1.6vw, 16px)" lift />
 
-        {/* THE BYLINE IS WHAT MAKES THIS A DIFFERENT OBJECT FROM THE HEADER.
-            The header carries the same mark, forty-odd pixels up, because it
-            is the site's persistent home control. Two identical lockups in one
-            viewport is the name said twice, which the old composition avoided
-            only because the header was a wordmark and the hero was a crest —
-            two different things.
+        {/* NO BYLINE HERE, AND THE REASON IS WHOSE SITE THIS IS. The app's
+            public pages sign the mark "By Velvet Viking" because an athlete is
+            inside the product and the company is standing behind it. This is
+            the company's own site — signing it would be the host introducing
+            himself at his own front door. The company speaks where it has a
+            job to do instead: the footer, the statutory disclosure, /about and
+            the legal pages, all of which name it.
 
-            Signing it resolves that the way the product already does: the
-            app's public pages open with the name between two dots, signed By
-            Velvet Viking. So the hero is the full lockup — the mark and the
-            company that makes it — and the header stays chrome. It also puts
-            the company where a first-time visitor meets it, which is the one
-            place the name Velvet Viking still has a job to do on this page. */}
-        <p className="mt-4 font-head text-[10px] font-semibold uppercase tracking-[0.3em] text-vv-ink-faint sm:text-[11px]">
-          By {brand.name}
-        </p>
+            The header carries the same mark a few hundred pixels up. That is
+            accepted rather than overlooked: it is chrome at a fifth of this
+            size, and the alternative — dropping the mark here — would open the
+            page on a floating rule with no brand moment at all. */}
 
         <div className="mt-7 flex flex-col items-center sm:mt-8">
           <span

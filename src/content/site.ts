@@ -98,7 +98,12 @@ export const exploreCta = { label: "Explore Sacoro", href: "/sacoro" } as const;
 export const brand = {
   name: "Velvet Viking",
   product: "Sacoro",
-  motto: "Earn Your Place",
+  /* THE TAGLINE, and the only one. This field was `motto` while `tagline`
+     held "Valhalla Awaits" — two names for the same slot, which is how the
+     site ended up stating the same four words as a literal in four places.
+     Valhalla Awaits is retired and this is what the brand says, so it takes
+     the name of the job and everything that deploys it reads from here. */
+  tagline: "Earn Your Place",
 } as const;
 
 export const nav = {
@@ -140,14 +145,16 @@ export const hero = {
   // periods stay" rule for this specific set of major display headlines —
   // no full stop anywhere in this heading now, internal or terminal.
   /* ONE LINE NOW, because the other one named a product that no longer
-     exists. "Sacoro Awaits" / "Earn Your Place" worked as a pair: the hall
+     exists. "Valhalla Awaits" / "Earn Your Place" worked as a pair: the hall
      you are summoned to, and the price of entry. "Sacoro Awaits" summons
      nobody — Sacoro is a family name, not a destination — so the first line
-     is dropped rather than substituted, and the motto carries the hero alone.
+     is dropped rather than substituted, and the tagline carries the hero alone.
      It is strong enough to: it is the site's standard, it closes the footer,
      and /philosophy is the page that argues it. A replacement opening line is
      founder copy and is deliberately not invented here. */
-  heading: ["Earn Your Place"],
+  // The tagline itself, read from the one field rather than restated. The
+  // hero IS the brand's statement, so it should not be able to drift from it.
+  heading: [brand.tagline],
   // HUMAN COPY PASS: the dash after "pays attention" severed the verb from
   // its own complement and did no grammatical work. layout.tsx's meta
   // description had ALREADY been written without it, so the two surfaces
@@ -413,7 +420,7 @@ export const workTravels = {
 // clipped by the crop — see PlaceholderMedia's objectPosition prop.
 export const earnYourPlace = {
   eyebrow: "Velvet Viking",
-  heading: "Earn Your Place",
+  heading: brand.tagline,
   body: "Not through one perfect session. Through the work you return to, again and again, with purpose.",
   media: {
     placeholder: "[ATHLETE / TRAINING PHOTOGRAPH]",
@@ -503,7 +510,21 @@ export const futureWorld = {
 } as const;
 
 export const finalCta = {
-  heading: "Sacoro Awaits",
+  /* THE BLANKET RENAME PRODUCED "Sacoro Awaits" HERE, which is the one
+     substitution this pass set out not to make: Valhalla is a hall you are
+     summoned to and Sacoro is a family name, so the line stopped carrying its
+     own argument the moment the product changed.
+
+     This section was designed as the product half of a pair — the hero fused
+     "Valhalla Awaits. Earn Your Place." and the close took the first half
+     alone. With the first half retired there is no product line to take, so
+     the close takes the standard instead and the page bookends on it: it
+     opens on what is being asked of the reader and ends on the same thing,
+     with the sub below doing the different work it always did.
+
+     THIS IS APPROVED COPY REUSED, NOT NEW COPY. A closing line of its own is
+     founder copy and is deliberately not invented here. */
+  heading: brand.tagline,
   // POSITIONING PASS: "Neither should your coaching." -> "your plan."
   // One word, and the sentence gets stronger rather than weaker: the
   // contrast the line wants is with a plan that stands still, which is
@@ -524,7 +545,7 @@ export const finalCta = {
 } as const;
 
 export const footer = {
-  tagline: "Earn Your Place",
+  tagline: brand.tagline,
   // Nullable on purpose — no real accounts exist yet. All four platforms
   // are always visually present (SocialLinks renders an inactive mark for
   // a null URL, not nothing), so the row's design can be finished ahead of
@@ -727,7 +748,7 @@ export const pages = {
   },
   philosophy: {
     eyebrow: "Velvet Viking",
-    heading: "Earn Your Place",
+    heading: brand.tagline,
     sub: "The philosophy behind the brand.",
     body: "Earn Your Place is not a slogan. It’s the standard everything else is built on.",
     // COPY AUDIT: paragraph 1 was trimmed — its back half ("showing up,
