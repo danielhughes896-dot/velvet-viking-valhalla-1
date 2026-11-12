@@ -122,7 +122,7 @@ test('the sitemap derives its legal routes from the approval gates', () => {
   );
   assert.ok(!/beta-terms/.test(sitemap), '/beta-terms stays out of the public sitemap');
   // The non-legal routes are still a plain list, because nothing gates them.
-  for (const r of ['/valhalla', '/pricing', '/start', '/philosophy', '/about', '/support']) {
+  for (const r of ['/sacoro', '/pricing', '/start', '/philosophy', '/about', '/support']) {
     assert.ok(sitemap.includes(`"${r}"`), `${r} must be listed`);
   }
 });
@@ -147,7 +147,7 @@ test('the gated routes still exist as real pages, only excluded from the sitemap
 // 5. CROSS-PAGE REPETITION — HOMEPAGE VS /VALHALLA
 // ---------------------------------------------------------------------------
 test('the exact "you decide whether to take it" clause is not duplicated across homepage and /valhalla', () => {
-  // The phrase is expected to survive exactly once — in valhallaProduct.body,
+  // The phrase is expected to survive exactly once — in sacoroProduct.body,
   // the homepage's own concise introduction, which this fix deliberately
   // left untouched. What must not happen is a SECOND, verbatim copy of it
   // living in the /valhalla deep-dive paragraph too.

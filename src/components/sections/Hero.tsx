@@ -1,11 +1,11 @@
 import Link from "next/link";
-import Crest from "@/components/ui/Crest";
+import Wordmark from "@/components/ui/Wordmark";
 import CtaButton from "@/components/ui/CtaButton";
-import { hero } from "@/content/site";
+import { hero, brand } from "@/content/site";
 import { buildUrl } from "@/content/journey";
 
 // Two-tier composition:
-//   1. MASTER-BRAND MOMENT — crest, a thin gold rule, and the category
+//   1. MASTER-BRAND MOMENT — the mark, a thin gold rule, and the category
 //      line below. (copy audit: the earlier "Built Differently" line
 //      asserted differentiation without demonstrating it — this version
 //      points at the actual differentiator instead of a generic
@@ -41,17 +41,34 @@ export default function Hero() {
         aria-hidden
       />
       <div className="relative mx-auto flex min-h-[85vh] max-w-4xl flex-col items-center justify-center px-6 py-14 text-center sm:px-8 sm:py-20 md:py-24">
-        <div className="relative">
-          <div
-            className="pointer-events-none absolute inset-0 -z-10"
-            style={{
-              transform: "scale(1.7)",
-              background: "radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 68%)",
-            }}
-            aria-hidden
-          />
-          <Crest size="clamp(200px, 24vw, 300px)" />
-        </div>
+        {/* THE CREST IS RETIRED, AND THIS IS WHAT STOOD IN ITS PLACE.
+            A 200–300px disc carrying a wordmark, "Valhalla Awaits" and "Earn
+            Your Place" baked into the artwork. Two of those three strings name
+            a product that no longer exists, and they were pixels rather than
+            text, so they could not be renamed — the artwork had to go, not be
+            edited. The app retired it in the same pass.
+
+            THE DROP SHADOW WENT WITH IT. It existed to seat a dark circular
+            raster on a dark field. Type needs no seating; it carries the same
+            soft white lift the hero headline does, via `lift`. */}
+        <Wordmark size="clamp(2.2rem, 8vw, 4rem)" dot="clamp(10px, 1.6vw, 16px)" lift />
+
+        {/* THE BYLINE IS WHAT MAKES THIS A DIFFERENT OBJECT FROM THE HEADER.
+            The header carries the same mark, forty-odd pixels up, because it
+            is the site's persistent home control. Two identical lockups in one
+            viewport is the name said twice, which the old composition avoided
+            only because the header was a wordmark and the hero was a crest —
+            two different things.
+
+            Signing it resolves that the way the product already does: the
+            app's public pages open with the name between two dots, signed By
+            Velvet Viking. So the hero is the full lockup — the mark and the
+            company that makes it — and the header stays chrome. It also puts
+            the company where a first-time visitor meets it, which is the one
+            place the name Velvet Viking still has a job to do on this page. */}
+        <p className="mt-4 font-head text-[10px] font-semibold uppercase tracking-[0.3em] text-vv-ink-faint sm:text-[11px]">
+          By {brand.name}
+        </p>
 
         <div className="mt-7 flex flex-col items-center sm:mt-8">
           <span
@@ -72,9 +89,17 @@ export default function Hero() {
             {hero.eyebrow}
           </p>
           <h1 className="mt-4 font-display text-4xl leading-[1.08] font-semibold uppercase tracking-[0.01em] text-vv-ink sm:text-5xl md:text-6xl">
-            {hero.heading[0]}
-            <br />
-            {hero.heading[1]}
+            {/* MAPPED, NOT INDEXED. This read heading[0] <br/> heading[1],
+                which hard-coded the two-line composition into the markup —
+                so dropping the dead "Valhalla Awaits" line left the h1 asking
+                for an element that is not there. The headline is now whatever
+                the content file says it is, one line or several. */}
+            {hero.heading.map((line, i) => (
+              <span key={line}>
+                {i > 0 ? <br /> : null}
+                {line}
+              </span>
+            ))}
           </h1>
           <p className="mt-6 max-w-lg text-balance text-base leading-relaxed text-vv-ink-dim sm:text-lg">
             {hero.sub}

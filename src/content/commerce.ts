@@ -23,7 +23,7 @@ export const plans = {
     // it also appeared verbatim as pages.pricing.sub, so the same phrase
     // ran twice inside one viewport. Both are now plain English and
     // deliberately different from each other.
-    tagline: "The whole of Valhalla.",
+    tagline: "The whole of Sacoro.",
     // Working hypothesis, not yet finalized pricing.
     price: { amount: 11.99, currency: "GBP", period: "month" },
     // ANNUAL BILLING OPTION for the SAME plan — not a second tier, and not

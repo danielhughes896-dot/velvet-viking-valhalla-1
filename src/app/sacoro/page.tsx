@@ -5,13 +5,13 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import DeviceFrame from "@/components/ui/DeviceFrame";
 import Link from "next/link";
 import CtaButton from "@/components/ui/CtaButton";
-import { pages, valhallaProduct } from "@/content/site";
+import { pages, sacoroProduct } from "@/content/site";
 import { buildUrl } from "@/content/journey";
 
 export const metadata: Metadata = {
-  title: pages.valhalla.heading,
-  description: pages.valhalla.sub,
-  alternates: { canonical: "/valhalla" },
+  title: pages.sacoro.heading,
+  description: pages.sacoro.sub,
+  alternates: { canonical: "/sacoro" },
 };
 
 // NARRATIVE ORDER: promise -> the year the product lives in -> how it works.
@@ -22,10 +22,10 @@ export const metadata: Metadata = {
 // belongs here, early: it is the shape of the product, and it is the reason
 // the mechanics below matter at all. Moved, not copied — the homepage no
 // longer mounts it, so the timeline exists in exactly one place on the site.
-export default function ValhallaPage() {
+export default function SacoroPage() {
   return (
     <>
-      <PageIntro {...pages.valhalla} />
+      <PageIntro {...pages.sacoro} />
 
       {/* THE PRODUCT IDEA, BEFORE THE PRODUCT DETAIL. Still gates itself on
           PRODUCT_CLAIMS.yearRoundCoaching — mounting it here publishes
@@ -35,12 +35,12 @@ export default function ValhallaPage() {
       <section className="border-t border-vv-line-soft bg-vv-bg">
         <div className="mx-auto max-w-2xl px-6 pt-20 sm:px-8 sm:pt-24">
           <SectionHeading
-            eyebrow={pages.valhalla.explanation.eyebrow}
-            heading={pages.valhalla.explanation.heading}
+            eyebrow={pages.sacoro.explanation.eyebrow}
+            heading={pages.sacoro.explanation.heading}
             align="center"
           />
           <div className="mt-10 flex flex-col items-center gap-5 text-center sm:mt-12">
-            {pages.valhalla.expanded.map((paragraph) => (
+            {pages.sacoro.expanded.map((paragraph) => (
               <p key={paragraph} className="max-w-md text-base leading-relaxed text-vv-ink-dim">
                 {paragraph}
               </p>
@@ -65,7 +65,7 @@ export default function ValhallaPage() {
             against the paragraphs, gap beneath halved. */}
         <div className="flex justify-center pt-10 sm:pt-12">
           <CtaButton href={buildUrl} variant="cherry">
-            {pages.valhalla.closingCta.label}
+            {pages.sacoro.closingCta.label}
           </CtaButton>
         </div>
 
@@ -73,22 +73,22 @@ export default function ValhallaPage() {
           {/* PROTOTYPE: two portrait frames, no desktop mockup — see
               ProductShowcase.tsx for the same primary/secondary rationale.
               theme-dark here too, matching the homepage's ProductShowcase:
-              Valhalla's own product surface stays visually distinct from
+              Sacoro's own product surface stays visually distinct from
               the ivory editorial page around it. */}
           <div className="flex flex-col items-center justify-center gap-8 sm:flex-row sm:items-end">
             <DeviceFrame
               kind="mobile"
-              label={valhallaProduct.screenshots.primary.placeholder}
-              src={valhallaProduct.screenshots.primary.src}
-              alt={valhallaProduct.screenshots.primary.alt}
+              label={sacoroProduct.screenshots.primary.placeholder}
+              src={sacoroProduct.screenshots.primary.src}
+              alt={sacoroProduct.screenshots.primary.alt}
               className="sm:-mr-10"
             />
             <div className="scale-[0.86]">
               <DeviceFrame
                 kind="mobile"
-                label={valhallaProduct.screenshots.secondary.placeholder}
-                src={valhallaProduct.screenshots.secondary.src}
-                alt={valhallaProduct.screenshots.secondary.alt}
+                label={sacoroProduct.screenshots.secondary.placeholder}
+                src={sacoroProduct.screenshots.secondary.src}
+                alt={sacoroProduct.screenshots.secondary.alt}
               />
             </div>
           </div>
@@ -100,13 +100,13 @@ export default function ValhallaPage() {
             the page pushes. */}
         <div className="flex flex-col items-center gap-5 pb-24 sm:pb-32">
           <CtaButton href={buildUrl} variant="cherry">
-            {pages.valhalla.closingCta.label}
+            {pages.sacoro.closingCta.label}
           </CtaButton>
           <Link
-            href={pages.valhalla.secondaryCta.href}
+            href={pages.sacoro.secondaryCta.href}
             className="inline-flex min-h-11 items-center font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text transition-opacity hover:opacity-70"
           >
-            {pages.valhalla.secondaryCta.label}
+            {pages.sacoro.secondaryCta.label}
           </Link>
         </div>
       </section>

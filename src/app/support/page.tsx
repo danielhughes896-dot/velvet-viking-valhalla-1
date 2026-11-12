@@ -29,7 +29,7 @@ const email = legalEntity.contactEmail;
 const TOPICS = [
   {
     heading: "Your account or your training",
-    body: "Sign-in trouble, a plan that does not look right, or a question about what Valhalla has done with your training. Include the email address your account uses.",
+    body: "Sign-in trouble, a plan that does not look right, or a question about what Sacoro has done with your training. Include the email address your account uses.",
   },
   {
     heading: "Billing, trials and cancellation",
@@ -85,7 +85,7 @@ export default function SupportPage() {
 
           <div className="border-t border-vv-line-soft pt-8 text-sm leading-relaxed text-vv-ink-dim">
             <p>
-              Valhalla itself lives at{" "}
+              Sacoro itself lives at{" "}
               <a
                 href={appUrl}
                 className="underline decoration-vv-line underline-offset-4 hover:text-vv-bronze-text"

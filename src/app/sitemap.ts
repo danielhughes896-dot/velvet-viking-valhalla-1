@@ -11,7 +11,7 @@ import { publicLegalLinks } from "@/content/legal";
 // indexing, and the redirect is what carries the indexed URL across.
 const routes = [
   "",
-  "/valhalla",
+  "/sacoro",
   "/gallery",
   "/pricing",
   "/start",

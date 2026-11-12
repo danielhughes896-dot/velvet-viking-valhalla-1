@@ -185,7 +185,7 @@ test('the website owns no identity: no auth form, no key, no provider', () => {
      to the app and name the provider while doing so. A visitor never reads a
      comment; the rule is about what ships to the page. */
   for (const f of ['src/app/start/page.tsx', 'src/app/pricing/page.tsx',
-                   'src/app/valhalla/page.tsx', 'src/components/sections/TrialTerms.tsx']) {
+                   'src/app/sacoro/page.tsx', 'src/components/sections/TrialTerms.tsx']) {
     assert.ok(!/supabase|gotrue|postgres/i.test(code(read(f))),
       `${f} exposes provider terminology in shipped text`);
   }

@@ -24,8 +24,8 @@ test('Gallery sits in nav.links between Valhalla and Pricing', () => {
   const at = site.indexOf('export const nav');
   const block = site.slice(at, site.indexOf('} as const;', at));
   const labels = [...block.matchAll(/label:\s*"([^"]+)"/g)].map((m) => m[1]);
-  const order = labels.filter((l) => ['Valhalla', 'Gallery', 'Pricing', 'Philosophy', 'About'].includes(l));
-  assert.deepEqual(order, ['Valhalla', 'Gallery', 'Pricing', 'Philosophy', 'About']);
+  const order = labels.filter((l) => ['Sacoro', 'Gallery', 'Pricing', 'Philosophy', 'About'].includes(l));
+  assert.deepEqual(order, ['Sacoro', 'Gallery', 'Pricing', 'Philosophy', 'About']);
 });
 
 test('Gallery links to /gallery', () => {

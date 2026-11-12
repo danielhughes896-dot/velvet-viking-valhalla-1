@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import PageIntro from "@/components/sections/PageIntro";
-import TheMark from "@/components/sections/TheMark";
 import { pages } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -26,7 +25,6 @@ export default function PhilosophyPage() {
       {/* The philosophy stated, then the shape that carries it. Placed after
           the prose rather than before it so the mark reads as the argument's
           conclusion — the page says what the standard is, then shows it. */}
-      <TheMark />
     </>
   );
 }

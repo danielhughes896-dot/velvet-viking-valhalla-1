@@ -117,7 +117,7 @@ test('the published documents carry a real effective date, not a placeholder', (
   // NOT BACKDATED. The commercial documents were unpublished until the day
   // they carry; asserting an earlier one would claim somebody was bound by
   // wording they could not have read.
-  assert.match(LEGAL, /export const COMMERCIAL_LEGAL_EFFECTIVE_DATE = "24 August 2026"/);
+  assert.match(LEGAL, /export const COMMERCIAL_LEGAL_EFFECTIVE_DATE = "12 November 2026"/);
   // A document not in force has no effective date, so the gated one keeps its.
   assert.match(docBody('cookiesDraft'), /lastUpdated: TBC\(/, 'cookiesDraft is not in force');
 });
@@ -468,7 +468,7 @@ test('an unpublished document reports no version, so nothing can record one', ()
       `${doc}.version must follow its approval flag`);
     assert.match(entry, /published: /);
   }
-  assert.match(body, /version: LEGAL_APPROVALS\.terms \? "commercial_terms_v1" : null/);
+  assert.match(body, /version: LEGAL_APPROVALS\.terms \? "commercial_terms_v2" : null/);
   assert.match(body, /published: LEGAL_APPROVALS\.terms,/);
 });
 
@@ -477,7 +477,7 @@ test('the commercial identifiers name their document, not just a number', () => 
   // `terms_v1` is what the app records today and it names no document: it would
   // mean the beta Terms on one row and the commercial Terms on another, with
   // nothing in the table to tell them apart. Every identifier is prefixed.
-  for (const id of ['commercial_terms_v1', 'commercial_privacy_v1', 'commercial_cookies_v1']) {
+  for (const id of ['commercial_terms_v2', 'commercial_privacy_v2', 'commercial_cookies_v1']) {
     assert.ok(body.includes(id), `${id} must be declared`);
   }
   assert.ok(body.includes('beta_privacy_v1'), 'the in-force beta policy is named as beta');

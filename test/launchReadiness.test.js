@@ -30,99 +30,76 @@ const srcFiles = () => {
 // defects the launch audit found at real phone widths do not come back.
 
 // ---------------------------------------------------------------------------
-// 1. THE MARK
+// 1. THE MARK — THE NAME BETWEEN TWO DOTS
 // ---------------------------------------------------------------------------
-test('the supplied mark is installed as a real asset, at its own proportions', () => {
-  const file = path.join(ROOT, 'public/brand/velvet-viking-mark.png');
-  assert.ok(fs.existsSync(file), 'the mark artwork must exist in the repo');
-  const buf = fs.readFileSync(file);
-  // PNG header: width/height at bytes 16-24, colour type at 25.
-  const width = buf.readUInt32BE(16);
-  const height = buf.readUInt32BE(20);
-  const colourType = buf[25];
-  assert.equal(width, 1295, 'the artwork must be the supplied file, unresized');
-  assert.equal(height, 1214);
-  assert.equal(colourType, 6, 'RGBA — the mark needs its transparent field');
-  assert.ok(buf.length > 900000, 'sanity: the full-resolution artwork, not a thumbnail');
+//
+// WHAT THIS SECTION USED TO HOLD, and why none of it survived. It pinned a
+// 1295x1214 RGBA PNG as "the supplied mark", required exactly one component to
+// reference it, and separately required the crest to keep the hero. All three
+// described artwork the product has retired: the crest's lettering reads
+// VALHALLA AWAITS and is pixels, so it could not be renamed, only withdrawn —
+// and the gold VV chevron went with it. The mark is now type and two circles.
+test('the mark is type and two dots, with no artwork to keep in sync', () => {
+  const w = code(read('src/components/ui/Wordmark.tsx'));
+  assert.match(w, /Sacoro/, 'the mark is the product name');
+  assert.ok(!/\.png|next\/image|<Image/.test(w),
+    'the mark must not reacquire a raster master — that is what it replaced');
+  // The app's own numbers, so the two marks cannot drift apart.
+  assert.match(w, /letterSpacing: "0\.17em"/);
+  assert.match(w, /marginRight: "-0\.17em"/,
+    'the trailing track must be taken back or the mark renders off-centre');
+  assert.match(w, /font-display/, 'Cinzel, the face the app sets the mark in');
+  assert.match(w, /bg-vv-gold-bright/, 'founder: "Just 1 gold dot either side."');
+  assert.match(w, /flex-none/, 'a narrow phone closes the tracking, never the dots');
 });
 
-test('one component owns the mark, and it never forces a square or a height', () => {
-  const users = srcFiles().filter((f) => /velvet-viking-mark\.png/.test(read(f)));
-  assert.deepEqual(users, ['src/components/ui/Mark.tsx'],
-    'the artwork must be referenced through Mark, so a future SVG master is a one-line swap');
-  const m = code(read('src/components/ui/Mark.tsx'));
-  // Width is set; height comes from the file. A height/aspect declaration here
-  // would be the thing that quietly re-proportions the supplied artwork.
-  assert.match(m, /style=\{\{ width \}\}/);
-  assert.match(m, /className="h-auto w-full"/);
-  assert.ok(!/aspect-|height:/.test(m), 'nothing may impose a height on the mark');
-});
-
-test('the mark is not a recreation: no hand-drawn chevron shipped alongside it', () => {
+test('the retired artwork is gone from the product, not merely unreferenced', () => {
+  for (const dead of ['src/components/ui/Crest.tsx', 'src/components/ui/Mark.tsx']) {
+    assert.ok(!fs.existsSync(path.join(ROOT, dead)), dead + ' must not survive as a component');
+  }
   for (const f of srcFiles()) {
-    const src = read(f);
-    if (!/<svg/i.test(src)) continue;
-    assert.ok(
-      !/velvet.?viking.?mark|\bVV\b.*polygon|chevron/i.test(src),
-      `${f} appears to redraw the mark — the supplied artwork is the authority`
-    );
+    const src = code(read(f));
+    assert.ok(!/velvet-viking-crest|velvet-viking-mark\.png/.test(src),
+      f + ' still reaches for retired brand artwork');
   }
 });
 
-test('the crest still exists and still owns the ceremonial slot', () => {
-  // The mark did not replace the crest; they are different objects. The crest
-  // is the full emblem (wordmark, "Valhalla Awaits", "Earn Your Place" baked
-  // into the artwork) and keeps the hero, which is the size it was drawn for.
-  assert.ok(fs.existsSync(path.join(ROOT, 'public/brand/velvet-viking-crest.png')));
-  assert.match(code(read('src/components/sections/Hero.tsx')), /<Crest /);
-});
-
-// ---------------------------------------------------------------------------
-// 2. THE MARK'S MEANING — SAID ONCE
-// ---------------------------------------------------------------------------
-test('the meaning is stated on /philosophy, and only there', () => {
-  const pages = srcFiles().filter((f) => /src\/app\/.*page\.tsx$/.test(f));
-  const mounts = pages.filter((f) => /<TheMark \/>/.test(code(read(f))));
-  assert.deepEqual(mounts, ['src/app/philosophy/page.tsx'],
-    'one brand moment, not a guidelines page bolted onto every route');
-});
-
-test('the meaning HQ supplied survives: triangle, ascent, progress, earning it', () => {
-  const site = code(read('src/content/site.ts'));
-  const block = site.slice(site.indexOf('export const theMark'), site.indexOf('export const brandStory'));
-  assert.match(block, /built around ascent/i);
-  assert.match(block, /triangle is progress/i);
-  assert.match(block, /climb toward something stronger/i);
-  for (const line of [
-    'Not where you started.',
-    'Not where you think you belong.',
-    'Where you earn your place.',
-  ]) {
-    assert.ok(block.includes(line), `the mark's closing lines lost: "${line}"`);
+test('one component owns the mark, so both surfaces carry the same object', () => {
+  const users = srcFiles().filter((f) => /<Wordmark/.test(code(read(f))));
+  assert.ok(users.includes('src/components/layout/HeaderBrand.tsx'), 'the header');
+  assert.ok(users.includes('src/components/sections/Hero.tsx'), 'the hero');
+  // Nothing may hand-set the name in display type and call it the mark.
+  for (const f of srcFiles()) {
+    if (f.endsWith('Wordmark.tsx')) continue;
+    const src = code(read(f));
+    assert.ok(!/font-display[^"]*>\s*Sacoro/.test(src),
+      f + ' sets the name as type instead of using the mark');
   }
 });
 
-test('"Earn Your Place" stays a standard, not a slogan on every surface', () => {
-  // WHERE IT LEGITIMATELY LIVES, and why this is a ceiling rather than a cut:
-  // the brand motto, the hero headline, the homepage section that argues it,
-  // the footer, and /philosophy — which is the page about it, and where the
-  // mark's meaning now lands too. Every one of those was approved copy before
-  // this pass and none of it is being rewritten to shrink a number.
-  //
-  // What this guards is GROWTH. Comments are stripped first: several notes in
-  // site.ts quote the phrase while explaining an earlier edit, and prose about
-  // the copy is not the copy.
+// ---------------------------------------------------------------------------
+// 2. THE COMPANY AND THE PRODUCT ARE TWO NAMES
+// ---------------------------------------------------------------------------
+//
+// Founder, asked which one customer-facing surfaces carry: "If it's customer
+// facing SACORO." Velvet Viking Ltd is the registered company; it signs the
+// work and is the data controller. The old brand-meaning section on
+// /philosophy explained the VV chevron's symbolism -- "the triangle is
+// progress" -- and went with the chevron, because a page explaining a mark
+// nobody can see is worse than no page.
+test('the product is Sacoro on customer-facing surfaces', () => {
   const site = code(read('src/content/site.ts'));
-  const occurrences = (site.match(/Earn Your Place/g) || []).length;
-  assert.ok(
-    occurrences <= 9,
-    `"Earn Your Place" appears ${occurrences} times in shipped copy — it is spreading into surfaces that should carry their own words`
-  );
-  // And it must not leak into the things a visitor is asked to press. A belief
-  // on a button is an advertising slogan.
-  const site2 = code(read('src/content/site.ts'));
-  const ctas = site2.slice(site2.indexOf('export const buildCta'), site2.indexOf('export const brand'));
-  assert.ok(!/Earn Your Place/.test(ctas), 'the standard must never become a call to action');
+  assert.match(site, /product: "Sacoro"/);
+  assert.match(site, /name: "Velvet Viking"/, 'the company keeps its own name');
+  const brandBlock = site.slice(site.indexOf('export const brand = {'),
+                               site.indexOf('} as const;', site.indexOf('export const brand = {')));
+  assert.ok(!/tagline:|crestAlt:/.test(brandBlock),
+    'both named retired artwork and must not return to the brand block');
+});
+
+test('the retired brand-meaning section is gone from /philosophy', () => {
+  assert.ok(!fs.existsSync(path.join(ROOT, 'src/components/sections/TheMark.tsx')));
+  assert.ok(!/TheMark/.test(read('src/app/philosophy/page.tsx')));
 });
 
 // ---------------------------------------------------------------------------
@@ -167,13 +144,21 @@ test('the success return is left to the app, which owns the account', () => {
 // ---------------------------------------------------------------------------
 // 4. DEFECTS THE LAUNCH AUDIT FOUND — THEY DO NOT COME BACK
 // ---------------------------------------------------------------------------
-test('the wordmark fits a 360px phone', () => {
-  // At 30px the wordmark measured 274px; a 360px screen leaves 312px between
-  // the header gutters and the menu control needs 40 of them.
+test('the mark fits a 360px phone without a breakpoint', () => {
+  /* WAS: assert the header stepped down to 26px below 380px. That step existed
+     because "VELVET VIKING" rendered 274px wide at 30px, against 312px of
+     usable width once the 40px menu control was counted -- a 2px overflow on a
+     real Android width. SACORO is six characters rather than thirteen and the
+     mark caps itself with a clamp(), so there is no step to make and nothing
+     to drop. The guarantee is unchanged and is now structural. */
+  const w = code(read('src/components/ui/Wordmark.tsx'));
+  assert.match(w, /clamp\(1\.22rem, 6\.2vw, 1\.62rem\)/, 'the mark caps its own size');
+  assert.match(w, /whitespace-nowrap/, 'the name must never wrap');
   const brandMark = code(read('src/components/layout/HeaderBrand.tsx'));
-  assert.match(brandMark, /text-\[26px\]/, 'the smallest step must be smaller than 30px');
-  assert.match(brandMark, /min-\[380px\]:text-\[30px\]/, 'and must return to 30px on ordinary phones');
-  assert.match(brandMark, /whitespace-nowrap/, 'the wordmark must still never wrap');
+  assert.ok(!/text-\[\d+px\]/.test(brandMark),
+    'the header must not re-impose a fixed size on the mark');
+  // And the real check is the rendered one: a 360px sweep runs in the
+  // verification pass, which is what caught the original 2px.
 });
 
 test('the support address cannot push the page sideways', () => {
@@ -201,7 +186,7 @@ test('every secondary text CTA clears a 44px hit area', () => {
   for (const f of [
     'src/components/sections/Hero.tsx',
     'src/components/sections/ProductShowcase.tsx',
-    'src/app/valhalla/page.tsx',
+    'src/app/sacoro/page.tsx',
   ]) {
     const src = code(read(f));
     const links = [...src.matchAll(/text-vv-bronze-text transition-opacity/g)];
@@ -322,16 +307,30 @@ test('the favicon is served by the App Router convention, from the VV mark', () 
   }
 });
 
-test('the crest assets are optimised, at unchanged dimensions', () => {
-  const crest = fs.readFileSync(path.join(ROOT, 'public/brand/velvet-viking-crest.png'));
-  const og = fs.readFileSync(path.join(ROOT, 'public/brand/velvet-viking-crest-og.png'));
-  // Dimensions are the artwork's and must not have moved.
-  assert.equal(crest.readUInt32BE(16), 1223);
-  assert.equal(crest.readUInt32BE(20), 1286);
-  assert.equal(og.readUInt32BE(16), 1141);
-  assert.equal(og.readUInt32BE(20), 1200);
-  // Weight: both were over 1.8MB. The OG image is the one served raw to every
-  // social crawler, so its size is a real cost rather than a repo tidy-up.
-  assert.ok(crest.length < 700000, `crest is ${(crest.length/1e6).toFixed(2)}MB — the optimisation was lost`);
-  assert.ok(og.length < 700000, `og image is ${(og.length/1e6).toFixed(2)}MB — the optimisation was lost`);
+test('the share card is the mark, at the size a crawler expects', () => {
+  /* WAS the crest pair: a 1223x1286 canonical PNG and a 1141x1200 OG copy,
+     both pinned at their artwork dimensions and under 700KB. Both are gone.
+     The crest could not be renamed -- its lettering is baked in and reads
+     VALHALLA AWAITS -- so it was withdrawn rather than edited, and the card
+     is now composed from the same parts the site renders: the mark between
+     its two gold dots, the motto, and the company byline.
+
+     1200x630 IS THE REQUIREMENT, not a preference. It is the aspect every
+     major crawler crops to, and a square crest was always being cut. */
+  const og = fs.readFileSync(path.join(ROOT, 'public/brand/sacoro-og.png'));
+  assert.equal(og.readUInt32BE(16), 1200, 'OG width');
+  assert.equal(og.readUInt32BE(20), 630, 'OG height');
+  assert.ok(og.length < 400000,
+    `og image is ${(og.length/1e6).toFixed(2)}MB — it is fetched by every crawler`);
+  assert.match(code(read('src/app/layout.tsx')), /\/brand\/sacoro-og\.png/);
+});
+
+test('the retired brand artwork is deleted, not just unreferenced', () => {
+  for (const f of ['public/brand/velvet-viking-crest.png',
+                   'public/brand/velvet-viking-crest-og.png',
+                   'public/brand/velvet-viking-mark.png',
+                   'public/brand/velvet-viking-icon-source.png']) {
+    assert.ok(!fs.existsSync(path.join(ROOT, f)),
+      f + ' still ships — a retired mark left in /public is a mark still being served');
+  }
 });

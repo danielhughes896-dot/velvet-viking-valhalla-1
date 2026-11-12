@@ -13,7 +13,16 @@ const nextConfig: NextConfig = {
   // transfer rather than keep checking. The route file itself IS deleted —
   // this is not a hidden page, it is a forwarding address.
   async redirects() {
-    return [{ source: "/trial", destination: "/start", permanent: true }];
+    return [
+      { source: "/trial", destination: "/start", permanent: true },
+      /* /valhalla WAS THE DEEP-DIVE PAGE, and it was public for months: in the
+         sitemap, linked from the menu, the homepage and both CTAs. The product
+         is called Sacoro now, so the page moved to /sacoro — but every indexed
+         URL, every bookmark and every link anyone has shared still points here.
+         Deleting it would 404 them, and this page is where somebody goes to
+         find out what they are buying. 308, because the move is permanent. */
+      { source: "/valhalla", destination: "/sacoro", permanent: true },
+    ];
   },
 };
 

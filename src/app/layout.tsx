@@ -26,7 +26,13 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Velvet Viking — Valhalla Awaits. Earn Your Place.",
+    /* WAS "Velvet Viking — Sacoro Awaits. Earn Your Place." The middle
+       clause named a product that no longer exists and could not simply be
+       renamed: "Sacoro Awaits" asserts nothing, because Sacoro is a family
+       name rather than a hall you are summoned to. What remains is the
+       company, the product and the standard — which is also what a search
+       result needs to carry. */
+    default: "Velvet Viking — Sacoro. Earn Your Place.",
     template: "%s — Velvet Viking",
   },
   // POSITIONING PASS: "Endurance coaching" -> "Endurance training", here
@@ -36,30 +42,36 @@ export const metadata: Metadata = {
   // people who never opened the site. Kept character-identical to
   // hero.sub in content/site.ts, which is the same sentence.
   description:
-    "Training that learns how you train. The longer you run with Valhalla, the better it understands how you respond.",
+    "Training that learns how you train. The longer you run with Sacoro, the better it understands how you respond.",
   // Site-wide default; every route below overrides this with its own path
   // so each page declares its own canonical URL rather than inheriting "/".
   alternates: { canonical: "/" },
   openGraph: {
     title: "Velvet Viking",
     description:
-      "Training that learns how you train. The longer you run with Valhalla, the better it understands how you respond.",
+      "Training that learns how you train. The longer you run with Sacoro, the better it understands how you respond.",
     url: siteUrl,
     siteName: "Velvet Viking",
-    // OVERNIGHT AUDIT: was the raw canonical crest (2.1MB) served directly
+    // THE CARD IS THE MARK NOW. It was the crest, recompressed to ~300KB for
+    // crawlers. The crest is retired — its lettering is artwork reading
+    // VALHALLA AWAITS, so it could not be renamed, only withdrawn — and this
+    // card is composed from the same parts the site uses: the mark between its
+    // two gold dots, the motto, and the company byline underneath, which is
+    // the lockup the public app pages carry too.
+    // WAS: the raw canonical crest (2.1MB) served directly
     // as the social-preview image. Same artwork, same transparency, no
     // crop or recomposite — just resized (longest edge 1200px) and
     // recompressed for a payload social crawlers actually fetch quickly.
     // The canonical file itself is untouched; Crest.tsx still renders the
     // full-resolution original everywhere on-page.
-    images: ["/brand/velvet-viking-crest-og.png"],
+    images: ["/brand/sacoro-og.png"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Velvet Viking",
-    description: "Valhalla Awaits. Earn Your Place.",
-    images: ["/brand/velvet-viking-crest-og.png"],
+    description: "Sacoro. Earn Your Place.",
+    images: ["/brand/sacoro-og.png"],
   },
   // NO `icons` DECLARATION, DELIBERATELY. It used to name two crest-derived
   // PNGs in /public, which left /favicon.ico returning 404 because nothing

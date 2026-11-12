@@ -7,8 +7,8 @@
 //
 // PUBLISHED COMMERCIALLY on 24 August 2026, on the founder's full-document
 // approval following solicitor review of the complete documents:
-//     termsDraft              -> /terms      commercial_terms_v1
-//     privacyCommercialDraft  -> /privacy    commercial_privacy_v1
+//     termsDraft              -> /terms      commercial_terms_v2
+//     privacyCommercialDraft  -> /privacy    commercial_privacy_v2
 //
 // PUBLISHED EARLIER, for the five-person invited private beta, and kept rather
 // than edited so the record of what those testers were shown stays intact:
@@ -139,7 +139,26 @@ export const publicLegalLinks = [
 export const BETA_LEGAL_EFFECTIVE_DATE = "17 August 2026";
 
 /**
- * Effective date of the commercial Terms and commercial Privacy Policy.
+ * Effective date of the commercial Terms and commercial Privacy Policy — v2.
+ *
+ * WHY v2 AND NOT AN EDIT IN PLACE. The product was renamed from Valhalla to
+ * Sacoro, and these documents name the thing being sold. Nothing else moved:
+ * not the price, the trial, cancellation, refunds, the liability cap, the
+ * Article 6/9 basis or any right. All 35 substitutions were product references
+ * — "Valhalla is operated by", "what Valhalla stores" — and the company is
+ * still Velvet Viking Ltd, exactly as the app's own terms say: "Sacoro is
+ * operated by Velvet Viking Ltd."
+ *
+ * BUT THE DOCUMENT TEXT CHANGED, AND THAT IS THE WHOLE TRIGGER. The identifier
+ * exists so stored evidence corresponds to the exact wording an athlete was
+ * shown. A row naming commercial_terms_v1 would otherwise attest text no longer
+ * at that URL. So the version bumps, the date is today, and v1 keeps its own
+ * date below rather than being overwritten.
+ *
+ * THE APP MUST FOLLOW. api/_agreements.js pins TERMS_COMMERCIAL_VERSION and
+ * PRIVACY_COMMERCIAL_VERSION, and its own comment says the website names them.
+ * Until it bumps, checkout records v1 against a v2 document — the same class of
+ * mismatch this identifier was introduced to end.
  *
  * THE DAY THEY WERE PUBLISHED, not the day they were drafted and not the day
  * the review concluded. Backdating a consumer contract would assert that
@@ -153,7 +172,19 @@ export const BETA_LEGAL_EFFECTIVE_DATE = "17 August 2026";
  * point somebody needs it — working out which document a given athlete agreed
  * to, and when.
  */
-export const COMMERCIAL_LEGAL_EFFECTIVE_DATE = "24 August 2026";
+export const COMMERCIAL_LEGAL_EFFECTIVE_DATE = "12 November 2026";
+
+/**
+ * The date the FIRST commercial set took effect, kept because v1 existed.
+ *
+ * Not decoration. Rows in the app's account_agreements name the version an
+ * athlete accepted, and anybody reading one later needs to know which document
+ * that was and when it was in force. v1 ran from 24 August to 11 November 2026
+ * and described the product under the name Valhalla; v2 is the same contract
+ * with the product's new name. Deleting this would leave a stored
+ * commercial_terms_v1 pointing at nothing.
+ */
+export const COMMERCIAL_LEGAL_V1_EFFECTIVE_DATE = "24 August 2026";
 
 /**
  * THE CANONICAL LEGAL DOCUMENT SET — the contract the app integrates against.
@@ -203,7 +234,8 @@ export type CanonicalLegalDocument = {
 
 export const CANONICAL_LEGAL: Record<"terms" | "privacy" | "cookies", CanonicalLegalDocument> = {
   /*
-   * TERMS. commercial_terms_v1, in force since 24 August 2026. The beta Terms
+   * TERMS. commercial_terms_v2, in force since 12 November 2026, superseding
+   * commercial_terms_v1 (24 August – 11 November 2026) on the rename. The beta Terms
    * are still NOT a fallback here in any state: they govern five invited
    * testers and live at /beta-terms, so pointing a paying customer's checkout
    * at them would be the same defect commissioning found, moved rather than
@@ -211,16 +243,18 @@ export const CANONICAL_LEGAL: Record<"terms" | "privacy" | "cookies", CanonicalL
    */
   terms: {
     url: `${CANONICAL_LEGAL_ORIGIN}/terms`,
-    version: LEGAL_APPROVALS.terms ? "commercial_terms_v1" : null,
+    version: LEGAL_APPROVALS.terms ? "commercial_terms_v2" : null,
     published: LEGAL_APPROVALS.terms,
     effectiveDate: LEGAL_APPROVALS.terms ? COMMERCIAL_LEGAL_EFFECTIVE_DATE : null,
-    commercialVersion: "commercial_terms_v1",
+    commercialVersion: "commercial_terms_v2",
   },
   /*
-   * PRIVACY. commercial_privacy_v1 replaced beta_privacy_v1 at this address on
-   * 24 August 2026. Both identifiers stay in the code because both are real:
-   * rows recorded before today name the beta policy, rows recorded after name
-   * the commercial one, and neither should be readable as the other.
+   * PRIVACY. Three identifiers have been in force at this one address, and all
+   * three stay named because rows exist against them: beta_privacy_v1 to
+   * 24 August 2026, commercial_privacy_v1 to 11 November, and
+   * commercial_privacy_v2 from 12 November on the rename. A reader of a stored
+   * row must be able to tell which document it names — that is the entire job
+   * of the identifier, and it fails the moment one of them is recycled.
    *
    * Privacy is NOTICE, never consent. This identifier is presentation evidence —
    * what the athlete was shown — and it must not become a checkbox. Article 9
@@ -229,7 +263,7 @@ export const CANONICAL_LEGAL: Record<"terms" | "privacy" | "cookies", CanonicalL
   privacy: {
     url: `${CANONICAL_LEGAL_ORIGIN}/privacy`,
     version: LEGAL_APPROVALS.privacyCommercial
-      ? "commercial_privacy_v1"
+      ? "commercial_privacy_v2"
       : LEGAL_APPROVALS.privacy
         ? "beta_privacy_v1"
         : null,
@@ -239,7 +273,7 @@ export const CANONICAL_LEGAL: Record<"terms" | "privacy" | "cookies", CanonicalL
       : LEGAL_APPROVALS.privacy
         ? BETA_LEGAL_EFFECTIVE_DATE
         : null,
-    commercialVersion: "commercial_privacy_v1",
+    commercialVersion: "commercial_privacy_v2",
   },
   /* COOKIES. Still unpublished, so still no version and no effective date. */
   cookies: {
@@ -529,24 +563,24 @@ export const privacyDraft: LegalDocument = {
 export const termsDraft: LegalDocument = {
   eyebrow: "Velvet Viking",
   heading: "Terms",
-  sub: "The agreement between you and Velvet Viking when you use Valhalla.",
+  sub: "The agreement between you and Velvet Viking when you use Sacoro.",
   preamble:
-    "These terms set out what you can expect from Valhalla, what we expect from you, and the limits of both. They are written to be read, not to be survived. If anything here is unclear, ask us before you subscribe.",
+    "These terms set out what you can expect from Sacoro, what we expect from you, and the limits of both. They are written to be read, not to be survived. If anything here is unclear, ask us before you subscribe.",
   // The real publication date, set on publication and not backdated.
   lastUpdated: COMMERCIAL_LEGAL_EFFECTIVE_DATE,
   sections: [
     {
       heading: "1. Who we are",
       paragraphs: [
-        `Valhalla is operated by ${legalEntity.name} (company number ${legalEntity.companyNumber}), registered in ${legalEntity.placeOfRegistration} at ${legalEntity.registeredAddress}. In these terms, "we" and "us" means that company, and "you" means the person using the product.`,
+        `Sacoro is operated by ${legalEntity.name} (company number ${legalEntity.companyNumber}), registered in ${legalEntity.placeOfRegistration} at ${legalEntity.registeredAddress}. In these terms, "we" and "us" means that company, and "you" means the person using the product.`,
         `You can reach us at ${legalEntity.contactEmail}. That address is also where complaints go, and a person reads it.`,
       ],
     },
     {
-      heading: "2. What Valhalla is",
+      heading: "2. What Sacoro is",
       paragraphs: [
-        "Valhalla builds an endurance training plan from the information you give it, reviews the sessions you log against that plan, and proposes changes to your future training when the evidence supports it. You decide whether to accept a proposed change.",
-        "Valhalla is a training tool. It is not a qualified human coach, and it is not a medical service. Section 6 explains what that means in practice.",
+        "Sacoro builds an endurance training plan from the information you give it, reviews the sessions you log against that plan, and proposes changes to your future training when the evidence supports it. You decide whether to accept a proposed change.",
+        "Sacoro is a training tool. It is not a qualified human coach, and it is not a medical service. Section 6 explains what that means in practice.",
       ],
     },
     {
@@ -554,13 +588,13 @@ export const termsDraft: LegalDocument = {
       paragraphs: [
         "You must be at least 18 to create an account. One account is for one person.",
         "You are responsible for the email address your account uses and for anything done through it. Tell us promptly if you think someone else has access.",
-        "The plan Valhalla produces is built from what you tell it about your fitness, your goal and the days you can train. If that information is wrong or out of date, the plan will be too. Keeping it accurate is your part of the arrangement.",
+        "The plan Sacoro produces is built from what you tell it about your fitness, your goal and the days you can train. If that information is wrong or out of date, the plan will be too. Keeping it accurate is your part of the arrangement.",
       ],
     },
     {
       heading: "4. Subscriptions, and what they cost",
       paragraphs: [
-        "Valhalla is sold as one subscription with one set of features. There is no cheaper tier with less in it, and no more expensive tier with more.",
+        "Sacoro is sold as one subscription with one set of features. There is no cheaper tier with less in it, and no more expensive tier with more.",
         "You choose how often you are billed. Monthly is billed every month, and annual is billed once a year. Both give you exactly the same product; the only difference is the billing period and the price.",
         "The current prices are shown on our pricing page and again before you commit. Prices include VAT where it applies.",
       ],
@@ -579,8 +613,8 @@ export const termsDraft: LegalDocument = {
       heading: "6. Training, health and your own judgement",
       paragraphs: [
         "Endurance training carries risk, and only you know how you actually feel. You are responsible for deciding whether you are well enough to train on a given day, and for stopping when you should. If you have a health condition, are returning from injury, are pregnant, or are unsure whether training is safe for you, speak to a qualified medical professional before starting.",
-        "Valhalla does not diagnose, treat, monitor or prevent illness or injury, and nothing it produces is medical advice or medical clearance. When it tells you to ease off, hold a plan or recover, it is making a training judgement from the information you have given it, not a clinical one.",
-        "None of that reduces our own responsibility for the product itself. If Valhalla does not work as described, section 12 and your statutory rights apply in the ordinary way. This section is about the difference between a training tool and a doctor, not an attempt to disclaim everything Valhalla does.",
+        "Sacoro does not diagnose, treat, monitor or prevent illness or injury, and nothing it produces is medical advice or medical clearance. When it tells you to ease off, hold a plan or recover, it is making a training judgement from the information you have given it, not a clinical one.",
+        "None of that reduces our own responsibility for the product itself. If Sacoro does not work as described, section 12 and your statutory rights apply in the ordinary way. This section is about the difference between a training tool and a doctor, not an attempt to disclaim everything Sacoro does.",
       ],
     },
     {
@@ -635,8 +669,8 @@ export const termsDraft: LegalDocument = {
     {
       heading: "11. Connected services",
       paragraphs: [
-        "Valhalla can connect to Strava, so that activities you record there can be brought into your training record. Connecting is your choice, you are asked to authorise it through Strava itself, and you can disconnect at any time from your account settings or from within Strava. We only ask for the access needed to read the activities you choose to share, and disconnecting stops any further data coming across.",
-        "Strava is a separate company. It does not endorse Valhalla, and it is not responsible for it. Your use of Strava is governed by Strava's own terms.",
+        "Sacoro can connect to Strava, so that activities you record there can be brought into your training record. Connecting is your choice, you are asked to authorise it through Strava itself, and you can disconnect at any time from your account settings or from within Strava. We only ask for the access needed to read the activities you choose to share, and disconnecting stops any further data coming across.",
+        "Strava is a separate company. It does not endorse Sacoro, and it is not responsible for it. Your use of Strava is governed by Strava's own terms.",
         "We may add other optional connections to devices and services in future, including the ability to send workouts to a watch. Any such connection will be optional, will ask for your authorisation, will be described in our Privacy Policy before it starts operating, and will be disconnectable in the same way.",
         "We are not responsible for a third-party service being unavailable, changing what it offers, or ending its access. If a connection stops working through no fault of ours, we will tell you.",
       ],
@@ -644,27 +678,27 @@ export const termsDraft: LegalDocument = {
     {
       heading: "12. Availability, changes and our responsibility to you",
       paragraphs: [
-        "We aim to keep Valhalla available and working properly, and we owe you reasonable care and skill in providing it. We do not guarantee that it will never be unavailable: we may need to suspend it for maintenance, and things occasionally break.",
+        "We aim to keep Sacoro available and working properly, and we owe you reasonable care and skill in providing it. We do not guarantee that it will never be unavailable: we may need to suspend it for maintenance, and things occasionally break.",
         "We may change or remove features as the product develops. If we make a change that materially reduces what you are paying for, we will tell you and you may cancel.",
         "We do not exclude or limit our liability where it would be unlawful to do so. That includes liability for death or personal injury caused by our negligence, for fraud or fraudulent misrepresentation, and for anything else that cannot lawfully be excluded.",
-        "Otherwise, we are responsible for loss you suffer that is a foreseeable result of our breaking these terms or failing to use reasonable care and skill. We are not responsible for loss that was not foreseeable, or for business losses, since Valhalla is supplied for personal use.",
-        "Subject to the two paragraphs above, our total liability to you for everything connected with Valhalla is limited to the greater of two amounts: the subscription fees you paid us in the twelve months before the claim arose, or £100.",
+        "Otherwise, we are responsible for loss you suffer that is a foreseeable result of our breaking these terms or failing to use reasonable care and skill. We are not responsible for loss that was not foreseeable, or for business losses, since Sacoro is supplied for personal use.",
+        "Subject to the two paragraphs above, our total liability to you for everything connected with Sacoro is limited to the greater of two amounts: the subscription fees you paid us in the twelve months before the claim arose, or £100.",
         "That limit does not reach the liabilities we have just said we do not exclude, and it does not apply to defective digital content: if something we supply damages your device or your other digital content because we failed to use reasonable care and skill, we will repair the damage or compensate you, and the limit does not cut that short.",
       ],
     },
     {
       heading: "13. Your training data, and our material",
       paragraphs: [
-        "You keep ownership of the training data you put into Valhalla. We do not claim it. Whether or not you are currently subscribed, you can view, export and delete your own training history. We do not hold your history hostage to a subscription.",
-        "The Valhalla software, interfaces, workout library, plan structures, coaching output and the methodology behind them are ours or licensed to us. You may use them to train. You may not copy, scrape or bulk-extract them, reverse engineer them, or use automated means to access the service beyond what we permit, except where the law expressly allows it.",
+        "You keep ownership of the training data you put into Sacoro. We do not claim it. Whether or not you are currently subscribed, you can view, export and delete your own training history. We do not hold your history hostage to a subscription.",
+        "The Sacoro software, interfaces, workout library, plan structures, coaching output and the methodology behind them are ours or licensed to us. You may use them to train. You may not copy, scrape or bulk-extract them, reverse engineer them, or use automated means to access the service beyond what we permit, except where the law expressly allows it.",
         "In particular you may not use the product or its outputs to build, train, evaluate or operate a competing product, or supply them to someone else for that purpose.",
-        "You may not use Valhalla unlawfully, attempt to gain access to another person's account, or interfere with the service's operation or security.",
+        "You may not use Sacoro unlawfully, attempt to gain access to another person's account, or interfere with the service's operation or security.",
       ],
     },
     {
       heading: "14. Suspension, ending, and deleting your account",
       paragraphs: [
-        "You can stop using Valhalla and delete your account at any time from within the product. Deleting your account is not the same as cancelling a subscription; if you have an active subscription, cancel it as well, and tell us if anything looks wrong afterwards.",
+        "You can stop using Sacoro and delete your account at any time from within the product. Deleting your account is not the same as cancelling a subscription; if you have an active subscription, cancel it as well, and tell us if anything looks wrong afterwards.",
         "We may suspend or end your access if you seriously or repeatedly break these terms, or if we are required to by law. Where it is reasonable to do so we will tell you first and give you a chance to put it right. If we end your access and you have paid for a period you cannot now use, we will refund the unused part unless the reason was your own serious breach.",
         "What happens to your data on deletion is described in our Privacy Policy.",
       ],
@@ -687,7 +721,7 @@ export const termsDraft: LegalDocument = {
 export const cookiesDraft: LegalDocument = {
   eyebrow: "Velvet Viking",
   heading: "Cookies",
-  sub: "What this website and the Valhalla app store on your device, and why there is so little of it.",
+  sub: "What this website and the Sacoro app store on your device, and why there is so little of it.",
   preamble:
     "This page covers cookies and the other ways a site or app can store and read information on your device — local storage, session storage and similar. It is short because the inventory is short, and everything in it is listed because it is actually there, not because policies usually mention it.",
   lastUpdated: TBC("effective date, set on publication"),
@@ -701,9 +735,9 @@ export const cookiesDraft: LegalDocument = {
       ],
     },
     {
-      heading: "The Valhalla app, once you have an account",
+      heading: "The Sacoro app, once you have an account",
       paragraphs: [
-        "Signing in to Valhalla is different, because an application that keeps you signed in has to remember something. What it stores falls into two groups.",
+        "Signing in to Sacoro is different, because an application that keeps you signed in has to remember something. What it stores falls into two groups.",
         "Authentication and security. When you sign in, the app stores a session token on your device so you stay signed in and so each request can be recognised as yours. It is set by us and by our authentication provider, it lasts until it expires or you sign out, and it is strictly necessary: without it there is no way to be signed in. Signing out or clearing the app's data removes it.",
         "Your plan and your preferences. The app keeps a copy of your current plan, your recent training and your settings — units, theme, whether reminders are on — on your own device, so the product still works when you are offline or on a poor connection. This is strictly necessary for the service you have asked for, is never read by anyone else, and is removed when you sign out, uninstall the app, or clear its data.",
         "Neither group is used to build a profile of you, to follow you between apps or websites, or for advertising.",
@@ -750,15 +784,15 @@ export const cookiesDraft: LegalDocument = {
 export const privacyCommercialDraft: LegalDocument = {
   eyebrow: "Velvet Viking",
   heading: "Privacy",
-  sub: "What Valhalla stores about your training, why, and what you can do about it.",
+  sub: "What Sacoro stores about your training, why, and what you can do about it.",
   preamble:
-    "This policy explains what personal data we collect when you use Valhalla, what we use it for, who else is involved, how long we keep it, and the rights you have. It describes what the product actually does. Where something is switched off, it says so rather than describing it as if it were running.",
+    "This policy explains what personal data we collect when you use Sacoro, what we use it for, who else is involved, how long we keep it, and the rights you have. It describes what the product actually does. Where something is switched off, it says so rather than describing it as if it were running.",
   lastUpdated: COMMERCIAL_LEGAL_EFFECTIVE_DATE,
   sections: [
     {
       heading: "Who is responsible for your data",
       paragraphs: [
-        `Valhalla is operated by ${entityDescription()}. For data protection purposes we are the data controller for the personal data described here.`,
+        `Sacoro is operated by ${entityDescription()}. For data protection purposes we are the data controller for the personal data described here.`,
         `To exercise any of the rights below, or to ask a question about your data, contact ${legalEntity.contactEmail}.`,
       ],
     },
@@ -766,11 +800,11 @@ export const privacyCommercialDraft: LegalDocument = {
       heading: "What we collect",
       paragraphs: [
         "Account data: your email address and the authentication records needed to sign you in. You sign in with a link we email you, so there is no password.",
-        "Programme data: the answers you give when you set up a training block — your goal distance and date, your current weekly volume, the days you can run, your benchmark performance and your goal times — and the plan Valhalla builds from them.",
+        "Programme data: the answers you give when you set up a training block — your goal distance and date, your current weekly volume, the days you can run, your benchmark performance and your goal times — and the plan Sacoro builds from them.",
         "Completed sessions: for each session you log, the distance, the pace, your heart rate where it is recorded or imported, your rating of perceived effort, how the session felt, any splits you enter, and any notes you write.",
-        "Daily check-in, where you record it: how you are feeling that day, how your legs feel, and how you slept. You can use Valhalla without providing this.",
+        "Daily check-in, where you record it: how you are feeling that day, how your legs feel, and how you slept. You can use Sacoro without providing this.",
         "Injury, pain and illness information where you supply it, through the check-in or in a session note. It is stored with the day it relates to and used to decide what to recommend next, including recommending that you do not run.",
-        "Coaching output: what Valhalla produces about your training — execution reviews, athlete-state and readiness assessments, proposed plan changes, and whether you accepted or declined them. This accumulates into a longitudinal record of your training, which is what lets coaching decisions take your history into account.",
+        "Coaching output: what Sacoro produces about your training — execution reviews, athlete-state and readiness assessments, proposed plan changes, and whether you accepted or declined them. This accumulates into a longitudinal record of your training, which is what lets coaching decisions take your history into account.",
         "Subscription data: which plan you are on, your billing period, whether you are in a trial and when it ends, and the status of your payments. We do not receive or store your full card number, expiry or security code.",
         "Support correspondence: what you write to us and what we reply.",
         "Operational and security information: records needed to keep the service running and to detect and prevent abuse, such as authentication events and error diagnostics. This includes the date and time your account last received access, recorded no more than once an hour. It tells us an account is in use; it is not a behavioural analytics stream, and we deliberately do not build one. Our diagnostic logs are written so as not to contain email addresses, tokens, secrets, signatures or full provider error payloads.",
@@ -780,13 +814,13 @@ export const privacyCommercialDraft: LegalDocument = {
     {
       heading: "Information that can indicate something about your health",
       paragraphs: [
-        "Some of what Valhalla holds is ordinary training information — distance, pace, the days you can run. Some of it is not so easily categorised. Heart rate, how you slept, how your legs feel, an entry saying you are unwell or in pain, and the readiness assessments built from them can all say something about your physical condition.",
-        "We do not treat everything as health data, because that would be inaccurate, and we do not pretend none of it is, because that would be worse. Where you tell Valhalla you are injured, in pain or ill, that is information about your health, and you are choosing to give it to us so the product can respond to it.",
-        "You are never required to provide it. The check-in is optional, notes are optional, and Valhalla works without them, with less to go on.",
-        "The lawful basis for running Valhalla is our contract with you — Article 6(1)(b) of the UK GDPR. That covers your account, your subscription and the ordinary training processing that produces your plan. Providing the service has never rested on your consent, and it does not now.",
+        "Some of what Sacoro holds is ordinary training information — distance, pace, the days you can run. Some of it is not so easily categorised. Heart rate, how you slept, how your legs feel, an entry saying you are unwell or in pain, and the readiness assessments built from them can all say something about your physical condition.",
+        "We do not treat everything as health data, because that would be inaccurate, and we do not pretend none of it is, because that would be worse. Where you tell Sacoro you are injured, in pain or ill, that is information about your health, and you are choosing to give it to us so the product can respond to it.",
+        "You are never required to provide it. The check-in is optional, notes are optional, and Sacoro works without them, with less to go on.",
+        "The lawful basis for running Sacoro is our contract with you — Article 6(1)(b) of the UK GDPR. That covers your account, your subscription and the ordinary training processing that produces your plan. Providing the service has never rested on your consent, and it does not now.",
         "The health-indicating information above needs something more, because special-category data does. For that, and only that, we rely on your explicit consent under Article 9(2)(a). The two sit together: the contract is why we can run the service, and your explicit consent is why we can use heart rate, sleep, readiness answers, how a session felt, and what your notes say about pain, illness or how you slept.",
         "We ask for that consent separately, and it looks like what it is. It is a single opt-in that starts unticked, on the same panel as the heart-rate fields it governs, recorded against the version identifier health_data_consent_v1. Consent is never inferred from something else you did: not from accepting these terms, not from creating an account, not from paying, not from entering a heart rate, and not from reaching the end of setup. Leaving it unticked is recorded as a decision not to consent, which is why we do not keep asking.",
-        "Declining costs you the readings, not the product. Valhalla still builds and adapts your plan, still scores your sessions, and still tells you what to do next. The controls that collect the covered information are simply not shown, with one line saying why. A session scored without heart rate gets exactly the score an athlete who never owned a chest strap would get; a missing reading is never read as poor readiness.",
+        "Declining costs you the readings, not the product. Sacoro still builds and adapts your plan, still scores your sessions, and still tells you what to do next. The controls that collect the covered information are simply not shown, with one line saying why. A session scored without heart rate gets exactly the score an athlete who never owned a chest strap would get; a missing reading is never read as poor readiness.",
         "You can withdraw at any time from Settings, using the same switch in both directions. From that moment we stop collecting the covered information and stop using it: typed, imported and device-supplied heart rate are refused, and your stored heart-rate profile values are cleared. Where a connected service such as Strava sends us an activity, the covered fields are removed before the activity is written down, so without valid consent they are never stored rather than stored and ignored.",
         "What withdrawal does not do is erase your past. Covered information you logged while consent was in place is retained and becomes inert: it is excluded from every coaching decision, target and longitudinal reading for as long as consent is absent, and it is not processed at all rather than kept under some other justification. We say this plainly because the opposite claim is the tempting one — withdrawal is not a purge, and we are not going to describe it as one. Erasure is a separate right, it is handled separately, and you can ask us for it.",
         "Your consent record is kept as its own append-only history — each decision, its version and when it was made, and no later edit to what an earlier decision said. If the purpose ever materially changes, the version changes with it and every consent to the old version stops counting until you are asked again. The record holds nothing about your body, so it survives an erasure of the health information itself: it is the evidence that what we already did was lawful when we did it.",
@@ -818,7 +852,7 @@ export const privacyCommercialDraft: LegalDocument = {
       paragraphs: [
         "We use a small number of service providers, each acting on our instructions under contract, and each with access only to what it needs.",
         "Hosting and database: our managed database is provided by Supabase and hosted in the European Union. Vercel hosts the website, the application and the server functions that talk to the database.",
-        "Authentication and database: Supabase provides our authentication and our managed database. Signing in uses a link we email you rather than a password, so no password for Valhalla exists to be stored or stolen. Sending that link necessarily processes your email address, and the sign-in email is currently delivered through our authentication provider's own sending infrastructure.",
+        "Authentication and database: Supabase provides our authentication and our managed database. Signing in uses a link we email you rather than a password, so no password for Sacoro exists to be stored or stolen. Sending that link necessarily processes your email address, and the sign-in email is currently delivered through our authentication provider's own sending infrastructure.",
         "Payments: card payments for web subscriptions are handled by Stripe as our payment processor. Your card details go to Stripe and not to us. We receive the state of your subscription and its payments — whether you are in a trial, when it ends, whether a payment succeeded — and never your full card number, expiry or security code.",
         "Internal operations: we use monday.com as an operational mirror for commercial and lifecycle tasks. It receives operational state only, against a pseudonymous reference rather than your account identifier. It does not receive your training sessions, heart rate, pace, perceived effort, readiness or athlete-state information, your notes, your training history, any other coaching evidence about you, or your payment-provider customer identifier. It is not a source of truth about what you are entitled to.",
         "We do not otherwise disclose your data, except where we are legally required to.",
@@ -827,10 +861,10 @@ export const privacyCommercialDraft: LegalDocument = {
     {
       heading: "Connected services, when you choose to use them",
       paragraphs: [
-        "Valhalla supports optional connections to services you already use. Every one of them is off until you connect it, requires your authorisation through the other service, and can be disconnected at any time from your account settings.",
+        "Sacoro supports optional connections to services you already use. Every one of them is off until you connect it, requires your authorisation through the other service, and can be disconnected at any time from your account settings.",
         "Strava. If you choose to connect it, we ask Strava only for permission to read your activities. We do not ask for permission to write anything back to Strava, and we do not ask for your Strava profile. The access credentials for the connection are held server-side in storage that is closed to direct access, and the activities we receive become part of your training record.",
         "Disconnecting is immediate and complete: we delete the stored credentials, delete the Strava activities we had staged, and tell Strava to revoke our access. If Strava stops accepting our credentials, we clear the connection rather than leave it looking connected when it is not.",
-        "Strava is a separate company with its own privacy policy and terms, and it does not endorse Valhalla.",
+        "Strava is a separate company with its own privacy policy and terms, and it does not endorse Sacoro.",
         "Devices and watches, including Garmin. Garmin is not currently available. No Garmin connection exists, no Garmin data is received and none is sent. The groundwork is in place on our side, but until it is switched on there is nothing to describe. If that changes we will update this policy before any data flows, and connecting will remain your choice.",
         "If a connection is not enabled for your account, no data passes to or from it.",
       ],
@@ -840,7 +874,7 @@ export const privacyCommercialDraft: LegalDocument = {
       paragraphs: [
         "Your account and training data are stored in a managed database hosted in the European Union.",
         "Some of our providers are established outside the UK or operate support functions elsewhere. Where personal data is transferred outside the UK, we rely on the safeguards UK data protection law requires, such as adequacy regulations or standard contractual clauses with the additional protections that go with them.",
-        "The Valhalla application also keeps a copy of your current plan and recent activity on your own device so it works offline. That copy is under your control and is removed when you uninstall the app or clear its data.",
+        "The Sacoro application also keeps a copy of your current plan and recent activity on your own device so it works offline. That copy is under your control and is removed when you uninstall the app or clear its data.",
       ],
     },
     {

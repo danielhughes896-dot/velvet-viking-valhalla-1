@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import Mark from "@/components/ui/Mark";
+import Wordmark from "@/components/ui/Wordmark";
 import CtaButton from "@/components/ui/CtaButton";
-import { brand, nav, appSignInUrl } from "@/content/site";
+import { nav, appSignInUrl } from "@/content/site";
 import { buildUrl } from "@/content/journey";
 
 const subscribeNoop = () => () => {};
@@ -32,7 +32,7 @@ function useIsClient() {
 // clarity — the product's real name (nav.links / site.ts) is untouched.
 const menuLinks = [
   { label: "Home", href: "/" },
-  ...nav.links.map((link) => (link.href === "/valhalla" ? { ...link, label: "Valhalla App" } : link)),
+  ...nav.links.map((link) => (link.href === "/sacoro" ? { ...link, label: "Sacoro App" } : link)),
 ];
 
 // Despite the filename (kept to avoid an unrelated rename), this is now the
@@ -178,17 +178,14 @@ export default function MobileNav() {
                   {nav.signIn.label}
                 </Link>
 
-                {/* THE MARK, NOT THE CREST, AT THIS SIZE. The circular crest
-                    carries a wordmark, "Valhalla Awaits" and "Earn Your Place"
-                    inside a 40px disc, where all three collapse into an
-                    illegible smudge. The mark is one shape and reads cleanly
-                    at any size, and this is a wayfinding slot — exactly where
-                    the primary Velvet Viking mark is intended. The crest keeps
-                    the hero, which is the size it was drawn for. */}
-                <Mark size={52} alt="" />
-                <p className="font-head text-[11px] uppercase tracking-[0.24em] text-vv-ink-faint">
-                  {brand.name}
-                </p>
+                {/* THE MARK IS THE NAME, so the name underneath it went.
+                    This slot held the gold VV chevron at 52px with brand.name
+                    set in small caps below — a mark and a label, because the
+                    chevron could not say what it was. The mark is now the word
+                    itself between two dots, which makes the label a second
+                    copy of the same six letters directly beneath the first.
+                    One of them had to go, and it was not the mark. */}
+                <Wordmark size="1.1rem" />
               </div>
             </div>,
             document.body,

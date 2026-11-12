@@ -183,7 +183,7 @@ test('the meta and Open Graph descriptions carry the same proposition, verbatim'
   // never load a page. They drifted from the hero once before.
   const layout = code(read('src/app/layout.tsx'));
   const site = code(read('src/content/site.ts'));
-  const heroLine = /Training that learns how you train\. The longer you run with Valhalla, the better it understands how you respond\./;
+  const heroLine = /Training that learns how you train\. The longer you run with Sacoro, the better it understands how you respond\./;
   assert.match(site, heroLine);
   // Counting needs the global flag — a non-global match returns one result no
   // matter how many times the string occurs, which made this pass-by-accident
@@ -222,7 +222,7 @@ test('the year-round lifecycle is published and says the athlete chooses', () =>
     assert.ok(yr.includes(stage), `the lifecycle is missing "${stage}"`);
   }
   // No forced transitions: app main is explicit that the athlete decides.
-  assert.match(yr, /You choose when to move on\. Valhalla does not decide it for you\./);
+  assert.match(yr, /You choose when to move on\. Sacoro does not decide it for you\./);
   assert.match(yr, /you can pick none/i);
   assert.match(code(read('src/components/sections/YearRound.tsx')), /yearRound\.footnote/,
     'the "athlete chooses" line must actually render');

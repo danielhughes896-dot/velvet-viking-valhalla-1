@@ -151,8 +151,8 @@ test('the accent is used for one job: the action that starts a plan', () => {
   assert.deepEqual(
     users.sort(),
     [
+      'src/app/sacoro/page.tsx',
       'src/app/start/page.tsx',
-      'src/app/valhalla/page.tsx',
       'src/components/layout/Header.tsx',
       'src/components/layout/MobileNav.tsx',
       'src/components/sections/FinalCta.tsx',

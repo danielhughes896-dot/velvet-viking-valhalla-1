@@ -31,7 +31,7 @@ export async function generateMetadata({
   return {
     title: "Privacy",
     description:
-      "What Valhalla stores about your training, why, how long it is kept, and the rights you have over it.",
+      "What Sacoro stores about your training, why, how long it is kept, and the rights you have over it.",
     alternates: { canonical: "/privacy" },
     ...(review ? { robots: { index: false, follow: false } } : {}),
   };

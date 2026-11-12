@@ -15,14 +15,14 @@
 // deployment. Two copies of one fact is what let it go stale twice, so there is
 // now one copy, and a test fails if a vercel.app host reappears in either file.
 //
-// PUBLIC ORIGIN ONLY. The Valhalla app is a separate deployment on its own
+// PUBLIC ORIGIN ONLY. The Sacoro app is a separate deployment on its own
 // Vercel hostname; that link further down this file is a genuine deployment URL
 // rather than a stale preview reference, and must stay exactly as it is.
 export const siteUrl = "https://velvetviking.co.uk";
 
 // THE CANONICAL APP ENTRY, IN ONE PLACE.
 //
-// The website is the shop window; the Valhalla app owns everything behind it —
+// The website is the shop window; the Sacoro app owns everything behind it —
 // account, plan builder, preview, trial. Every acquisition CTA that leaves this
 // site for the product lands here, and it is written down once for exactly the
 // reason siteUrl is: the previous app URL was a raw Vercel hostname pasted into
@@ -78,20 +78,33 @@ export const buildCta = { label: "Build My Plan" } as const;
 export const signInCta = { label: "Sign In" } as const;
 
 /** Quiet secondary route, kept so the editorial deep dive is never orphaned. */
-export const exploreCta = { label: "Explore Valhalla", href: "/valhalla" } as const;
+export const exploreCta = { label: "Explore Sacoro", href: "/sacoro" } as const;
 
+/* THE COMPANY AND THE PRODUCT ARE TWO NAMES, AND THE LINE BETWEEN THEM HOLDS.
+   Founder, asked which one customer-facing surfaces should carry: "If it's
+   customer facing SACORO." Velvet Viking Ltd is the registered company — it
+   signs the work, owns this domain, and is the data controller named in the
+   Privacy Policy. Sacoro is the thing an athlete opens. `name` is therefore
+   still Velvet Viking and `product` is no longer Valhalla.
+
+   TWO FIELDS ARE GONE RATHER THAN RENAMED.
+   `tagline` was "Valhalla Awaits", which only ever meant anything because
+   Valhalla is a hall you earn your way into — that is the whole reason it
+   paired with the motto. Rename the product and the line stops carrying its
+   own argument, so it is retired rather than reworded into "Sacoro Awaits",
+   which would assert nothing.
+   `crestAlt` described artwork that no longer exists. The crest could not be
+   renamed because its lettering is baked in and reads VALHALLA AWAITS. */
 export const brand = {
   name: "Velvet Viking",
-  product: "Valhalla",
-  tagline: "Valhalla Awaits",
+  product: "Sacoro",
   motto: "Earn Your Place",
-  crestAlt: "The Velvet Viking crest",
 } as const;
 
 export const nav = {
   links: [
-    { label: "Valhalla", href: "/valhalla" },
-    // GALLERY: MobileNav relabels "Valhalla" -> "Valhalla App" for display
+    { label: "Sacoro", href: "/sacoro" },
+    // GALLERY: MobileNav relabels "Sacoro" -> "Sacoro App" for display
     // only; this array is also the source for Header's <noscript> fallback
     // nav, so adding Gallery here (rather than hard-coding it into either
     // component separately) keeps both surfaces in sync automatically.
@@ -117,16 +130,24 @@ export const nav = {
 export const hero = {
   // PROTOTYPE NOTE: was "Velvet Viking". The crest above already states
   // "Velvet Viking" (it's baked into the artwork), so the eyebrow becomes
-  // "The Flagship" instead — reusing valhallaProduct.eyebrow's own exact
+  // "The Flagship" instead — reusing sacoroProduct.eyebrow's own exact
   // wording, not new copy — so this eyebrow now reads as introducing
-  // Valhalla as a product noun ("The Flagship / Valhalla Awaits.") rather
+  // Sacoro as a product noun ("The Flagship / Valhalla Awaits.") rather
   // than repeating the brand name a second time in the same viewport.
   // heading/sub/cta below are unchanged and remain protected verbatim.
   eyebrow: "The Flagship",
   // FINAL TYPOGRAPHY CONSISTENCY CHANGE: supersedes the earlier "internal
   // periods stay" rule for this specific set of major display headlines —
   // no full stop anywhere in this heading now, internal or terminal.
-  heading: ["Valhalla Awaits", "Earn Your Place"],
+  /* ONE LINE NOW, because the other one named a product that no longer
+     exists. "Sacoro Awaits" / "Earn Your Place" worked as a pair: the hall
+     you are summoned to, and the price of entry. "Sacoro Awaits" summons
+     nobody — Sacoro is a family name, not a destination — so the first line
+     is dropped rather than substituted, and the motto carries the hero alone.
+     It is strong enough to: it is the site's standard, it closes the footer,
+     and /philosophy is the page that argues it. A replacement opening line is
+     founder copy and is deliberately not invented here. */
+  heading: ["Earn Your Place"],
   // HUMAN COPY PASS: the dash after "pays attention" severed the verb from
   // its own complement and did no grammatical work. layout.tsx's meta
   // description had ALREADY been written without it, so the two surfaces
@@ -153,7 +174,7 @@ export const hero = {
   // audit removed coaching-credential language from this site and it stays
   // removed: a programme that learns is a description of behaviour, which is
   // what we can substantiate, where a coach is a claim about a profession.
-  sub: "Training that learns how you train. The longer you run with Valhalla, the better it understands how you respond.",
+  sub: "Training that learns how you train. The longer you run with Sacoro, the better it understands how you respond.",
   // ENTRY-JOURNEY PASS: the hero's primary action was "Explore Valhalla",
   // which sent the most motivated visitor on the site sideways into more
   // reading. It is now the action that starts a plan, and the exploratory
@@ -208,20 +229,20 @@ export const brandStory = {
   },
 } as const;
 
-export const valhallaProduct = {
+export const sacoroProduct = {
   eyebrow: "The Flagship",
-  heading: "Valhalla",
+  heading: "Sacoro",
   // POSITIONING PASS: was "Endurance coaching that reads your training,
   // not just your calendar." Deliberately NOT resolved the same way as
   // hero.sub above — repeating "Endurance training that…" twice on one
   // scroll would be a mechanical find-and-replace rather than an edit.
   // Dropping the category noun altogether leaves the verb doing the work,
-  // which is the whole point: what Valhalla does is read. This string is
-  // also pages.valhalla.sub, so it is the /valhalla page subheading and
+  // which is the whole point: what Sacoro does is read. This string is
+  // also pages.sacoro.sub, so it is the /sacoro page subheading and
   // that route's meta description as well — it reads correctly under the
-  // "Valhalla" heading that precedes it in all three places.
+  // "Sacoro" heading that precedes it in all three places.
   sub: "A programme that learns you, not a plan that forgets you.",
-  // COPY AUDIT: was "...Valhalla pays attention to what you actually do,
+  // COPY AUDIT: was "...Sacoro pays attention to what you actually do,
   // and helps you understand what that means for what comes next." — a
   // near-duplicate of hero.sub one scroll later. Rewritten to state the
   // actual differentiator (waits for a pattern, explains why, athlete
@@ -234,7 +255,7 @@ export const valhallaProduct = {
   // mark. "actually" also dropped from "what actually happens" — the
   // sentence is unchanged in meaning without it, and the word appeared ten
   // times across the site.
-  body: "A training plan shouldn’t go stale the moment real training starts. Valhalla watches what happens and waits for a real pattern before it changes anything. When a change is genuinely justified, it tells you why, and you decide whether to take it.",
+  body: "A training plan shouldn’t go stale the moment real training starts. Sacoro watches what happens and waits for a real pattern before it changes anything. When a change is genuinely justified, it tells you why, and you decide whether to take it.",
   points: [
     {
       heading: "Training built around you",
@@ -275,7 +296,7 @@ export const valhallaProduct = {
   // homepage to offer the build. Cherry on a dark section — see CtaButton.
   cta: buildCta,
   secondaryCta: exploreCta,
-  // PROTOTYPE: both slots are now portrait/phone-first — Valhalla has no
+  // PROTOTYPE: both slots are now portrait/phone-first — Sacoro has no
   // desktop app to screenshot. `primary` is Next Move/Plan Evolution (the
   // dominant, foregrounded frame); `secondary` is Execution Review (the
   // smaller, offset frame). Renamed from desktop/mobile.
@@ -288,12 +309,12 @@ export const valhallaProduct = {
     primary: {
       src: "/photography/app-today.jpg",
       placeholder: "[VALHALLA — TODAY]",
-      alt: "Valhalla’s Today screen: the day’s Next Move card and pace reference table",
+      alt: "Sacoro’s Today screen: the day’s Next Move card and pace reference table",
     },
     secondary: {
       src: "/photography/app-full-plan.jpg",
       placeholder: "[VALHALLA — FULL PLAN]",
-      alt: "Valhalla’s Full Plan screen: the training block broken into weeks and phases",
+      alt: "Sacoro’s Full Plan screen: the training block broken into weeks and phases",
     },
   },
 } as const;
@@ -344,7 +365,7 @@ export const provenance = {
   // would make more formal and a comma would make ambiguous. Keeping one
   // considered dash is what stops the copy reading as mechanically
   // de-dashed; the other twenty-two were habit, this one is a choice.
-  body: "A training plan that doesn’t adapt to real life isn’t much of a plan. Dan built Valhalla after enough of those — plans that looked perfect on paper and fell apart the moment an actual week got in the way.",
+  body: "A training plan that doesn’t adapt to real life isn’t much of a plan. Dan built Sacoro after enough of those — plans that looked perfect on paper and fell apart the moment an actual week got in the way.",
   media: {
     src: "/photography/founder-medal.jpg",
     alt: "Dan holding his marathon finisher’s medal, smiling",
@@ -441,16 +462,16 @@ export const earnYourPlace = {
 // the evidence and for the one condition that should flip it.
 //
 // Five stages, not a feature matrix. Each names a moment an athlete already
-// recognises from their own year, and says what Valhalla does in it — the
+// recognises from their own year, and says what Sacoro does in it — the
 // point being that the fifth stage loops back to the first, which is the whole
 // argument. No feature names, because an athlete does not buy "Plan Evolution",
 // they buy not having to work out what to do in January.
 export const yearRound = {
   eyebrow: "Beyond Race Day",
   heading: ["A race is a milestone", "Not the finish"],
-  body: "Most plans end when the race does and leave you to work out the rest of the year alone. Valhalla carries what it has learned about you into whatever comes next.",
+  body: "Most plans end when the race does and leave you to work out the rest of the year alone. Sacoro carries what it has learned about you into whatever comes next.",
   // THE ATHLETE CHOOSES. Named after the app's own blocks so the website and
-  // the product use one vocabulary, and worded so nothing implies Valhalla
+  // the product use one vocabulary, and worded so nothing implies Sacoro
   // moves anyone between phases by itself — app main is explicit that the
   // athlete decides and that choosing nothing is a legitimate answer.
   stages: [
@@ -460,11 +481,11 @@ export const yearRound = {
     { label: "Maintain, Base or Speed", body: "Hold what you built, lay aerobic base, or sharpen. You pick which, and you can pick none." },
     { label: "Next Goal", body: "When the next race appears, you start from what you have actually become, not from scratch." },
   ],
-  footnote: "You choose when to move on. Valhalla does not decide it for you.",
+  footnote: "You choose when to move on. Sacoro does not decide it for you.",
 } as const;
 
 export const futureWorld = {
-  eyebrow: "Beyond Valhalla",
+  eyebrow: "Beyond Sacoro",
   // FINAL TYPOGRAPHY CONSISTENCY CHANGE: no full stop anywhere in this
   // heading now — see the matching note on hero.heading above.
   heading: ["One philosophy", "Different expressions"],
@@ -473,7 +494,7 @@ export const futureWorld = {
   // the vaguest passage on the homepage. "The same standards" still points
   // at Philosophy and About, which is where the standard is actually
   // stated. Nothing factual is lost; the sentence is eleven words shorter.
-  body: "Velvet Viking begins with Valhalla, but it isn’t defined by a single product. The same standards will shape everything that carries the name.",
+  body: "Velvet Viking begins with Sacoro, but it isn’t defined by a single product. The same standards will shape everything that carries the name.",
   // Deliberately framed as direction, not a product list — none of these
   // exist yet. The kicker label above the words in FutureWorld.tsx exists
   // specifically so this can't be misread as an active business structure.
@@ -482,7 +503,7 @@ export const futureWorld = {
 } as const;
 
 export const finalCta = {
-  heading: "Valhalla Awaits",
+  heading: "Sacoro Awaits",
   // POSITIONING PASS: "Neither should your coaching." -> "your plan."
   // One word, and the sentence gets stronger rather than weaker: the
   // contrast the line wants is with a plan that stands still, which is
@@ -524,7 +545,7 @@ export const footer = {
   legalLine: "© " + new Date().getFullYear().toString() + " Velvet Viking. All rights reserved.",
 } as const;
 
-// FIVE-PERSON PRIVATE BETA: the current, authoritative Valhalla access/
+// FIVE-PERSON PRIVATE BETA: the current, authoritative Sacoro access/
 // download page — owned entirely by the app repo, not this one. The
 // website is only ever a doorway to it, never a second download surface;
 // the app's own Supabase beta gate remains the sole authority on who can
@@ -536,7 +557,7 @@ export const footer = {
 export const betaAccess = {
   eyebrow: "Private Beta",
   body: "Already invited to the private beta?",
-  cta: { label: "Continue to Valhalla", href: "https://velvet-viking-valhalla-1.vercel.app/get" },
+  cta: { label: "Continue to Sacoro", href: "https://velvet-viking-valhalla-1.vercel.app/get" },
 } as const;
 
 export const pages = {
@@ -548,8 +569,8 @@ export const pages = {
     // and again as the plan tagline in commerce.ts). Both are now plain
     // English, and deliberately different from each other. The body's dash
     // was standing in for a full stop, so it became one.
-    sub: "One plan. Everything Valhalla does.",
-    body: "No tiers to compare, nothing held back for later. Standard is Valhalla, in full.",
+    sub: "One plan. Everything Sacoro does.",
+    body: "No tiers to compare, nothing held back for later. Standard is Sacoro, in full.",
   },
   // THE BILLING PREFERENCE STEP IS GONE, and so is its copy. It sat between
   // /pricing and /start and asked one question — monthly or annual — that the
@@ -585,11 +606,11 @@ export const pages = {
     // reach the app without knowing what the fourteen days turn into.
     body: "Your first 14 days are free. After your trial, your chosen subscription starts automatically unless you cancel beforehand.",
   },
-  valhalla: {
-    eyebrow: valhallaProduct.eyebrow,
-    heading: valhallaProduct.heading,
-    sub: valhallaProduct.sub,
-    body: "A closer look at how Valhalla works.",
+  sacoro: {
+    eyebrow: sacoroProduct.eyebrow,
+    heading: sacoroProduct.heading,
+    sub: sacoroProduct.sub,
+    body: "A closer look at how Sacoro works.",
     // PHASE 3: this page previously had no closing action at all — after
     // the screenshots, the scroll just ended. That's the literal "dead
     // end" the Phase 2 audit flagged in the CTA graph. Now closes into the
@@ -620,7 +641,7 @@ export const pages = {
     // lines at 390px: the longer "From your first plan / To your next
     // session" wrapped to four, orphaning "PLAN" on a line of its own.
     explanation: {
-      eyebrow: "Inside Valhalla",
+      eyebrow: "Inside Sacoro",
       heading: ["Your first plan", "Your next session"],
     },
     // Real product screenshots will eventually sit alongside this copy —
@@ -632,14 +653,14 @@ export const pages = {
       // "actually" is kept in "the days you can actually train" — there it
       // carries a real contrast (days available in life, not days on a
       // calendar) rather than acting as filler.
-      "Valhalla builds your plan from what’s true about you: your current fitness, a real benchmark performance, your race target and the days you can actually train. From there, it works out the paces and effort levels that make sense for your training, not generic ones.",
-      // FINAL QA FIX PASS: was near-identical to valhallaProduct.body's own
+      "Sacoro builds your plan from what’s true about you: your current fitness, a real benchmark performance, your race target and the days you can actually train. From there, it works out the paces and effort levels that make sense for your training, not generic ones.",
+      // FINAL QA FIX PASS: was near-identical to sacoroProduct.body's own
       // closing ("waits for a real pattern... you decide whether to take
       // it") one scroll after the homepage already said it. Kept the
       // pattern-before-acting claim (it's true and belongs here too), but
       // deepened it with what an adjustment actually is — the pace/effort
       // target for the next session, not a rewritten plan — grounded in
-      // valhallaProduct.points above, not a new claim. Closing reframed so
+      // sacoroProduct.points above, not a new claim. Closing reframed so
       // it advances the homepage's line instead of repeating it verbatim.
       // HUMAN COPY PASS: three em dashes and a colon inside 78 words made
       // this the second-densest passage on the site. Repunctuating alone
@@ -649,12 +670,12 @@ export const pages = {
       // "the pace or effort target set for your next session, not a plan
       // rewritten from scratch" is preserved exactly (finalQaFixPass.test.js
       // asserts on it).
-      "Once training starts, Valhalla pays attention. Every session is compared with what was planned: pace, heart rate, effort, execution. But a single hard day doesn’t change anything on its own. Only once a real pattern shows up does Valhalla act, and what changes is specific. It’s the pace or effort target set for your next session, not a plan rewritten from scratch. You see exactly what’s proposed and the reasoning behind it, and the choice to act on it is still yours.",
+      "Once training starts, Sacoro pays attention. Every session is compared with what was planned: pace, heart rate, effort, execution. But a single hard day doesn’t change anything on its own. Only once a real pattern shows up does Sacoro act, and what changes is specific. It’s the pace or effort target set for your next session, not a plan rewritten from scratch. You see exactly what’s proposed and the reasoning behind it, and the choice to act on it is still yours.",
       // PHASE 4 AUDIT: two genuine gaps, not duplication — confirmed against
       // the app's real decision engine before writing this. (1) Every other
       // paragraph on this page frames "change" as something cautious/
       // downward ("waits", "one hard day doesn't change anything"); nothing
-      // said Valhalla also recognises when training is going well and lets
+      // said Sacoro also recognises when training is going well and lets
       // it continue, or when recovery should outrank the schedule entirely
       // — both are real, evidence-gated outcomes, not aspirational. (2)
       // Nothing on the product-explanation pages said what happens to a
@@ -667,7 +688,7 @@ export const pages = {
       // the site's only semicolon and a colon inside 62 words. Now five
       // plain sentences with none of the three. No claim added, removed or
       // softened; "the training itself" lost "itself" as redundant.
-      "A missed session doesn’t spiral into a rescue plan. The days worth rescheduling get another chance when the calendar allows it. The rest are simply left behind, because that protects the training, not a completion percentage. And a change isn’t automatically a step back. Valhalla knows when to hold the current plan, when to let progression continue, and when recovery matters more than the schedule.",
+      "A missed session doesn’t spiral into a rescue plan. The days worth rescheduling get another chance when the calendar allows it. The rest are simply left behind, because that protects the training, not a completion percentage. And a change isn’t automatically a step back. Sacoro knows when to hold the current plan, when to let progression continue, and when recovery matters more than the schedule.",
       // PHASE 2 AUDIT: was "It's a coach that's actually looking at it" —
       // flagged against Business's unearned-claim list ("coach-like",
       // "understands training"). Rewritten to keep the not-a-dashboard
@@ -681,10 +702,10 @@ export const pages = {
       // a fourth "actually". Recast so the contrast with a dashboard is
       // still made — that positioning point is worth keeping — but stated
       // positively, about what each thing does, rather than as a denial.
-      "A dashboard shows you everything. Valhalla reads your training and tells you only what matters.",
+      "A dashboard shows you everything. Sacoro reads your training and tells you only what matters.",
     ],
   },
-  // GALLERY: a curated visual home, not a rehearsal of Valhalla/Philosophy/
+  // GALLERY: a curated visual home, not a rehearsal of Sacoro/Philosophy/
   // About's own claims — see gallery.ts for the photographs themselves and
   // why each one was chosen. Copy stays minimal on purpose: the page's job
   // is to let the photography carry it.
@@ -732,7 +753,7 @@ export const pages = {
       // preceding two sentences already carry the "applied intelligently"
       // nuance.
       "That means knowing when to push. It also means knowing when to hold back, because recovery is part of the work, not a break from it. Consistency beats heroics.",
-      "Valhalla exists to support that: to help you do the right work, understand what it’s telling you, and keep coming back to it.",
+      "Sacoro exists to support that: to help you do the right work, understand what it’s telling you, and keep coming back to it.",
     ],
   },
   about: {
@@ -748,15 +769,15 @@ export const pages = {
     // intelligent work — not shortcuts, not hype..." — that's Philosophy's
     // thesis, restated here for roughly the sixth time site-wide. About's
     // job is the entity, not the training belief: what Velvet Viking is,
-    // and its relationship to Valhalla.
+    // and its relationship to Sacoro.
     // POSITIONING PASS: "its endurance coaching product" -> "its endurance
     // training app". Factual and already established elsewhere on the site
-    // (MobileNav labels it "Valhalla App"; /start explains installing the
+    // (MobileNav labels it "Sacoro App"; /start explains installing the
     // app on your phone), so this names the thing rather than implying a
     // service staffed by coaches. "first thing it has built" is preserved
     // verbatim — finalQaFixPass.test.js asserts that fact appears exactly
     // once in this block.
-    body: "Velvet Viking is a performance brand. Valhalla, its endurance training app, is the first thing it has built.",
+    body: "Velvet Viking is a performance brand. Sacoro, its endurance training app, is the first thing it has built.",
     // No founder/origin story: the repository holds no factual basis for
     // one, and inventing personal history is explicitly out of scope for
     // this pass. This page states only what's actually true.
@@ -765,9 +786,9 @@ export const pages = {
     // purpose, performance, refinement — will apply to whatever Velvet
     // Viking builds next.") was a near-duplicate of FutureWorld's own
     // sentence on the homepage. FutureWorld already owns that forward-
-    // looking claim; this one stays about the Valhalla/Velvet Viking
+    // looking claim; this one stays about the Sacoro/Velvet Viking
     // relationship instead.
-    // FINAL QA FIX PASS: was "Valhalla is not a side project. It is Velvet
+    // FINAL QA FIX PASS: was "Sacoro is not a side project. It is Velvet
     // Viking's first product..." — restating body's own "first product"
     // fact a second time, back-to-back, on a two-sentence page. body keeps
     // that fact as the page's one statement of it; this reframes toward
