@@ -19,19 +19,22 @@ const constBlock = (src, name) => {
   const end = src.indexOf('} as const;', start);
   return end === -1 ? '' : src.slice(start, end);
 };
-const freeTierIsLive = () =>
-  /live:\s*true/.test(constBlock(code(read('src/content/commerce.ts')), 'freeTier'));
+const freeTrialIsLive = () =>
+  /live:\s*true/.test(constBlock(code(read('src/content/commerce.ts')), 'freeTrial'));
 
-// THE 7-DAY FREE TIER: DECIDED, DRAFTED, AND NOT YET TRUE.
+// THE 7-DAY FREE TRIAL: DECIDED, DRAFTED, AND NOT YET TRUE.
 //
 // Founder: "I think it should be 7 days free trial. And when they sign up for
 // free all data after 7 days is hidden. Then when they pay they see the full
-// data." The shape chosen was a free account that never expires and never
-// shows more than the next seven days, with payment revealing the whole block.
+// data." Then, correcting a first reading of that as a permanent free tier:
+// "Just a single 7 days. Then it ends. But a user can only see 7 days."
+//
+// So: one seven-day period per account, no card, showing seven days of the
+// block, ending rather than converting.
 //
 // WHAT THIS FILE IS FOR. The model is written down in two places that cannot
 // yet be published — `freeTier`/`freeTierCopy` in content/commerce.ts and
-// FREE_TIER_LEGAL_AMENDMENT in content/legal.ts — because the app still runs
+// FREE_TRIAL_LEGAL_AMENDMENT in content/legal.ts — because the app still runs
 // the opposite product. Writing a commercial model down and not shipping it
 // is exactly the state in which things go wrong quietly: the draft rots
 // against the live document, or somebody flips the flag and the copy is
@@ -49,7 +52,7 @@ test('every clause the amendment replaces is present, verbatim, in the live docu
 
   // The amendment's own quotations are inside the object, so strip it out
   // before searching — otherwise every string trivially finds itself.
-  const start = legal.indexOf('export const FREE_TIER_LEGAL_AMENDMENT');
+  const start = legal.indexOf('export const FREE_TRIAL_LEGAL_AMENDMENT');
   const end = legal.indexOf('export const termsDraft');
   assert.ok(start > -1 && end > start, 'the amendment object must exist, above termsDraft');
   const documents = legal.slice(0, start) + legal.slice(end);
@@ -77,7 +80,7 @@ test('the lines the amendment protects are still in the documents it protects th
      consumer's right to cancel a distance contract, which is law. A careless
      find-and-replace of "14" would have shortened the right to seven. */
   const legal = read('src/content/legal.ts');
-  const start = legal.indexOf('export const FREE_TIER_LEGAL_AMENDMENT');
+  const start = legal.indexOf('export const FREE_TRIAL_LEGAL_AMENDMENT');
   const end = legal.indexOf('export const termsDraft');
   const documents = legal.slice(0, start) + legal.slice(end);
 
@@ -102,19 +105,29 @@ test('the lines the amendment protects are still in the documents it protects th
 // ---------------------------------------------------------------------------
 // 2. THE MODEL IS NOT LIVE, AND NOTHING DESCRIBES IT YET
 // ---------------------------------------------------------------------------
-test('the free tier is gated off, and the site still describes the product the app runs', () => {
+test('the free trial is gated off, and the site still describes the product the app runs', () => {
   const commerce = code(read('src/content/commerce.ts'));
-  assert.match(commerce, /live:\s*false/, 'freeTier.live must be false until the app behaves this way');
-  assert.match(commerce, /horizonDays:\s*7/);
-  assert.match(commerce, /cardRequired:\s*false/);
-  assert.match(commerce, /autoConverts:\s*false/);
-  assert.match(commerce, /expires:\s*false/);
+  const block = constBlock(commerce, 'freeTrial');
+  assert.ok(block, 'the freeTrial model must exist');
+  assert.match(block, /live:\s*false/, 'freeTrial.live must be false until the app behaves this way');
+
+  /* TWO SEVENS, AND THEY ARE DIFFERENT NUMBERS — how long the free period
+     lasts, and how much of the block is shown during it. They coincide
+     today, which is exactly why both are asserted: deriving one from the
+     other would hide the day they diverge. */
+  assert.match(block, /days:\s*7/, 'the free period is seven days long');
+  assert.match(block, /horizonDays:\s*7/, 'and seven days of the block are visible during it');
+
+  assert.match(block, /cardRequired:\s*false/);
+  assert.match(block, /autoConverts:\s*false/, 'it ends rather than becoming a subscription');
+  assert.match(block, /expires:\s*true/, 'it is a trial with a last day, not a permanent free tier');
+  assert.match(block, /onePerAccount:\s*true/, '"just a single 7 days"');
 
   // COMMERCIAL_MODEL is the single branch every surface would read.
-  assert.match(commerce, /COMMERCIAL_MODEL: "freeTier" \| "trial" = freeTier\.live \? "freeTier" : "trial"/);
+  assert.match(commerce, /COMMERCIAL_MODEL: "freeTrial" \| "cardTrial"/);
 });
 
-test('no rendered surface describes the free tier while it is gated off', () => {
+test('no rendered surface describes the free trial while it is gated off', () => {
   /* freeTierCopy is written early on purpose — the wording is the part worth
      reviewing before the engineering lands. The risk of writing copy that
      nothing renders is that something starts rendering it. Until the flag
@@ -133,8 +146,8 @@ test('no rendered surface describes the free tier while it is gated off', () => 
     if (f === 'src/content/commerce.ts') continue;
     const src = code(read(f));
     assert.ok(
-      !/freeTierCopy|freeTier\./.test(src),
-      `${f} reads the free-tier model, which is not live — see freeTier.live in content/commerce.ts`
+      !/freeTrialCopy|freeTrial\./.test(src),
+      `${f} reads the free-trial model, which is not live — see freeTrial.live in content/commerce.ts`
     );
   }
 });
@@ -142,7 +155,7 @@ test('no rendered surface describes the free tier while it is gated off', () => 
 // ---------------------------------------------------------------------------
 // 3. THE TRIPWIRE: FLIPPING THE FLAG WITHOUT THE REST
 // ---------------------------------------------------------------------------
-test('the free tier cannot go live while the Terms still promise a trial', () => {
+test('the free trial cannot go live while the Terms still promise the old one', () => {
   /* THIS IS THE ONE THAT MATTERS. Flipping freeTier.live is a single
      character, and it would put "free, nothing to cancel, nothing taken" on a
      site whose own Terms — one click away, on the same domain — promise a
@@ -152,20 +165,20 @@ test('the free tier cannot go live while the Terms still promise a trial', () =>
      So the flag is tied to the document. If the free tier is live, the
      published Terms must no longer describe a trial, and the amendment must
      have been applied rather than left sitting in the file. */
-  if (!freeTierIsLive()) return;
+  if (!freeTrialIsLive()) return;
 
   const legal = read('src/content/legal.ts');
-  const start = legal.indexOf('export const FREE_TIER_LEGAL_AMENDMENT');
+  const start = legal.indexOf('export const FREE_TRIAL_LEGAL_AMENDMENT');
   const end = legal.indexOf('export const termsDraft');
   const documents = legal.slice(0, start) + legal.slice(end);
 
   assert.ok(
     !/New subscribers are offered a 14-day free trial/.test(documents),
-    'the free tier is live while the published Terms still offer a 14-day trial'
+    'the free trial is live while the published Terms still offer a 14-day trial'
   );
   assert.ok(
     !/Nothing is held back for paying subscribers/.test(documents),
-    'the free tier holds the block back — the Terms must not promise otherwise'
+    'the free trial holds the block back — the Terms must not promise otherwise'
   );
   assert.match(
     code(legal),
@@ -174,12 +187,12 @@ test('the free tier cannot go live while the Terms still promise a trial', () =>
   );
 });
 
-test('the free tier cannot go live while the trial model is still being advertised', () => {
+test('the free trial cannot go live while the card trial is still being advertised', () => {
   /* The two models are mutually exclusive: one takes a card up front and
      converts, the other takes nothing and never does. Whichever is live, the
      other must be silent — a page describing both is a page a reader cannot
      act on. */
-  if (!freeTierIsLive()) return;
+  if (!freeTrialIsLive()) return;
 
   const commerce = code(read('src/content/commerce.ts'));
   assert.ok(
@@ -189,7 +202,7 @@ test('the free tier cannot go live while the trial model is still being advertis
   for (const f of ['src/components/sections/TrialTerms.tsx', 'src/components/sections/PricingCard.tsx']) {
     assert.ok(
       !/trial\.days/.test(code(read(f))),
-      `${f} still renders a trial length while the free tier is live`
+      `${f} still renders the old trial length while the free trial is live`
     );
   }
 });
@@ -197,22 +210,33 @@ test('the free tier cannot go live while the trial model is still being advertis
 // ---------------------------------------------------------------------------
 // 4. WHAT THE WORDING MUST NOT DO
 // ---------------------------------------------------------------------------
-test('the free-tier copy never calls it a trial or implies a countdown', () => {
-  /* The single most likely way to get this wrong in copy is to keep the word
-     "trial", or to write "7 days free", which a reader hears as a clock. The
-     offer has no clock: on day ninety a free athlete still sees the next
-     seven days. Every sentence has to survive that. */
+test('the free-trial copy says it ends, and never promises permanence', () => {
+  /* THIS TEST USED TO ASSERT THE OPPOSITE, and that is worth leaving on the
+     record. The first reading of the founder's message modelled a permanent
+     free tier, so this guard banned the word "trial" and banned anything that
+     sounded like a countdown. The founder corrected it — "Just a single 7
+     days. Then it ends" — and every one of those banned words became
+     required. Copy that hid the ending would have been the most damaging
+     possible error here: an athlete planning around an account that does not
+     exist, told so by the page that took their email. */
   const commerce = read('src/content/commerce.ts');
-  const start = commerce.indexOf('export const freeTierCopy');
+  const start = commerce.indexOf('export const freeTrialCopy');
   const end = commerce.indexOf('export const trial');
-  assert.ok(start > -1 && end > start, 'freeTierCopy must exist, above the trial it replaces');
+  assert.ok(start > -1 && end > start, 'freeTrialCopy must exist, above the trial it replaces');
   const copy = code(commerce.slice(start, end));
 
-  for (const rx of [/\btrial\b/i, /\b7 days free\b/i, /\bfree for 7 days\b/i, /\bexpires?\b/i, /\brunning out\b/i]) {
-    assert.ok(!rx.test(copy), `the free-tier copy matches ${rx}, which describes a trial rather than a free tier`);
+  // It must not promise permanence in any of the ways that read as a promise.
+  for (const rx of [/\balways\b/i, /\bstays free\b/i, /\bforever\b/i, /\bnever expires?\b/i, /\bunlimited\b/i]) {
+    assert.ok(!rx.test(copy), `the copy matches ${rx}, which promises a free period that does not end`);
   }
-  // And it must say what paying actually does.
-  assert.match(copy, /whole block/i, 'the copy must say that subscribing reveals the whole block');
+  // And it must say, in the copy itself, that it ends.
+  assert.match(copy, /\bends\b/i, 'the copy must state that the free period ends');
+  // Paying must be described by what it actually does.
+  assert.match(copy, /whole block/i, 'the copy must say that subscribing shows the whole block');
+  // No urgency framing, same restraint the prices are held to.
+  for (const rx of [/\bhurry\b/i, /\bdon.t miss\b/i, /\blimited time\b/i, /\bact now\b/i]) {
+    assert.ok(!rx.test(copy), `the copy matches ${rx}, which is urgency framing`);
+  }
 });
 
 // ---------------------------------------------------------------------------

@@ -7,6 +7,33 @@ const ROOT = path.join(__dirname, '..');
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const code = (src) => src.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
 
+/* THE GATED SUCCESSOR MODEL IS NOT A SURFACE, AND MUST NOT BE READ AS ONE.
+   content/commerce.ts now carries `freeTrial` and `freeTrialCopy`: the
+   seven-day, card-free period the founder has asked for, written down and
+   switched off until the app behaves that way. Its copy says "no card",
+   which is the exact phrase the card-free guard below exists to catch — and
+   rightly so, for anything an athlete can read. Nothing can read this: a
+   test in freeTrialModel.test.js asserts no component imports it, and two
+   more assert the flag cannot go live while the published Terms still
+   describe the current model.
+   So it is stripped here for the same reason comments are stripped — these
+   files legitimately contain the other model's wording — and the stripping
+   is deliberately narrow: it removes the two named exports and nothing else,
+   so a card-free sentence written anywhere a reader could meet it still
+   fails. */
+const stripGatedModel = (src) => {
+  let out = src;
+  for (const name of ['freeTrial', 'freeTrialCopy']) {
+    const start = out.indexOf(`export const ${name} = {`);
+    if (start === -1) continue;
+    const end = out.indexOf('} as const;', start);
+    if (end === -1) continue;
+    out = out.slice(0, start) + out.slice(end + '} as const;'.length);
+  }
+  return out;
+};
+const surface = (p) => stripGatedModel(code(read(p)));
+
 // Every surface that talks to an athlete about the trial. Comments are stripped
 // before matching, because several of these files legitimately quote the older,
 // weaker wording while explaining why it changed.
@@ -39,7 +66,7 @@ test('the trial config states card up front, period up front and auto-conversion
 // ---------------------------------------------------------------------------
 test('no surface implies the trial is card-free', () => {
   for (const f of TRIAL_SURFACES) {
-    const src = code(read(f));
+    const src = surface(f);
     for (const rx of [/no card/i, /card.free/i, /without a card/i, /no payment (method|details) (needed|required)/i,
       /free trial, no card/i]) {
       assert.ok(!rx.test(src), `${f} matches ${rx} — the authorised model requires a card up front`);
@@ -49,7 +76,7 @@ test('no surface implies the trial is card-free', () => {
 
 test('no surface implies payment details are collected only after the trial', () => {
   for (const f of TRIAL_SURFACES) {
-    const src = code(read(f));
+    const src = surface(f);
     for (const rx of [/card (will be )?required (when|after|once) /i, /add (your )?(card|payment method) (after|when the trial|once the trial)/i,
       /pay (at the end|after the trial)/i]) {
       assert.ok(!rx.test(src), `${f} matches ${rx} — the card is taken before the trial starts`);
@@ -59,7 +86,7 @@ test('no surface implies payment details are collected only after the trial', ()
 
 test('no surface implies a manual purchase is needed after the trial', () => {
   for (const f of TRIAL_SURFACES) {
-    const src = code(read(f));
+    const src = surface(f);
     for (const rx of [/choose whether to continue/i, /decide (later|afterwards) whether to (buy|subscribe)/i,
       /upgrade (when|after) the trial/i, /then decide if/i]) {
       assert.ok(!rx.test(src), `${f} matches ${rx} — conversion is automatic, not a later purchase`);
@@ -124,7 +151,7 @@ test('the site never implies payment comes before the programme', () => {
      opposite: that no surface implies the reverse order, which is what most
      trials do and what a careless sentence would fall into. */
   for (const f of TRIAL_SURFACES) {
-    const src = code(read(f));
+    const src = surface(f);
     for (const rx of [/pay (first|up ?front) (and|to) (see|unlock)/i,
                       /before you (can )?see your (programme|plan)/i,
                       /subscribe to (see|view|unlock) your (programme|plan)/i]) {
@@ -147,7 +174,7 @@ test('/start never quotes only the monthly price for a choice that may be annual
 // ---------------------------------------------------------------------------
 test('no refund, notice-period or guarantee wording is fabricated', () => {
   for (const f of TRIAL_SURFACES) {
-    const src = code(read(f));
+    const src = surface(f);
     for (const rx of [/refund/i, /money.back/i, /guarantee/i, /pro.rata/i, /cooling.off/i,
       /no questions asked/i, /cancel any ?time/i]) {
       assert.ok(!rx.test(src),
