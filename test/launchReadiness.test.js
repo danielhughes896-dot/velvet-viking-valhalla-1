@@ -189,7 +189,12 @@ test('every secondary text CTA clears a 44px hit area', () => {
     'src/app/sacoro/page.tsx',
   ]) {
     const src = code(read(f));
-    const links = [...src.matchAll(/text-vv-bronze-text transition-opacity/g)];
+    /* COLOUR-AGNOSTIC ON PURPOSE. This matched text-vv-bronze-text, which
+       made a touch-target guarantee depend on a palette decision — so moving
+       interaction from gold to cherry broke a test about thumbs. The hit area
+       is what this test is for; which colour an action is painted in is the
+       hierarchy's business, and visualReconciliation holds that. */
+    const links = [...src.matchAll(/transition-opacity hover:opacity-70/g)];
     assert.ok(links.length > 0, `${f} lost its secondary link`);
     assert.match(src, /inline-flex min-h-11 items-center font-head/,
       `${f} has a secondary CTA smaller than a thumb`);

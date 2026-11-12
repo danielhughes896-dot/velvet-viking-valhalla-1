@@ -42,31 +42,40 @@ type CtaButtonProps = {
 const base =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-vv-sm px-6 py-3 font-head text-[13px] font-semibold uppercase tracking-[0.14em] transition duration-200";
 
-// THREE JOBS, THREE FILLS.
+// CHERRY IS THE HIERARCHY NOW, NOT A CLOSED SET OF ONE.
 //
-//   cherry   THE ACTION THAT STARTS A PLAN, and only that. Cherry Lacquer is
-//            the app's accent for "the button that moves the athlete forward",
-//            so the colour pressed to begin on this site is the colour met
-//            again inside the builder. Solid, not a gradient — that was the
-//            violet this replaced in the app, and a flat fill is what makes it
-//            read as one deliberate colour rather than a surface with a sheen.
-//            The 1px rim is what gives a dark fill an edge in the dark
-//            sections without lightening its face back into rose.
-//   primary  EXPLORATION AND BRAND ACTIONS — the gold the site has always
-//            used, now on the app's own bronze. Flat, not a gradient: under a
-//            near-black ground a two-stop bronze gradient's dark end measures
-//            3.81:1 against bronze-ink text, failing AA for 13px semibold.
-//            Flat vv-bronze on vv-bronze-ink measures 6.6:1. Gradient tokens
-//            stay in globals.css for decorative, non-text uses (the wordmark).
-//   ghost    QUIET SECONDARY ACTIONS, unchanged.
+// Founder's rule, from the app's review pass: "Gold = brand/destination/
+// milestone. Cherry = active/training/interaction. White = information.
+// Green = complete/good."
 //
-// Gold is still the brand. Cherry is a closed set of one job — see the test
-// that fails if it spreads.
+// This file used to encode the opposite. `cherry` was "THE ACTION THAT STARTS
+// A PLAN, and only that" and `primary` was gold — so the site painted most of
+// its buttons in the brand colour and reserved the interaction colour for one.
+// Under the rule above a button is interaction by definition, whatever it
+// links to, so gold comes off all three variants and cherry goes on.
+//
+// WHAT GOLD KEEPS, and it is not a consolation prize: the mark's two dots, the
+// hero rule, every eyebrow and section label, the timeline's milestone
+// markers. Brand, destination and milestone — exactly the list. The app did
+// the same thing in the same pass: gold kept the wordmark, the carousel dots
+// and the phase slides, and came off the builder and Settings.
+//
+//   cherry   THE ACTION THAT MOVES SOMEBODY FORWARD. Solid, not a gradient —
+//            that was the violet this replaced in the app, and a flat fill
+//            reads as one deliberate colour rather than a surface with a
+//            sheen. The 1px rim gives a dark fill an edge in the dark sections
+//            without lightening its face back into rose.
+//   primary  EVERY OTHER REAL ACTION. Was flat bronze; now the same cherry
+//            face at a lighter weight than the solid fill, so the two read as
+//            one family with a clear order rather than two different offers.
+//   ghost    QUIET SECONDARY ACTIONS. The hover was the one place gold still
+//            touched an interaction, and it is now cherry.
 const variants = {
   cherry:
     "bg-vv-cherry-fill text-vv-cherry-ink shadow-[inset_0_0_0_1px_var(--vv-cherry)] hover:brightness-110",
-  primary: "bg-vv-bronze text-vv-bronze-ink hover:brightness-110",
-  ghost: "border border-vv-line text-vv-ink hover:border-vv-bronze",
+  primary:
+    "border border-vv-cherry-line bg-vv-cherry-soft/0 text-vv-cherry-text hover:border-vv-cherry hover:bg-vv-cherry-fill hover:text-vv-cherry-ink",
+  ghost: "border border-vv-line text-vv-ink hover:border-vv-cherry",
 };
 
 export default function CtaButton({

@@ -146,41 +146,59 @@ test('exactly one component knows how to paint the accent', () => {
     'only CtaButton may fill with the accent; every other surface asks for the variant');
 });
 
-test('the accent is used for one job: the action that starts a plan', () => {
-  const users = srcFiles().filter((f) => /variant="cherry"/.test(code(read(f))));
-  assert.deepEqual(
-    users.sort(),
-    [
-      'src/app/sacoro/page.tsx',
-      'src/app/start/page.tsx',
-      'src/components/layout/Header.tsx',
-      'src/components/layout/MobileNav.tsx',
-      'src/components/sections/FinalCta.tsx',
-      'src/components/sections/Hero.tsx',
-      'src/components/sections/PricingCard.tsx',
-      'src/components/sections/ProductShowcase.tsx',
-    ],
-    'the accent spread beyond the build action — re-decide the set, do not edit this list'
-  );
-  // Every one of them is the build button, not decoration.
-  for (const f of users) {
+test('cherry is the interaction layer, and covers every real action', () => {
+  /* WAS "the accent is used for one job: the action that starts a plan", with
+     a pinned list of the eight files allowed to paint it. That rule is
+     inverted now, by the founder's own hierarchy from the app's review pass:
+
+       "Gold = brand/destination/milestone. Cherry = active/training/
+        interaction. White = information. Green = complete/good."
+
+     Cherry is no longer a closed set of one job; it is what interaction looks
+     like. So the thing worth guarding is no longer "has it spread" but the
+     opposite: has anything a visitor can press or click been left behind in
+     gold. */
+  const interactive = [];
+  for (const f of srcFiles()) {
     const src = code(read(f));
-    assert.match(src, /buildUrl|appUrl/, `${f} paints the accent on something that is not the build action`);
+    // Anything carrying a hover state or a CTA variant is an interaction.
+    if (/hover:|variant="/.test(src)) interactive.push(f);
+  }
+  for (const f of interactive) {
+    const src = code(read(f));
+    const goldHover = src.match(/hover:[a-z-]*-vv-(gold|bronze)[a-z-]*/g) || [];
+    assert.deepEqual(goldHover, [],
+      `${f} still paints a hover in gold — interaction belongs to cherry`);
   }
 });
 
-test('gold is still the brand: the accent took none of its jobs', () => {
+test('gold keeps brand, destination and milestone — and nothing else', () => {
+  // The other half of the same rule. Gold is not demoted out of the site; it
+  // is demoted out of INTERACTION. These are the jobs the hierarchy leaves it.
+  assert.match(code(read('src/components/ui/SectionHeading.tsx')), /text-vv-bronze-text/,
+    'eyebrows are labels, not actions');
+  assert.match(code(read('src/components/ui/Wordmark.tsx')), /bg-vv-gold-bright/,
+    'the mark keeps its two dots, exactly as the app kept gold on its wordmark');
+  assert.match(code(read('src/components/sections/Hero.tsx')), /var\(--vv-gold\)/,
+    'the hero rule is a brand divider');
+  assert.match(css(), /::selection[\s\S]{0,80}var\(--vv-bronze\)/);
+  // And the button variants must no longer offer a gold fill at all.
+  const btn = code(read('src/components/ui/CtaButton.tsx'));
+  const variants = btn.slice(btn.indexOf('const variants'), btn.indexOf('export default'));
+  assert.ok(!/vv-bronze|vv-gold/.test(variants),
+    'a gold button is the brand colour doing interaction\'s job');
+  assert.match(variants, /vv-cherry/, 'every variant resolves through cherry');
+});
+
+test('cherry has a readable text token in both themes', () => {
+  /* The site had only cherry FILLS, because cherry only ever filled one
+     button. As the interaction colour it now has to carry link text too, and
+     one value cannot do that on both grounds: #532d3a disappears on near
+     black, and the dark ramp's rose would fail on ivory. */
   const c = css();
-  // Eyebrows, rules, the crest and the metallic wordmark all still resolve
-  // through the gold/bronze tokens.
-  assert.match(c, /\.theme-dark \.text-metallic/);
-  assert.match(c, /linear-gradient\(180deg, var\(--vv-gold-bright\) 0%, var\(--vv-gold-mid\) 100%\)/);
-  assert.match(c, /::selection[\s\S]{0,80}var\(--vv-bronze\)/);
-  // The exploratory CTA keeps the gold variant, so the two accents are
-  // visibly doing different jobs on the same page.
-  assert.match(code(read('src/components/ui/CtaButton.tsx')), /primary: "bg-vv-bronze text-vv-bronze-ink/);
-  // And the eyebrow token is untouched across the site's section headings.
-  assert.match(code(read('src/components/ui/SectionHeading.tsx')), /text-vv-bronze-text/);
+  assert.match(c, /--vv-cherry-text:\s*#532d3a;/, 'ivory: the dark fill itself');
+  assert.match(c, /--vv-cherry-text:\s*#c46a89;/, "dark: the app's own --cherry-text");
+  assert.match(c, /--color-vv-cherry-text: var\(--vv-cherry-text\);/, 'registered for Tailwind');
 });
 
 // ---------------------------------------------------------------------------

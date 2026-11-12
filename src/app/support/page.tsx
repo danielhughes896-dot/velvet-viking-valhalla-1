@@ -61,7 +61,7 @@ export default function SupportPage() {
                   // thing on the page somebody has to be able to read and copy,
                   // so it keeps its weight and its rule and simply starts a step
                   // smaller. break-all is the safety net, not the mechanism.
-                  className="font-display text-base font-semibold break-all text-vv-ink underline decoration-vv-bronze underline-offset-4 hover:text-vv-bronze-text min-[380px]:text-xl sm:text-2xl"
+                  className="font-display text-base font-semibold break-all text-vv-ink underline decoration-vv-cherry-line underline-offset-4 hover:text-vv-cherry-text min-[380px]:text-xl sm:text-2xl"
                 >
                   {email}
                 </a>
@@ -88,7 +88,7 @@ export default function SupportPage() {
               Sacoro itself lives at{" "}
               <a
                 href={appUrl}
-                className="underline decoration-vv-line underline-offset-4 hover:text-vv-bronze-text"
+                className="underline decoration-vv-line underline-offset-4 hover:text-vv-cherry-text"
               >
                 app.velvetviking.co.uk
               </a>

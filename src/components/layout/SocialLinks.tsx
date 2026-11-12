@@ -37,7 +37,7 @@ export default function SocialLinks() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={p.label}
-            className="block text-vv-ink-faint transition-colors hover:text-vv-bronze-text"
+            className="block text-vv-ink-faint transition-colors hover:text-vv-cherry-text"
           >
             <SocialIcon platform={p.key} />
           </Link>

@@ -104,7 +104,7 @@ export default function SacoroPage() {
           </CtaButton>
           <Link
             href={pages.sacoro.secondaryCta.href}
-            className="inline-flex min-h-11 items-center font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-bronze-text transition-opacity hover:opacity-70"
+            className="inline-flex min-h-11 items-center font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-cherry-text transition-opacity hover:opacity-70"
           >
             {pages.sacoro.secondaryCta.label}
           </Link>

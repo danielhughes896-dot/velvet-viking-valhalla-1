@@ -43,7 +43,7 @@ export default function Header() {
             </CtaButton>
             <Link
               href={appSignInUrl}
-              className="font-head text-[11px] font-semibold uppercase tracking-[0.14em] text-vv-ink-dim transition-colors hover:text-vv-bronze-text"
+              className="font-head text-[11px] font-semibold uppercase tracking-[0.14em] text-vv-ink-dim transition-colors hover:text-vv-cherry-text"
             >
               {nav.signIn.label}
             </Link>

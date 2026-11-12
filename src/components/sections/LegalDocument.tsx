@@ -27,7 +27,7 @@ function withLinks(text: string) {
         <a
           key={i}
           href={`mailto:${part}`}
-          className="text-vv-bronze-text underline decoration-vv-bronze-text/40 underline-offset-2 transition-colors hover:decoration-vv-bronze-text"
+          className="text-vv-cherry-text underline decoration-vv-cherry-text/40 underline-offset-2 transition-colors hover:decoration-vv-cherry-text"
         >
           {part}
         </a>
@@ -38,7 +38,7 @@ function withLinks(text: string) {
         <Link
           key={i}
           href={part}
-          className="text-vv-bronze-text underline decoration-vv-bronze-text/40 underline-offset-2 transition-colors hover:decoration-vv-bronze-text"
+          className="text-vv-cherry-text underline decoration-vv-cherry-text/40 underline-offset-2 transition-colors hover:decoration-vv-cherry-text"
         >
           {part}
         </Link>

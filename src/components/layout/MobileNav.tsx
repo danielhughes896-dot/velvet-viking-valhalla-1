@@ -145,7 +145,7 @@ export default function MobileNav() {
                       key={link.href}
                       href={link.href}
                       onClick={() => setOpen(false)}
-                      className="font-display text-4xl font-semibold uppercase tracking-[0.03em] text-vv-ink transition-colors hover:text-vv-gold-text sm:text-5xl md:text-6xl"
+                      className="font-display text-4xl font-semibold uppercase tracking-[0.03em] text-vv-ink transition-colors hover:text-vv-cherry-text sm:text-5xl md:text-6xl"
                     >
                       {link.label}
                     </Link>
@@ -173,7 +173,7 @@ export default function MobileNav() {
                 <Link
                   href={appSignInUrl}
                   onClick={() => setOpen(false)}
-                  className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink-dim transition-colors hover:text-vv-bronze-text"
+                  className="font-head text-xs font-semibold uppercase tracking-[0.2em] text-vv-ink-dim transition-colors hover:text-vv-cherry-text"
                 >
                   {nav.signIn.label}
                 </Link>

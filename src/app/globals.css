@@ -83,6 +83,12 @@
   --vv-cherry-line: rgba(83, 45, 58, 0.32);
   --vv-cherry-soft: #efe4e8;
   --vv-cherry-ink: #ffffff;
+  /* CHERRY AS TEXT, which the site had no token for because cherry used to be
+     a single button fill. It is the interaction colour now, so links and hover
+     states need a readable version of it. On ivory that is the fill itself —
+     #532d3a is dark enough to carry 13px semibold — rather than a lighter tint
+     that would fail against the cream. */
+  --vv-cherry-text: #532d3a;
   --vv-radius-sm: 10px;
   --vv-radius: 16px;
   --vv-radius-lg: 22px;
@@ -115,6 +121,12 @@
   --vv-cherry-line: rgba(83, 45, 58, 0.32);
   --vv-cherry-soft: #efe4e8;
   --vv-cherry-ink: #ffffff;
+  /* CHERRY AS TEXT, which the site had no token for because cherry used to be
+     a single button fill. It is the interaction colour now, so links and hover
+     states need a readable version of it. On ivory that is the fill itself —
+     #532d3a is dark enough to carry 13px semibold — rather than a lighter tint
+     that would fail against the cream. */
+  --vv-cherry-text: #532d3a;
   --vv-shadow-sm: 0 4px 12px rgba(90, 70, 30, 0.1);
   --vv-shadow: 0 10px 30px rgba(90, 70, 30, 0.14);
   --vv-placeholder-bg: rgba(23, 23, 23, 0.05);
@@ -151,6 +163,9 @@
   --vv-cherry-line: rgba(154, 84, 108, 0.45);
   --vv-cherry-soft: #9a546c;
   --vv-cherry-ink: #ffffff;
+  /* The app's own --cherry-text. #532d3a would disappear on a near-black
+     ground, so the dark ramp lifts to the same rose the app reads cherry as. */
+  --vv-cherry-text: #c46a89;
   --vv-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
   --vv-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   --vv-placeholder-bg: rgba(255, 255, 255, 0.045);
@@ -181,6 +196,7 @@
   --color-vv-cherry-line: var(--vv-cherry-line);
   --color-vv-cherry-soft: var(--vv-cherry-soft);
   --color-vv-cherry-ink: var(--vv-cherry-ink);
+  --color-vv-cherry-text: var(--vv-cherry-text);
 
   --radius-vv-sm: var(--vv-radius-sm);
   --radius-vv: var(--vv-radius);
